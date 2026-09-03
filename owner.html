@@ -1,0 +1,638 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Owner Dashboard - Task Reward System</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f3f4f6;
+    color:#222;
+}
+
+header{
+    background:#111827;
+    color:white;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h2{
+    margin:0;
+    font-size:20px;
+}
+
+.logout{
+    background:#ef4444;
+    color:white;
+    border:0;
+    padding:9px 15px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.container{
+    max-width:1150px;
+    margin:25px auto;
+    padding:0 15px;
+}
+
+.welcome{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.welcome h2{
+    margin-top:0;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.card h3{
+    margin:0 0 10px;
+    font-size:14px;
+    color:#666;
+}
+
+.value{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.section{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.section h2{
+    margin-top:0;
+}
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#f9fafb;
+}
+
+.badge{
+    padding:5px 9px;
+    border-radius:15px;
+    font-size:12px;
+}
+
+.active{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.pending{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+button{
+    border:0;
+    border-radius:7px;
+    padding:9px 14px;
+    cursor:pointer;
+}
+
+.primary{
+    background:#2563eb;
+    color:white;
+}
+
+.danger{
+    background:#ef4444;
+    color:white;
+}
+
+.info{
+    color:#666;
+}
+
+.empty{
+    text-align:center;
+    padding:20px;
+    color:#777;
+}
+
+@media(max-width:800px){
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:500px){
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    header h2{
+        font-size:17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>👑 Owner Dashboard</h2>
+    <button class="logout" onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Welcome, Owner 👋</h2>
+        <p class="info">
+            Manage members, tasks, rewards and withdrawals.
+        </p>
+    </div>
+
+
+    <!-- Dashboard Cards -->
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>👥 Total Members</h3>
+            <div class="value" id="totalMembers">0</div>
+        </div>
+
+        <div class="card">
+            <h3>✅ Active Members</h3>
+            <div class="value" id="activeMembers">0</div>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Total Tasks</h3>
+            <div class="value" id="totalTasks">0</div>
+        </div>
+
+        <div class="card">
+            <h3>🪙 Total Coins</h3>
+            <div class="value" id="totalCoins">0</div>
+        </div>
+
+    </div>
+
+
+    <!-- Members -->
+
+    <div class="section">
+
+        <h2>👥 Members</h2>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Coins</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="membersTable">
+
+                    <tr>
+                        <td colspan="5" class="empty">
+                            Loading members...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- Tasks -->
+
+    <div class="section">
+
+        <h2>🎯 Task Management</h2>
+
+        <p class="info">
+            Task creation system will be added in the next step.
+        </p>
+
+        <button class="primary" onclick="taskComingSoon()">
+            + Create Task
+        </button>
+
+    </div>
+
+
+    <!-- Withdrawals -->
+
+    <div class="section">
+
+        <h2>💸 Withdrawal Requests</h2>
+
+        <p class="info">
+            Member withdrawal requests will appear here.
+        </p>
+
+        <div class="empty">
+            No withdrawal requests yet.
+        </div>
+
+    </div>
+
+
+    <!-- Exchange Rate -->
+
+    <div class="section">
+
+        <h2>⚙️ Reward Settings</h2>
+
+        <p>
+            <b>Exchange Rate:</b>
+            100 Coins = ₹1
+        </p>
+
+        <p class="info">
+            Reward settings management will be added later.
+        </p>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    doc,
+    getDoc
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* Firebase Configuration */
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyAH030c2ydOmijyUwmT60CC7vvnyXxyOdY",
+
+    authDomain:
+        "task-reward-system-af46f.firebaseapp.com",
+
+    projectId:
+        "task-reward-system-af46f",
+
+    storageBucket:
+        "task-reward-system-af46f.firebasestorage.app",
+
+    messagingSenderId:
+        "64322126165",
+
+    appId:
+        "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+
+    measurementId:
+        "G-6P3R9F3ZQT"
+};
+
+
+/* Initialize Firebase */
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* Check Owner Login */
+
+onAuthStateChanged(auth, async (user) => {
+
+    if(!user){
+
+        window.location.href = "index.html";
+
+        return;
+    }
+
+
+    try{
+
+        const userRef =
+            doc(db, "users", user.uid);
+
+        const userSnap =
+            await getDoc(userRef);
+
+
+        if(!userSnap.exists()){
+
+            alert("Owner data not found.");
+
+            await signOut(auth);
+
+            window.location.href =
+                "index.html";
+
+            return;
+        }
+
+
+        const data =
+            userSnap.data();
+
+
+        /* Owner Role Check */
+
+        if(data.role !== "owner"){
+
+            alert(
+                "Access denied. Owner account required."
+            );
+
+            await signOut(auth);
+
+            window.location.href =
+                "index.html";
+
+            return;
+        }
+
+
+        /* Load Members */
+
+        await loadMembers();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to load dashboard.\n\n" +
+            error.message
+        );
+
+    }
+
+});
+
+
+/* Load Members From Firestore */
+
+async function loadMembers(){
+
+    const usersRef =
+        collection(db, "users");
+
+    const snapshot =
+        await getDocs(usersRef);
+
+
+    let totalMembers = 0;
+
+    let activeMembers = 0;
+
+    let totalCoins = 0;
+
+
+    const table =
+        document.getElementById(
+            "membersTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    snapshot.forEach((docSnap) => {
+
+        const data =
+            docSnap.data();
+
+
+        if(data.role === "member"){
+
+            totalMembers++;
+
+
+            if(data.status === "active"){
+
+                activeMembers++;
+
+            }
+
+
+            const coins =
+                Number(data.coins || 0);
+
+            totalCoins += coins;
+
+
+            const row =
+                document.createElement("tr");
+
+
+            const statusClass =
+                data.status === "active"
+                ? "active"
+                : "pending";
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHtml(data.name || "-")}
+                </td>
+
+                <td>
+                    ${escapeHtml(data.email || "-")}
+                </td>
+
+                <td>
+                    ${escapeHtml(data.mobile || "-")}
+                </td>
+
+                <td>
+                    🪙 ${coins}
+                </td>
+
+                <td>
+                    <span class="badge ${statusClass}">
+                        ${escapeHtml(data.status || "-")}
+                    </span>
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        }
+
+    });
+
+
+    if(totalMembers === 0){
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="empty"
+                >
+                    No members found.
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    document.getElementById(
+        "totalMembers"
+    ).textContent = totalMembers;
+
+
+    document.getElementById(
+        "activeMembers"
+    ).textContent = activeMembers;
+
+
+    document.getElementById(
+        "totalCoins"
+    ).textContent = totalCoins;
+
+
+    /* Tasks will be connected later */
+
+    document.getElementById(
+        "totalTasks"
+    ).textContent = "0";
+
+}
+
+
+/* Basic HTML Escape */
+
+function escapeHtml(value){
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* Logout */
+
+window.logout = async function(){
+
+    try{
+
+        await signOut(auth);
+
+        window.location.href =
+            "index.html";
+
+    }
+    catch(error){
+
+        alert(
+            "Logout failed: " +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* Temporary Task Button */
+
+window.taskComingSoon = function(){
+
+    alert(
+        "Task creation will be activated in the next step."
+    );
+
+};
+
+</script>
+
+</body>
+</html>
+```
