@@ -1,0 +1,353 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Member Dashboard - Task Reward System</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f3f4f6;
+    color:#222;
+}
+
+header{
+    background:#1f2937;
+    color:white;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h2{
+    margin:0;
+    font-size:20px;
+}
+
+.logout{
+    background:#ef4444;
+    color:white;
+    border:0;
+    padding:9px 15px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.container{
+    max-width:1100px;
+    margin:25px auto;
+    padding:0 15px;
+}
+
+.welcome{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.welcome h2{
+    margin-top:0;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.card h3{
+    margin:0 0 10px;
+    font-size:15px;
+    color:#666;
+}
+
+.card .value{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.section{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.section h2{
+    margin-top:0;
+}
+
+.task{
+    border:1px solid #ddd;
+    padding:18px;
+    border-radius:10px;
+    margin-top:12px;
+}
+
+.task h3{
+    margin-top:0;
+}
+
+.task button{
+    background:#2563eb;
+    color:white;
+    border:0;
+    padding:10px 16px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.task button:hover{
+    background:#1d4ed8;
+}
+
+.info{
+    color:#666;
+}
+
+@media(max-width:700px){
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    header h2{
+        font-size:17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>🪙 Task Reward System</h2>
+    <button class="logout" onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Welcome, <span id="memberName">Member</span> 👋</h2>
+        <p class="info">
+            Complete tasks and earn reward coins.
+        </p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>🪙 Total Coins</h3>
+            <div class="value" id="coinBalance">0</div>
+        </div>
+
+        <div class="card">
+            <h3>💰 Current Value</h3>
+            <div class="value" id="rupeeValue">₹0</div>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Available Tasks</h3>
+            <div class="value" id="taskCount">0</div>
+        </div>
+
+    </div>
+
+    <div class="section">
+        <h2>🎯 Available Tasks</h2>
+
+        <div id="tasks">
+
+            <div class="task">
+                <h3>▶️ YouTube Video Task</h3>
+                <p>
+                    Watch the assigned video and complete the required task.
+                </p>
+                <p>
+                    <b>Reward:</b> Coming Soon
+                </p>
+                <button onclick="comingSoon()">
+                    Start Task
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 Task History</h2>
+        <p class="info">
+            Your completed tasks will appear here.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>💸 Withdraw</h2>
+        <p>
+            <b>Exchange Rate:</b> 100 Coins = ₹1
+        </p>
+
+        <p>
+            Minimum withdrawal system will be added later.
+        </p>
+
+        <button class="task button" onclick="comingSoon()">
+            Withdraw
+        </button>
+    </div>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    doc,
+    getDoc
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAH030c2ydOmijyUwmT60CC7vvnyXxyOdY",
+    authDomain: "task-reward-system-af46f.firebaseapp.com",
+    projectId: "task-reward-system-af46f",
+    storageBucket: "task-reward-system-af46f.firebasestorage.app",
+    messagingSenderId: "64322126165",
+    appId: "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+    measurementId: "G-6P3R9F3ZQT"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+onAuthStateChanged(auth, async (user) => {
+
+    if(!user){
+        window.location.href = "index.html";
+        return;
+    }
+
+    try{
+
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if(!userSnap.exists()){
+            alert("User data not found.");
+            await signOut(auth);
+            window.location.href = "index.html";
+            return;
+        }
+
+        const data = userSnap.data();
+
+        // Role check
+        if(data.role !== "member"){
+            alert("Access denied.");
+            await signOut(auth);
+            window.location.href = "index.html";
+            return;
+        }
+
+        // Status check
+        if(data.status !== "active"){
+            alert("Your account is not active.");
+            await signOut(auth);
+            window.location.href = "index.html";
+            return;
+        }
+
+        const coins = Number(data.coins || 0);
+
+        document.getElementById("memberName").textContent =
+            data.name || "Member";
+
+        document.getElementById("coinBalance").textContent =
+            coins;
+
+        // 100 Coins = ₹1
+        const rupees = coins / 100;
+
+        document.getElementById("rupeeValue").textContent =
+            "₹" + rupees.toFixed(2);
+
+        // Currently one demo task
+        document.getElementById("taskCount").textContent = "1";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to load member data.\n\n" +
+            error.message
+        );
+    }
+
+});
+
+
+window.logout = async function(){
+
+    try{
+
+        await signOut(auth);
+
+        window.location.href = "index.html";
+
+    }
+    catch(error){
+
+        alert("Logout failed: " + error.message);
+
+    }
+
+};
+
+
+window.comingSoon = function(){
+
+    alert("This feature will be activated soon.");
+
+};
+
+</script>
+
+</body>
+</html>
+```
