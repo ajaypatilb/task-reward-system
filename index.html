@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Task Reward System - Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #111827, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 15px;
+      background: #2563eb;
+      color: white;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #111827;
+      margin-bottom: 8px;
+      font-size: 26px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    .role-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .role-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      background: #f9fafb;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    .role-btn.active {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: white;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .login-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .register-text {
+      text-align: center;
+      margin-top: 22px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .register-text span {
+      color: #2563eb;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 28px 20px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+
+    <div class="logo">💰</div>
+
+    <h1>Task Reward System</h1>
+
+    <p class="subtitle">
+      Complete tasks and earn rewards
+    </p>
+
+    <!-- Role Selection -->
+    <div class="role-buttons">
+
+      <button
+        class="role-btn active"
+        id="memberBtn"
+        onclick="selectRole('member')">
+        👤 Member
+      </button>
+
+      <button
+        class="role-btn"
+        id="ownerBtn"
+        onclick="selectRole('owner')">
+        👑 Owner
+      </button>
+
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm">
+
+      <div class="input-group">
+        <label>Email Address</label>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="Enter your email"
+          required>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          required>
+      </div>
+
+      <button
+        type="submit"
+        class="login-btn"
+        id="loginBtn">
+        Login
+      </button>
+
+    </form>
+
+    <div
+      id="message"
+      class="message">
+    </div>
+
+    <div class="register-text" id="registerText">
+      New Member?
+      <span onclick="showRegisterMessage()">Register</span>
+    </div>
+
+    <div class="footer">
+      © 2026 Task Reward System
+    </div>
+
+  </div>
+
+
+  <!-- Firebase SDK -->
+  <script type="module">
+
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+    import {
+      getAuth,
+      signInWithEmailAndPassword
+    }
+      from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    }
+      from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    // ==========================================
+    // FIREBASE CONFIG
+    // ==========================================
+
+    const firebaseConfig = {
+
+      apiKey: "AIzaSyAH030c2ydOmijyUwmT60CC7vvnyXxyOdY",
+
+      authDomain:
+        "task-reward-system-af46f.firebaseapp.com",
+
+      projectId:
+        "task-reward-system-af46f",
+
+      storageBucket:
+        "task-reward-system-af46f.firebasestorage.app",
+
+      messagingSenderId:
+        "64322126165",
+
+      appId:
+        "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+
+      measurementId:
+        "G-6P3R9F3ZQT"
+    };
+
+
+    // Initialize Firebase
+
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+
+    const db = getFirestore(app);
+
+
+    // ==========================================
+    // ROLE
+    // ==========================================
+
+    let selectedRole = "member";
+
+
+    window.selectRole = function(role) {
+
+      selectedRole = role;
+
+      const memberBtn =
+        document.getElementById("memberBtn");
+
+      const ownerBtn =
+        document.getElementById("ownerBtn");
+
+      const registerText =
+        document.getElementById("registerText");
+
+
+      memberBtn.classList.remove("active");
+      ownerBtn.classList.remove("active");
+
+
+      if (role === "member") {
+
+        memberBtn.classList.add("active");
+
+        registerText.style.display = "block";
+
+      } else {
+
+        ownerBtn.classList.add("active");
+
+        registerText.style.display = "none";
+      }
+    };
+
+
+    // ==========================================
+    // MESSAGE
+    // ==========================================
+
+    function showMessage(text, type) {
+
+      const message =
+        document.getElementById("message");
+
+      message.textContent = text;
+
+      message.className =
+        "message " + type;
+
+      message.style.display = "block";
+    }
+
+
+    // ==========================================
+    // LOGIN
+    // ==========================================
+
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async function(e) {
+
+        e.preventDefault();
+
+
+        const email =
+          document.getElementById("email").value.trim();
+
+        const password =
+          document.getElementById("password").value;
+
+        const loginBtn =
+          document.getElementById("loginBtn");
+
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent = "Logging in...";
+
+
+        try {
+
+          // Firebase Authentication
+
+          const userCredential =
+            await signInWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+
+          const user =
+            userCredential.user;
+
+
+          // Get user profile from Firestore
+
+          const userRef =
+            doc(db, "users", user.uid);
+
+          const userSnap =
+            await getDoc(userRef);
+
+
+          if (!userSnap.exists()) {
+
+            showMessage(
+              "User profile not found.",
+              "error"
+            );
+
+            await auth.signOut();
+
+            return;
+          }
+
+
+          const userData =
+            userSnap.data();
+
+
+          // Check selected role
+
+          if (userData.role !== selectedRole) {
+
+            showMessage(
+              "You do not have permission to login as " +
+              selectedRole + ".",
+              "error"
+            );
+
+            await auth.signOut();
+
+            return;
+          }
+
+
+          // Check account status
+
+          if (
+            userData.status &&
+            userData.status !== "active"
+          ) {
+
+            showMessage(
+              "Your account is not active.",
+              "error"
+            );
+
+            await auth.signOut();
+
+            return;
+          }
+
+
+          showMessage(
+            "Login successful!",
+            "success"
+          );
+
+
+          // Dashboard redirect
+
+          setTimeout(function() {
+
+            if (selectedRole === "owner") {
+
+              window.location.href =
+                "owner.html";
+
+            } else {
+
+              window.location.href =
+                "member.html";
+            }
+
+          }, 800);
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          let errorMessage =
+            "Login failed. Please try again.";
+
+
+          if (
+            error.code ===
+            "auth/invalid-credential"
+          ) {
+
+            errorMessage =
+              "Invalid email or password.";
+
+          } else if (
+            error.code ===
+            "auth/user-not-found"
+          ) {
+
+            errorMessage =
+              "User account not found.";
+
+          } else if (
+            error.code ===
+            "auth/wrong-password"
+          ) {
+
+            errorMessage =
+              "Incorrect password.";
+
+          } else if (
+            error.code ===
+            "auth/invalid-email"
+          ) {
+
+            errorMessage =
+              "Please enter a valid email.";
+
+          }
+
+
+          showMessage(
+            errorMessage,
+            "error"
+          );
+
+
+        } finally {
+
+          loginBtn.disabled = false;
+
+          loginBtn.textContent = "Login";
+        }
+
+      });
+
+
+    // ==========================================
+    // REGISTER MESSAGE
+    // ==========================================
+
+    window.showRegisterMessage = function() {
+
+      showMessage(
+        "Member registration will be added in the next step.",
+        "success"
+      );
+
+    };
+
+  </script>
+
+</body>
+</html>
