@@ -164,6 +164,25 @@ header h2{
     text-decoration:underline;
 }
 
+.timer-box{
+    margin-top:15px;
+    padding:15px;
+    background:#eff6ff;
+    border-radius:8px;
+    display:none;
+}
+
+.timer-value{
+    font-size:24px;
+    font-weight:bold;
+    margin-top:5px;
+}
+
+.complete-button{
+    background:#16a34a !important;
+    margin-top:10px;
+}
+
 @media(max-width:700px){
 
     .cards{
@@ -573,7 +592,8 @@ async function loadTasks(){
 
             const title =
                 escapeHtml(
-                    data.title || "Untitled Task"
+                    data.title ||
+                    "Untitled Task"
                 );
 
 
@@ -640,6 +660,29 @@ async function loadTasks(){
                     ▶️ Start Task
                 </button>
 
+                <div
+                    id="timer-${docSnap.id}"
+                    class="timer-box"
+                >
+
+                    <b>⏱️ Task Timer</b>
+
+                    <div
+                        id="timerValue-${docSnap.id}"
+                        class="timer-value"
+                    >
+                        -
+                    </div>
+
+                    <div
+                        id="timerStatus-${docSnap.id}"
+                        class="info"
+                    >
+                        Task started...
+                    </div>
+
+                </div>
+
             `;
 
 
@@ -696,17 +739,239 @@ async function loadTasks(){
 
 /* Start Task */
 
-window.startTask = function(taskId){
+window.startTask = async function(taskId){
+
+    try{
+
+        /* Get Task */
+
+        const taskRef =
+            doc(
+                db,
+                "tasks",
+                taskId
+            );
+
+
+        const taskSnap =
+            await getDoc(taskRef);
+
+
+        if(!taskSnap.exists()){
+
+            alert(
+                "Task not found."
+            );
+
+            return;
+        }
+
+
+        const task =
+            taskSnap.data();
+
+
+        /* Check Active */
+
+        if(task.status !== "active"){
+
+            alert(
+                "This task is no longer active."
+            );
+
+            return;
+        }
+
+
+        const watchTime =
+            Number(
+                task.watchTime || 0
+            );
+
+
+        const youtubeUrl =
+            task.youtubeUrl || "";
+
+
+        if(!youtubeUrl){
+
+            alert(
+                "YouTube video link not available."
+            );
+
+            return;
+        }
+
+
+        /* Show Timer */
+
+        const timerBox =
+            document.getElementById(
+                "timer-" + taskId
+            );
+
+
+        const timerValue =
+            document.getElementById(
+                "timerValue-" + taskId
+            );
+
+
+        const timerStatus =
+            document.getElementById(
+                "timerStatus-" + taskId
+            );
+
+
+        if(timerBox){
+
+            timerBox.style.display =
+                "block";
+
+        }
+
+
+        /*
+         * Open YouTube video
+         */
+
+        window.open(
+            youtubeUrl,
+            "_blank"
+        );
+
+
+        let remaining =
+            watchTime;
+
+
+        if(remaining < 1){
+
+            remaining = 1;
+
+        }
+
+
+        if(timerValue){
+
+            timerValue.textContent =
+                remaining + " seconds";
+
+        }
+
+
+        if(timerStatus){
+
+            timerStatus.textContent =
+                "Please complete the required task time.";
+
+        }
+
+
+        /*
+         * Disable Start button
+         */
+
+        const buttons =
+            document.querySelectorAll(
+                ".task button"
+            );
+
+
+        buttons.forEach((button) => {
+
+            const onclickValue =
+                button.getAttribute(
+                    "onclick"
+                );
+
+
+            if(
+                onclickValue &&
+                onclickValue.includes(taskId)
+            ){
+
+                button.disabled = true;
+
+                button.style.opacity =
+                    "0.6";
+
+                button.textContent =
+                    "Task Started";
+
+            }
+
+        });
+
+
+        /*
+         * Timer
+         */
+
+        const timer =
+            setInterval(() => {
+
+                remaining--;
+
+
+                if(timerValue){
+
+                    timerValue.textContent =
+                        remaining > 0
+                        ? remaining + " seconds"
+                        : "Completed";
+
+                }
+
+
+                if(remaining <= 0){
+
+                    clearInterval(timer);
+
+
+                    if(timerStatus){
+
+                        timerStatus.textContent =
+                            "Required time completed.";
+                    }
+
+
+                    showTaskCompleteMessage(
+                        taskId
+                    );
+
+                }
+
+            },1000);
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to start task.\n\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* Task Complete Message */
+
+function showTaskCompleteMessage(taskId){
 
     alert(
-        "Task started.\n\n" +
+        "Required watch time completed.\n\n" +
         "Task ID: " +
         taskId +
         "\n\n" +
-        "Task completion system will be added next."
+        "Task completion verification will be added next."
     );
 
-};
+}
 
 
 /* Logout */
