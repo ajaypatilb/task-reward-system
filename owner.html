@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -160,13 +160,99 @@ button{
     color:#777;
 }
 
+/* Form */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+.form-group label{
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select{
+    padding:11px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    font-size:14px;
+}
+
+.form-actions{
+    margin-top:15px;
+    display:flex;
+    gap:10px;
+}
+
+.secondary{
+    background:#6b7280;
+    color:white;
+}
+
+/* Task cards */
+
+.task-card{
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:15px;
+    margin-bottom:12px;
+}
+
+.task-card h3{
+    margin:0 0 10px;
+}
+
+.task-info{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-top:10px;
+}
+
+.task-info div{
+    background:#f9fafb;
+    padding:10px;
+    border-radius:7px;
+}
+
+.task-actions{
+    margin-top:12px;
+}
+
 @media(max-width:800px){
+
     .cards{
         grid-template-columns:repeat(2,1fr);
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .task-info{
+        grid-template-columns:1fr;
     }
 }
 
 @media(max-width:500px){
+
     .cards{
         grid-template-columns:1fr;
     }
@@ -259,19 +345,120 @@ button{
     </div>
 
 
-    <!-- Tasks -->
+    <!-- Task Management -->
 
     <div class="section">
 
         <h2>🎯 Task Management</h2>
 
-        <p class="info">
-            Task creation system will be added in the next step.
-        </p>
-
-        <button class="primary" onclick="taskComingSoon()">
+        <button class="primary" onclick="showTaskForm()">
             + Create Task
         </button>
+
+
+        <!-- Create Task Form -->
+
+        <div id="taskForm" style="display:none;">
+
+            <hr style="margin:20px 0;border:0;border-top:1px solid #ddd;">
+
+            <h3>Create New Task</h3>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Task Title</label>
+                    <input
+                        type="text"
+                        id="taskTitle"
+                        placeholder="Enter task title"
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>Reward Coins</label>
+                    <input
+                        type="number"
+                        id="taskReward"
+                        min="1"
+                        placeholder="Example: 10"
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>Watch Time (Seconds)</label>
+                    <input
+                        type="number"
+                        id="taskWatchTime"
+                        min="1"
+                        placeholder="Example: 30"
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>Status</label>
+
+                    <select id="taskStatus">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group full">
+                    <label>YouTube URL</label>
+
+                    <input
+                        type="url"
+                        id="taskYoutubeUrl"
+                        placeholder="https://www.youtube.com/..."
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    class="primary"
+                    onclick="createTask()"
+                >
+                    Save Task
+                </button>
+
+                <button
+                    class="secondary"
+                    onclick="hideTaskForm()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Task List -->
+
+    <div class="section">
+
+        <h2>📋 Existing Tasks</h2>
+
+        <div id="tasksList">
+
+            <div class="empty">
+                Loading tasks...
+            </div>
+
+        </div>
 
     </div>
 
@@ -330,7 +517,9 @@ import {
     collection,
     getDocs,
     doc,
-    getDoc
+    getDoc,
+    addDoc,
+    serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
@@ -408,8 +597,6 @@ onAuthStateChanged(auth, async (user) => {
             userSnap.data();
 
 
-        /* Owner Role Check */
-
         if(data.role !== "owner"){
 
             alert(
@@ -425,9 +612,9 @@ onAuthStateChanged(auth, async (user) => {
         }
 
 
-        /* Load Members */
-
         await loadMembers();
+
+        await loadTasks();
 
     }
     catch(error){
@@ -444,7 +631,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 
-/* Load Members From Firestore */
+/* Load Members */
 
 async function loadMembers(){
 
@@ -463,9 +650,7 @@ async function loadMembers(){
 
 
     const table =
-        document.getElementById(
-            "membersTable"
-        );
+        document.getElementById("membersTable");
 
 
     table.innerHTML = "";
@@ -483,9 +668,7 @@ async function loadMembers(){
 
 
             if(data.status === "active"){
-
                 activeMembers++;
-
             }
 
 
@@ -573,17 +756,266 @@ async function loadMembers(){
         "totalCoins"
     ).textContent = totalCoins;
 
+}
 
-    /* Tasks will be connected later */
+
+/* Load Tasks */
+
+async function loadTasks(){
+
+    const tasksRef =
+        collection(db, "tasks");
+
+    const snapshot =
+        await getDocs(tasksRef);
+
+
+    const tasksList =
+        document.getElementById("tasksList");
+
+
+    tasksList.innerHTML = "";
+
 
     document.getElementById(
         "totalTasks"
-    ).textContent = "0";
+    ).textContent = snapshot.size;
+
+
+    if(snapshot.empty){
+
+        tasksList.innerHTML = `
+            <div class="empty">
+                No tasks found.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    snapshot.forEach((docSnap) => {
+
+        const data =
+            docSnap.data();
+
+
+        const card =
+            document.createElement("div");
+
+        card.className = "task-card";
+
+
+        const statusClass =
+            data.status === "active"
+            ? "active"
+            : "pending";
+
+
+        card.innerHTML = `
+
+            <h3>
+                🎯 ${escapeHtml(data.title || "-")}
+            </h3>
+
+            <span class="badge ${statusClass}">
+                ${escapeHtml(data.status || "-")}
+            </span>
+
+            <div class="task-info">
+
+                <div>
+                    🪙 <b>Reward</b><br>
+                    ${Number(data.rewardCoins || 0)} Coins
+                </div>
+
+                <div>
+                    ⏱️ <b>Watch Time</b><br>
+                    ${Number(data.watchTime || 0)} Seconds
+                </div>
+
+                <div>
+                    🔗 <b>Video</b><br>
+                    <a
+                        href="${escapeHtml(data.youtubeUrl || "#")}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Open YouTube
+                    </a>
+                </div>
+
+            </div>
+
+        `;
+
+
+        tasksList.appendChild(card);
+
+    });
 
 }
 
 
-/* Basic HTML Escape */
+/* Show Task Form */
+
+window.showTaskForm = function(){
+
+    document.getElementById(
+        "taskForm"
+    ).style.display = "block";
+
+};
+
+
+/* Hide Task Form */
+
+window.hideTaskForm = function(){
+
+    document.getElementById(
+        "taskForm"
+    ).style.display = "none";
+
+};
+
+
+/* Create Task */
+
+window.createTask = async function(){
+
+    try{
+
+        const title =
+            document.getElementById(
+                "taskTitle"
+            ).value.trim();
+
+
+        const rewardCoins =
+            Number(
+                document.getElementById(
+                    "taskReward"
+                ).value
+            );
+
+
+        const watchTime =
+            Number(
+                document.getElementById(
+                    "taskWatchTime"
+                ).value
+            );
+
+
+        const youtubeUrl =
+            document.getElementById(
+                "taskYoutubeUrl"
+            ).value.trim();
+
+
+        const status =
+            document.getElementById(
+                "taskStatus"
+            ).value;
+
+
+        if(!title){
+
+            alert("Please enter task title.");
+
+            return;
+        }
+
+
+        if(!rewardCoins || rewardCoins < 1){
+
+            alert("Please enter valid reward coins.");
+
+            return;
+        }
+
+
+        if(!watchTime || watchTime < 1){
+
+            alert("Please enter valid watch time.");
+
+            return;
+        }
+
+
+        if(!youtubeUrl){
+
+            alert("Please enter YouTube URL.");
+
+            return;
+        }
+
+
+        const tasksRef =
+            collection(db, "tasks");
+
+
+        await addDoc(tasksRef, {
+
+            title: title,
+
+            rewardCoins: rewardCoins,
+
+            watchTime: watchTime,
+
+            youtubeUrl: youtubeUrl,
+
+            status: status,
+
+            createdAt: serverTimestamp()
+
+        });
+
+
+        alert("Task created successfully!");
+
+
+        document.getElementById(
+            "taskTitle"
+        ).value = "";
+
+        document.getElementById(
+            "taskReward"
+        ).value = "";
+
+        document.getElementById(
+            "taskWatchTime"
+        ).value = "";
+
+        document.getElementById(
+            "taskYoutubeUrl"
+        ).value = "";
+
+        document.getElementById(
+            "taskStatus"
+        ).value = "active";
+
+
+        hideTaskForm();
+
+        await loadTasks();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to create task.\n\n" +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* HTML Escape */
 
 function escapeHtml(value){
 
@@ -617,17 +1049,6 @@ window.logout = async function(){
         );
 
     }
-
-};
-
-
-/* Temporary Task Button */
-
-window.taskComingSoon = function(){
-
-    alert(
-        "Task creation will be activated in the next step."
-    );
 
 };
 
