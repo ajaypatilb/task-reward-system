@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,6 +105,20 @@ header h2{
 
 .task h3{
     margin-top:0;
+    margin-bottom:10px;
+}
+
+.task-info{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin:15px 0;
+}
+
+.task-info div{
+    background:#f9fafb;
+    padding:12px;
+    border-radius:7px;
 }
 
 .task button{
@@ -121,12 +134,43 @@ header h2{
     background:#1d4ed8;
 }
 
+.status{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:15px;
+    background:#dcfce7;
+    color:#166534;
+    font-size:12px;
+    font-weight:bold;
+}
+
 .info{
     color:#666;
 }
 
+.empty{
+    text-align:center;
+    padding:20px;
+    color:#777;
+}
+
+.youtube-link{
+    color:#2563eb;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.youtube-link:hover{
+    text-decoration:underline;
+}
+
 @media(max-width:700px){
+
     .cards{
+        grid-template-columns:1fr;
+    }
+
+    .task-info{
         grid-template-columns:1fr;
     }
 
@@ -140,79 +184,133 @@ header h2{
 <body>
 
 <header>
+
     <h2>🪙 Task Reward System</h2>
-    <button class="logout" onclick="logout()">Logout</button>
+
+    <button class="logout" onclick="logout()">
+        Logout
+    </button>
+
 </header>
+
 
 <div class="container">
 
     <div class="welcome">
-        <h2>Welcome, <span id="memberName">Member</span> 👋</h2>
+
+        <h2>
+            Welcome,
+            <span id="memberName">Member</span>
+            👋
+        </h2>
+
         <p class="info">
             Complete tasks and earn reward coins.
         </p>
+
     </div>
+
+
+    <!-- Dashboard Cards -->
 
     <div class="cards">
 
         <div class="card">
+
             <h3>🪙 Total Coins</h3>
-            <div class="value" id="coinBalance">0</div>
+
+            <div
+                class="value"
+                id="coinBalance"
+            >
+                0
+            </div>
+
         </div>
 
+
         <div class="card">
+
             <h3>💰 Current Value</h3>
-            <div class="value" id="rupeeValue">₹0</div>
+
+            <div
+                class="value"
+                id="rupeeValue"
+            >
+                ₹0
+            </div>
+
         </div>
 
+
         <div class="card">
+
             <h3>🎯 Available Tasks</h3>
-            <div class="value" id="taskCount">0</div>
+
+            <div
+                class="value"
+                id="taskCount"
+            >
+                0
+            </div>
+
         </div>
 
     </div>
 
+
+    <!-- Available Tasks -->
+
     <div class="section">
+
         <h2>🎯 Available Tasks</h2>
 
         <div id="tasks">
 
-            <div class="task">
-                <h3>▶️ YouTube Video Task</h3>
-                <p>
-                    Watch the assigned video and complete the required task.
-                </p>
-                <p>
-                    <b>Reward:</b> Coming Soon
-                </p>
-                <button onclick="comingSoon()">
-                    Start Task
-                </button>
+            <div class="empty">
+                Loading tasks...
             </div>
 
         </div>
+
     </div>
 
+
+    <!-- Task History -->
+
     <div class="section">
+
         <h2>📊 Task History</h2>
+
         <p class="info">
             Your completed tasks will appear here.
         </p>
+
     </div>
 
+
+    <!-- Withdraw -->
+
     <div class="section">
+
         <h2>💸 Withdraw</h2>
-        <p>
-            <b>Exchange Rate:</b> 100 Coins = ₹1
-        </p>
 
         <p>
+            <b>Exchange Rate:</b>
+            100 Coins = ₹1
+        </p>
+
+        <p class="info">
             Minimum withdrawal system will be added later.
         </p>
 
-        <button class="task button" onclick="comingSoon()">
+        <button
+            class="task button"
+            onclick="comingSoon()"
+        >
             Withdraw
         </button>
+
     </div>
 
 </div>
@@ -233,80 +331,170 @@ from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 import {
     getFirestore,
     doc,
-    getDoc
+    getDoc,
+    collection,
+    getDocs
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
+/* Firebase Configuration */
+
 const firebaseConfig = {
-    apiKey: "AIzaSyAH030c2ydOmijyUwmT60CC7vvnyXxyOdY",
-    authDomain: "task-reward-system-af46f.firebaseapp.com",
-    projectId: "task-reward-system-af46f",
-    storageBucket: "task-reward-system-af46f.firebasestorage.app",
-    messagingSenderId: "64322126165",
-    appId: "1:64322126165:web:7aae7a6e4792ab4f092fdc",
-    measurementId: "G-6P3R9F3ZQT"
+
+    apiKey:
+        "AIzaSyAH030c2ydOmijyUwmT60CC7vvnyXxyOdY",
+
+    authDomain:
+        "task-reward-system-af46f.firebaseapp.com",
+
+    projectId:
+        "task-reward-system-af46f",
+
+    storageBucket:
+        "task-reward-system-af46f.firebasestorage.app",
+
+    messagingSenderId:
+        "64322126165",
+
+    appId:
+        "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+
+    measurementId:
+        "G-6P3R9F3ZQT"
+
 };
 
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+/* Initialize Firebase */
 
+const app =
+    initializeApp(firebaseConfig);
+
+const auth =
+    getAuth(app);
+
+const db =
+    getFirestore(app);
+
+
+/* Check Member Login */
 
 onAuthStateChanged(auth, async (user) => {
 
     if(!user){
-        window.location.href = "index.html";
+
+        window.location.href =
+            "index.html";
+
         return;
     }
 
+
     try{
 
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
+        /* Get Member Data */
+
+        const userRef =
+            doc(
+                db,
+                "users",
+                user.uid
+            );
+
+
+        const userSnap =
+            await getDoc(userRef);
+
 
         if(!userSnap.exists()){
-            alert("User data not found.");
+
+            alert(
+                "User data not found."
+            );
+
             await signOut(auth);
-            window.location.href = "index.html";
+
+            window.location.href =
+                "index.html";
+
             return;
         }
 
-        const data = userSnap.data();
 
-        // Role check
+        const data =
+            userSnap.data();
+
+
+        /* Role Check */
+
         if(data.role !== "member"){
-            alert("Access denied.");
+
+            alert(
+                "Access denied."
+            );
+
             await signOut(auth);
-            window.location.href = "index.html";
+
+            window.location.href =
+                "index.html";
+
             return;
         }
 
-        // Status check
+
+        /* Status Check */
+
         if(data.status !== "active"){
-            alert("Your account is not active.");
+
+            alert(
+                "Your account is not active."
+            );
+
             await signOut(auth);
-            window.location.href = "index.html";
+
+            window.location.href =
+                "index.html";
+
             return;
         }
 
-        const coins = Number(data.coins || 0);
 
-        document.getElementById("memberName").textContent =
+        /* Member Name */
+
+        document.getElementById(
+            "memberName"
+        ).textContent =
             data.name || "Member";
 
-        document.getElementById("coinBalance").textContent =
+
+        /* Coins */
+
+        const coins =
+            Number(data.coins || 0);
+
+
+        document.getElementById(
+            "coinBalance"
+        ).textContent =
             coins;
 
-        // 100 Coins = ₹1
-        const rupees = coins / 100;
 
-        document.getElementById("rupeeValue").textContent =
+        /* 100 Coins = ₹1 */
+
+        const rupees =
+            coins / 100;
+
+
+        document.getElementById(
+            "rupeeValue"
+        ).textContent =
             "₹" + rupees.toFixed(2);
 
-        // Currently one demo task
-        document.getElementById("taskCount").textContent = "1";
+
+        /* Load Tasks */
+
+        await loadTasks();
 
     }
     catch(error){
@@ -317,10 +505,211 @@ onAuthStateChanged(auth, async (user) => {
             "Unable to load member data.\n\n" +
             error.message
         );
+
     }
 
 });
 
+
+/* Load Active Tasks */
+
+async function loadTasks(){
+
+    const tasksContainer =
+        document.getElementById(
+            "tasks"
+        );
+
+
+    tasksContainer.innerHTML = `
+        <div class="empty">
+            Loading tasks...
+        </div>
+    `;
+
+
+    try{
+
+        const tasksRef =
+            collection(
+                db,
+                "tasks"
+            );
+
+
+        const snapshot =
+            await getDocs(tasksRef);
+
+
+        tasksContainer.innerHTML = "";
+
+
+        let activeTaskCount = 0;
+
+
+        snapshot.forEach((docSnap) => {
+
+            const data =
+                docSnap.data();
+
+
+            /* Only Active Tasks */
+
+            if(data.status !== "active"){
+                return;
+            }
+
+
+            activeTaskCount++;
+
+
+            const task =
+                document.createElement("div");
+
+
+            task.className =
+                "task";
+
+
+            const title =
+                escapeHtml(
+                    data.title || "Untitled Task"
+                );
+
+
+            const reward =
+                Number(
+                    data.rewardCoins || 0
+                );
+
+
+            const watchTime =
+                Number(
+                    data.watchTime || 0
+                );
+
+
+            const youtubeUrl =
+                escapeHtml(
+                    data.youtubeUrl || "#"
+                );
+
+
+            task.innerHTML = `
+
+                <h3>
+                    🎯 ${title}
+                </h3>
+
+                <span class="status">
+                    Active
+                </span>
+
+                <div class="task-info">
+
+                    <div>
+                        🪙 <b>Reward</b><br>
+                        ${reward} Coins
+                    </div>
+
+                    <div>
+                        ⏱️ <b>Watch Time</b><br>
+                        ${watchTime} Seconds
+                    </div>
+
+                    <div>
+                        ▶️ <b>Video</b><br>
+
+                        <a
+                            class="youtube-link"
+                            href="${youtubeUrl}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Open YouTube
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    onclick="startTask('${docSnap.id}')"
+                >
+                    ▶️ Start Task
+                </button>
+
+            `;
+
+
+            tasksContainer.appendChild(
+                task
+            );
+
+        });
+
+
+        /* Task Count */
+
+        document.getElementById(
+            "taskCount"
+        ).textContent =
+            activeTaskCount;
+
+
+        /* No Active Tasks */
+
+        if(activeTaskCount === 0){
+
+            tasksContainer.innerHTML = `
+
+                <div class="empty">
+                    No active tasks available right now.
+                </div>
+
+            `;
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        tasksContainer.innerHTML = `
+
+            <div class="empty">
+                Unable to load tasks.
+            </div>
+
+        `;
+
+        document.getElementById(
+            "taskCount"
+        ).textContent = "0";
+
+    }
+
+}
+
+
+/* Start Task */
+
+window.startTask = function(taskId){
+
+    alert(
+        "Task started.\n\n" +
+        "Task ID: " +
+        taskId +
+        "\n\n" +
+        "Task completion system will be added next."
+    );
+
+};
+
+
+/* Logout */
 
 window.logout = async function(){
 
@@ -328,26 +717,47 @@ window.logout = async function(){
 
         await signOut(auth);
 
-        window.location.href = "index.html";
+        window.location.href =
+            "index.html";
 
     }
     catch(error){
 
-        alert("Logout failed: " + error.message);
+        alert(
+            "Logout failed: " +
+            error.message
+        );
 
     }
 
 };
 
 
+/* Coming Soon */
+
 window.comingSoon = function(){
 
-    alert("This feature will be activated soon.");
+    alert(
+        "This feature will be activated soon."
+    );
 
 };
+
+
+/* HTML Escape */
+
+function escapeHtml(value){
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
 
 </script>
 
 </body>
 </html>
-```
