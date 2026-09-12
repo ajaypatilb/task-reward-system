@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -168,11 +169,6 @@ header h2{
 .rejected-status{
     background:#fee2e2;
     color:#991b1b;
-}
-
-.paid-status{
-    background:#dbeafe;
-    color:#1e40af;
 }
 
 .info{
@@ -792,24 +788,9 @@ let currentMember = null;
 
 let currentMemberData = null;
 
-
-/*
- * Stores currently running task timers.
- */
-
 const activeTaskTimers = {};
 
-
-/*
- * Stores YouTube players.
- */
-
 const youtubePlayers = {};
-
-
-/*
- * YouTube API ready state
- */
 
 let youtubeApiReady = false;
 
@@ -1017,7 +998,7 @@ async function refreshMemberData(){
 
     if(!currentMember){
 
-        return;
+        return false;
 
     }
 
@@ -1038,20 +1019,57 @@ async function refreshMemberData(){
 
     if(!userSnap.exists()){
 
-        return;
+        return false;
+
+    }
+
+
+    const data =
+        userSnap.data();
+
+
+    if(data.role !== "member"){
+
+        await signOut(auth);
+
+        window.location.href =
+            "index.html";
+
+        return false;
+
+    }
+
+
+    if(data.status !== "active"){
+
+        await signOut(auth);
+
+        window.location.href =
+            "index.html";
+
+        return false;
 
     }
 
 
     currentMemberData =
-        userSnap.data();
+        data;
 
 
     updateCoinDisplay(
         Number(
-            currentMemberData.coins || 0
+            data.coins || 0
         )
     );
+
+
+    document.getElementById(
+        "memberName"
+    ).textContent =
+        data.name || "Member";
+
+
+    return true;
 
 }
 
@@ -1080,16 +1098,12 @@ async function loadTasks(){
 
     try{
 
-        const tasksRef =
-            collection(
-                db,
-                "tasks"
-            );
-
-
         const snapshot =
             await getDocs(
-                tasksRef
+                collection(
+                    db,
+                    "tasks"
+                )
             );
 
 
@@ -1151,11 +1165,9 @@ async function loadTasks(){
                         🎯 ${title}
                     </h3>
 
-
                     <span class="status">
                         Active
                     </span>
-
 
                     <div class="task-info">
 
@@ -1165,13 +1177,11 @@ async function loadTasks(){
                             ${reward} Coins
                         </div>
 
-
                         <div>
                             ⏱️ <b>Required Watch Time</b>
                             <br>
                             ${watchTime} Seconds
                         </div>
-
 
                         <div>
                             ▶️ <b>Video</b>
@@ -1181,16 +1191,12 @@ async function loadTasks(){
 
                     </div>
 
-
                     <button
                         id="start-${docSnap.id}"
                         onclick="startTask('${docSnap.id}')"
                     >
-
                         ▶️ Start Task
-
                     </button>
-
 
                     <div
                         id="player-box-${docSnap.id}"
@@ -1203,7 +1209,6 @@ async function loadTasks(){
                             class="youtube-player"
                         ></div>
 
-
                         <div class="player-message">
 
                             ▶️ Press Play on the video
@@ -1212,7 +1217,6 @@ async function loadTasks(){
                         </div>
 
                     </div>
-
 
                     <div
                         id="timer-${docSnap.id}"
@@ -1223,14 +1227,12 @@ async function loadTasks(){
                             ⏱️ Actual Watch Timer
                         </b>
 
-
                         <div
                             id="timerValue-${docSnap.id}"
                             class="timer-value"
                         >
                             ${watchTime} seconds
                         </div>
-
 
                         <div
                             id="timerStatus-${docSnap.id}"
@@ -1240,7 +1242,6 @@ async function loadTasks(){
                         </div>
 
                     </div>
-
 
                     <div
                         id="completed-${docSnap.id}"
@@ -1428,15 +1429,22 @@ async function(taskId){
         }
 
 
-        let watchTime =
+        const watchTime =
             Number(
                 task.watchTime || 0
             );
 
 
-        if(watchTime < 1){
+        if(
+            !Number.isInteger(watchTime) ||
+            watchTime < 1
+        ){
 
-            watchTime = 1;
+            alert(
+                "Invalid task watch time."
+            );
+
+            return;
 
         }
 
@@ -1533,6 +1541,18 @@ async function(taskId){
         await waitForYouTubeAPI();
 
 
+        if(
+            !window.YT ||
+            !window.YT.Player
+        ){
+
+            throw new Error(
+                "YouTube player could not be loaded."
+            );
+
+        }
+
+
         youtubePlayers[taskId] =
             new YT.Player(
                 playerContainer,
@@ -1573,9 +1593,7 @@ async function(taskId){
 
                                 handleYouTubeState(
                                     taskId,
-                                    event.data,
-                                    watchTime,
-                                    task
+                                    event.data
                                 );
 
                             },
@@ -1646,6 +1664,24 @@ async function(taskId){
             "Start task error:",
             error
         );
+
+
+        const startButton =
+            document.getElementById(
+                "start-" +
+                taskId
+            );
+
+
+        if(startButton){
+
+            startButton.disabled =
+                false;
+
+            startButton.textContent =
+                "▶️ Start Task";
+
+        }
 
 
         alert(
@@ -2095,6 +2131,15 @@ async function completeTask(
             );
 
 
+        /*
+         * IMPORTANT:
+         * Reward and required watch time are taken
+         * directly from the task document.
+         *
+         * Firestore Rules also verify these values
+         * against the actual task document.
+         */
+
         const rewardCoins =
             Number(
                 task.rewardCoins || 0
@@ -2105,6 +2150,30 @@ async function completeTask(
             Number(
                 task.watchTime || 0
             );
+
+
+        if(
+            !Number.isInteger(rewardCoins) ||
+            rewardCoins <= 0
+        ){
+
+            throw new Error(
+                "Invalid task reward."
+            );
+
+        }
+
+
+        if(
+            !Number.isInteger(requiredWatchTime) ||
+            requiredWatchTime <= 0
+        ){
+
+            throw new Error(
+                "Invalid task watch time."
+            );
+
+        }
 
 
         await setDoc(
@@ -2143,7 +2212,7 @@ async function completeTask(
         alert(
             "Task completed successfully! 🎉\n\n" +
 
-            "Your actual video watch time has been recorded.\n\n" +
+            "Required watch time completed.\n\n" +
 
             "Reward Status: Pending Verification"
         );
@@ -2160,11 +2229,32 @@ async function completeTask(
         );
 
 
-        alert(
-            "Unable to save task completion.\n\n" +
-            "Error:\n" +
-            error.message
-        );
+        /*
+         * ALREADY EXISTS
+         * This normally means the same member has
+         * already submitted this task.
+         */
+
+        if(
+            error.code ===
+            "permission-denied"
+        ){
+
+            alert(
+                "This task completion was already submitted " +
+                "or Firestore security rules blocked the request."
+            );
+
+        }
+        else{
+
+            alert(
+                "Unable to save task completion.\n\n" +
+                "Error:\n" +
+                error.message
+            );
+
+        }
 
     }
 
@@ -2213,6 +2303,10 @@ document.addEventListener(
 
 
                 if(!visible){
+
+                    timer.playing =
+                        false;
+
 
                     if(timerStatus){
 
@@ -2271,7 +2365,7 @@ document.addEventListener(
 function waitForYouTubeAPI(){
 
     return new Promise(
-        (resolve) => {
+        (resolve,reject) => {
 
             if(
                 window.YT &&
@@ -2325,7 +2419,11 @@ function waitForYouTubeAPI(){
                                 check
                             );
 
-                            resolve();
+                            reject(
+                                new Error(
+                                    "YouTube API loading timeout."
+                                )
+                            );
 
                         }
 
@@ -2640,55 +2738,43 @@ async function loadTaskHistory(){
                         🎯 ${title}
                     </h3>
 
-
                     <div class="history-info">
 
                         <b>Task Status:</b>
 
                         <span class="status completed-status">
-
                             Completed
-
                         </span>
 
                         <br>
 
-
                         <b>Reward:</b>
-
                         ${reward}
                         Coins
 
                         <br>
 
-
                         <b>Required Time:</b>
-
                         ${watchTime}
                         Seconds
 
                         <br>
 
-
                         <b>Completed:</b>
-
                         ${escapeHtml(
                             completedDate
                         )}
 
                         <br>
 
-
                         <b>Reward Status:</b>
 
                         <span
                             class="status ${rewardClass}"
                         >
-
                             ${escapeHtml(
                                 rewardStatus
                             )}
-
                         </span>
 
                     </div>
@@ -2776,11 +2862,15 @@ function formatRewardStatus(
 window.calculateWithdrawValue =
 function(){
 
-    const coins =
+    const input =
+        document.getElementById(
+            "withdrawCoins"
+        );
+
+
+    let coins =
         Number(
-            document.getElementById(
-                "withdrawCoins"
-            ).value || 0
+            input.value || 0
         );
 
 
@@ -2792,15 +2882,24 @@ function(){
         );
 
 
-    const safeCoins =
-        Math.max(
-            0,
-            coins
-        );
+    if(!Number.isInteger(coins)){
+
+        coins =
+            0;
+
+    }
+
+
+    if(coins < 0){
+
+        coins =
+            0;
+
+    }
 
 
     const rupees =
-        safeCoins / 100;
+        coins / 100;
 
 
     document.getElementById(
@@ -2826,6 +2925,12 @@ function(){
 window.submitWithdrawal =
 async function(){
 
+    const button =
+        document.getElementById(
+            "withdrawButton"
+        );
+
+
     try{
 
         if(!currentMember){
@@ -2839,7 +2944,30 @@ async function(){
         }
 
 
-        await refreshMemberData();
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Checking balance...";
+
+
+        /*
+         * IMPORTANT:
+         * Always get the latest balance from Firestore
+         * before creating a withdrawal request.
+         */
+
+        const refreshed =
+            await refreshMemberData();
+
+
+        if(!refreshed){
+
+            throw new Error(
+                "Unable to refresh member balance."
+            );
+
+        }
 
 
         const availableCoins =
@@ -2848,11 +2976,15 @@ async function(){
             );
 
 
+        const coinsInput =
+            document.getElementById(
+                "withdrawCoins"
+            ).value.trim();
+
+
         const coins =
             Number(
-                document.getElementById(
-                    "withdrawCoins"
-                ).value
+                coinsInput
             );
 
 
@@ -2863,12 +2995,13 @@ async function(){
 
 
         if(
-            !coins ||
+            !coinsInput ||
+            !Number.isInteger(coins) ||
             coins < 1
         ){
 
             alert(
-                "Please enter valid coins."
+                "Please enter a valid whole number of coins."
             );
 
             return;
@@ -2900,10 +3033,14 @@ async function(){
         }
 
 
-        if(!upiId.includes("@")){
+        if(
+            upiId.length < 4 ||
+            !upiId.includes("@")
+        ){
 
             alert(
-                "Please enter a valid UPI ID.\n\nExample: example@upi"
+                "Please enter a valid UPI ID.\n\n" +
+                "Example: example@upi"
             );
 
             return;
@@ -2915,28 +3052,15 @@ async function(){
             coins / 100;
 
 
-        const button =
-            document.getElementById(
-                "withdrawButton"
-            );
-
-
-        button.disabled =
-            true;
-
         button.textContent =
             "Submitting...";
 
 
-        const withdrawalsRef =
+        await addDoc(
             collection(
                 db,
                 "withdrawals"
-            );
-
-
-        await addDoc(
-            withdrawalsRef,
+            ),
             {
 
                 memberId:
@@ -3002,7 +3126,9 @@ async function(){
             rupees.toFixed(2) +
             "\n\n" +
 
-            "Status: Pending"
+            "Status: Pending\n\n" +
+
+            "Coins will be deducted only after Owner approval."
         );
 
 
@@ -3017,19 +3143,27 @@ async function(){
         );
 
 
-        alert(
-            "Unable to submit withdrawal request.\n\n" +
-            error.message
-        );
+        if(
+            error.code ===
+            "permission-denied"
+        ){
+
+            alert(
+                "Withdrawal request was blocked by Firestore security rules."
+            );
+
+        }
+        else{
+
+            alert(
+                "Unable to submit withdrawal request.\n\n" +
+                error.message
+            );
+
+        }
 
     }
     finally{
-
-        const button =
-            document.getElementById(
-                "withdrawButton"
-            );
-
 
         button.disabled =
             false;
@@ -3188,7 +3322,7 @@ async function loadWithdrawalHistory(){
 
 
                 let date =
-                    "Pending";
+                    "Requested";
 
 
                 if(data.requestedAt){
@@ -3205,6 +3339,30 @@ async function loadWithdrawalHistory(){
 
                         date =
                             "Requested";
+
+                    }
+
+                }
+
+
+                let processedDate =
+                    "";
+
+
+                if(data.processedAt){
+
+                    try{
+
+                        processedDate =
+                            data.processedAt
+                                .toDate()
+                                .toLocaleString();
+
+                    }
+                    catch(error){
+
+                        processedDate =
+                            "";
 
                     }
 
@@ -3240,12 +3398,35 @@ async function loadWithdrawalHistory(){
                 }
 
 
+                let rejectionHtml =
+                    "";
+
+
+                if(
+                    status === "rejected" &&
+                    data.rejectionReason
+                ){
+
+                    rejectionHtml = `
+
+                        <br>
+
+                        <b>Rejection Reason:</b>
+
+                        ${escapeHtml(
+                            data.rejectionReason
+                        )}
+
+                    `;
+
+                }
+
+
                 item.innerHTML = `
 
                     <h3>
                         💸 Withdrawal Request
                     </h3>
-
 
                     <div class="withdraw-info">
 
@@ -3254,12 +3435,10 @@ async function loadWithdrawalHistory(){
 
                         <br>
 
-
                         <b>Amount:</b>
                         ₹${amount.toFixed(2)}
 
                         <br>
-
 
                         <b>UPI ID:</b>
                         ${escapeHtml(
@@ -3268,14 +3447,12 @@ async function loadWithdrawalHistory(){
 
                         <br>
 
-
                         <b>Requested:</b>
                         ${escapeHtml(
                             date
                         )}
 
                         <br>
-
 
                         <b>Status:</b>
 
@@ -3288,6 +3465,19 @@ async function loadWithdrawalHistory(){
                                 )
                             )}
                         </span>
+
+                        ${processedDate ? `
+
+                            <br>
+
+                            <b>Processed:</b>
+                            ${escapeHtml(
+                                processedDate
+                            )}
+
+                        ` : ""}
+
+                        ${rejectionHtml}
 
                     </div>
 
@@ -3461,3 +3651,4 @@ function escapeHtml(
 
 </body>
 </html>
+```
