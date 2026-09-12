@@ -1981,38 +1981,6 @@ async function completeTask(
 
 
         /*
-         * Check existing completion.
-         */
-
-        const existingSnap =
-            await getDoc(
-                completionRef
-            );
-
-
-        if(existingSnap.exists()){
-
-            const existingData =
-                existingSnap.data();
-
-
-            alert(
-                "You have already completed this task.\n\n" +
-                "Reward Status: " +
-                formatRewardStatus(
-                    existingData.status
-                )
-            );
-
-
-            await loadTaskHistory();
-
-            return;
-
-        }
-
-
-        /*
          * Reward
          */
 
@@ -2035,11 +2003,11 @@ async function completeTask(
         /*
          * SAVE COMPLETION
          *
-         * IMPORTANT:
+         * Direct create.
          *
-         * status = pending
-         *
-         * Member does NOT receive coins here.
+         * We intentionally do NOT use getDoc()
+         * before saving because a new document
+         * cannot be read using resource.data.
          */
 
         await setDoc(
@@ -2103,8 +2071,7 @@ async function completeTask(
 
     }
 
-}
-
+            }
 
 
 /* =====================================================
