@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Member Dashboard - Task Reward System</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     font-family:Arial,sans-serif;
@@ -179,6 +185,44 @@ header h2{
     text-decoration:underline;
 }
 
+
+/* =====================================================
+   YOUTUBE PLAYER
+   ===================================================== */
+
+.youtube-player-box{
+    margin-top:18px;
+    background:#111827;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.youtube-player{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#000;
+}
+
+.youtube-player iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+}
+
+.player-message{
+    padding:12px;
+    background:#f9fafb;
+    color:#555;
+    font-size:14px;
+    text-align:center;
+}
+
+
+/* =====================================================
+   TIMER
+   ===================================================== */
+
 .timer-box{
     margin-top:15px;
     padding:15px;
@@ -192,6 +236,28 @@ header h2{
     font-weight:bold;
     margin-top:5px;
 }
+
+.timer-status{
+    margin-top:6px;
+    font-weight:bold;
+}
+
+.timer-running{
+    color:#166534;
+}
+
+.timer-paused{
+    color:#92400e;
+}
+
+.timer-completed{
+    color:#166534;
+}
+
+
+/* =====================================================
+   HISTORY
+   ===================================================== */
 
 .history-item{
     border:1px solid #e5e7eb;
@@ -210,6 +276,26 @@ header h2{
     line-height:1.6;
 }
 
+
+/* =====================================================
+   TASK COMPLETED
+   ===================================================== */
+
+.task-completed-box{
+    margin-top:15px;
+    padding:15px;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    border-radius:8px;
+    color:#166534;
+    font-weight:bold;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
 @media(max-width:700px){
 
     .cards{
@@ -223,17 +309,31 @@ header h2{
     header h2{
         font-size:17px;
     }
+
+    .youtube-player{
+        aspect-ratio:16/9;
+    }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <header>
 
-    <h2>🪙 Task Reward System</h2>
+    <h2>
+        🪙 Task Reward System
+    </h2>
 
-    <button class="logout" onclick="logout()">
+    <button
+        class="logout"
+        onclick="logout()"
+    >
         Logout
     </button>
 
@@ -242,28 +342,46 @@ header h2{
 
 <div class="container">
 
+
+    <!-- =====================================================
+         WELCOME
+         ===================================================== -->
+
     <div class="welcome">
 
         <h2>
+
             Welcome,
-            <span id="memberName">Member</span>
+
+            <span id="memberName">
+                Member
+            </span>
+
             👋
+
         </h2>
 
         <p class="info">
+
             Complete tasks and earn reward coins.
+
         </p>
 
     </div>
 
 
-    <!-- Dashboard Cards -->
+    <!-- =====================================================
+         DASHBOARD CARDS
+         ===================================================== -->
 
     <div class="cards">
 
+
         <div class="card">
 
-            <h3>🪙 Total Coins</h3>
+            <h3>
+                🪙 Total Coins
+            </h3>
 
             <div
                 class="value"
@@ -277,7 +395,9 @@ header h2{
 
         <div class="card">
 
-            <h3>💰 Current Value</h3>
+            <h3>
+                💰 Current Value
+            </h3>
 
             <div
                 class="value"
@@ -291,7 +411,9 @@ header h2{
 
         <div class="card">
 
-            <h3>🎯 Available Tasks</h3>
+            <h3>
+                🎯 Available Tasks
+            </h3>
 
             <div
                 class="value"
@@ -302,14 +424,19 @@ header h2{
 
         </div>
 
+
     </div>
 
 
-    <!-- Available Tasks -->
+    <!-- =====================================================
+         AVAILABLE TASKS
+         ===================================================== -->
 
     <div class="section">
 
-        <h2>🎯 Available Tasks</h2>
+        <h2>
+            🎯 Available Tasks
+        </h2>
 
         <div id="tasks">
 
@@ -322,11 +449,15 @@ header h2{
     </div>
 
 
-    <!-- Task History -->
+    <!-- =====================================================
+         TASK HISTORY
+         ===================================================== -->
 
     <div class="section">
 
-        <h2>📊 Task History</h2>
+        <h2>
+            📊 Task History
+        </h2>
 
         <div id="taskHistory">
 
@@ -339,23 +470,34 @@ header h2{
     </div>
 
 
-    <!-- Withdraw -->
+    <!-- =====================================================
+         WITHDRAW
+         ===================================================== -->
 
     <div class="section">
 
-        <h2>💸 Withdraw</h2>
+        <h2>
+            💸 Withdraw
+        </h2>
 
         <p>
-            <b>Exchange Rate:</b>
+
+            <b>
+                Exchange Rate:
+            </b>
+
             100 Coins = ₹1
+
         </p>
 
         <p class="info">
+
             Minimum withdrawal system will be added later.
+
         </p>
 
         <button
-            class="task button"
+            class="task"
             onclick="comingSoon()"
         >
             Withdraw
@@ -363,20 +505,41 @@ header h2{
 
     </div>
 
+
 </div>
+
+
+
+<!-- =========================================================
+     YOUTUBE IFRAME API
+     ========================================================= -->
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
 
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+/* =====================================================
+   FIREBASE IMPORTS
+   ===================================================== */
+
+import {
+    initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 
 import {
     getAuth,
     onAuthStateChanged,
     signOut
 }
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
 
 import {
     getFirestore,
@@ -389,7 +552,9 @@ import {
     where,
     serverTimestamp
 }
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
 
 
 /* =====================================================
@@ -423,18 +588,24 @@ const firebaseConfig = {
 };
 
 
+
 /* =====================================================
    INITIALIZE FIREBASE
    ===================================================== */
 
 const app =
-    initializeApp(firebaseConfig);
+    initializeApp(
+        firebaseConfig
+    );
+
 
 const auth =
     getAuth(app);
 
+
 const db =
     getFirestore(app);
+
 
 
 /* =====================================================
@@ -444,155 +615,217 @@ const db =
 let currentMember = null;
 
 
+/*
+ * Stores currently running task timers.
+ *
+ * taskId -> timer information
+ */
+
+const activeTaskTimers = {};
+
+
+
+/*
+ * Stores YouTube players.
+ *
+ * taskId -> YouTube player
+ */
+
+const youtubePlayers = {};
+
+
+
+/*
+ * YouTube API ready state
+ */
+
+let youtubeApiReady = false;
+
+
+
+/* =====================================================
+   YOUTUBE API READY
+   ===================================================== */
+
+window.onYouTubeIframeAPIReady = function(){
+
+    youtubeApiReady = true;
+
+    console.log(
+        "YouTube IFrame API Ready"
+    );
+
+};
+
+
+
 /* =====================================================
    CHECK MEMBER LOGIN
    ===================================================== */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(
+    auth,
+    async (user) => {
 
-    if(!user){
-
-        window.location.href =
-            "index.html";
-
-        return;
-    }
-
-
-    try{
-
-        currentMember = user;
-
-
-        /* Get Member Data */
-
-        const userRef =
-            doc(
-                db,
-                "users",
-                user.uid
-            );
-
-
-        const userSnap =
-            await getDoc(userRef);
-
-
-        if(!userSnap.exists()){
-
-            alert(
-                "User data not found."
-            );
-
-            await signOut(auth);
+        if(!user){
 
             window.location.href =
                 "index.html";
 
             return;
+
         }
 
 
-        const data =
-            userSnap.data();
+        try{
+
+            currentMember = user;
 
 
-        /* Role Check */
+            /* Get Member Data */
 
-        if(data.role !== "member"){
+            const userRef =
+                doc(
+                    db,
+                    "users",
+                    user.uid
+                );
 
-            alert(
-                "Access denied."
+
+            const userSnap =
+                await getDoc(
+                    userRef
+                );
+
+
+            if(!userSnap.exists()){
+
+                alert(
+                    "User data not found."
+                );
+
+                await signOut(
+                    auth
+                );
+
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            const data =
+                userSnap.data();
+
+
+            /* Role Check */
+
+            if(data.role !== "member"){
+
+                alert(
+                    "Access denied."
+                );
+
+                await signOut(
+                    auth
+                );
+
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            /* Status Check */
+
+            if(data.status !== "active"){
+
+                alert(
+                    "Your account is not active."
+                );
+
+                await signOut(
+                    auth
+                );
+
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            /* Member Name */
+
+            document.getElementById(
+                "memberName"
+            ).textContent =
+                data.name || "Member";
+
+
+            /* =================================================
+               COINS
+               IMPORTANT:
+               MEMBER ONLY READS COINS
+               ================================================= */
+
+            const coins =
+                Number(
+                    data.coins || 0
+                );
+
+
+            document.getElementById(
+                "coinBalance"
+            ).textContent =
+                coins;
+
+
+            /* 100 Coins = ₹1 */
+
+            const rupees =
+                coins / 100;
+
+
+            document.getElementById(
+                "rupeeValue"
+            ).textContent =
+                "₹" +
+                rupees.toFixed(2);
+
+
+            /* Load Tasks */
+
+            await loadTasks();
+
+
+            /* Load History */
+
+            await loadTaskHistory();
+
+        }
+        catch(error){
+
+            console.error(
+                "Member load error:",
+                error
             );
 
-            await signOut(auth);
-
-            window.location.href =
-                "index.html";
-
-            return;
-        }
-
-
-        /* Status Check */
-
-        if(data.status !== "active"){
-
             alert(
-                "Your account is not active."
+                "Unable to load member data.\n\n" +
+                error.message
             );
 
-            await signOut(auth);
-
-            window.location.href =
-                "index.html";
-
-            return;
         }
 
-
-        /* Member Name */
-
-        document.getElementById(
-            "memberName"
-        ).textContent =
-            data.name || "Member";
-
-
-        /* Coins
-
-           IMPORTANT:
-           We only READ coins.
-           We DO NOT increase coins here.
-        */
-
-        const coins =
-            Number(data.coins || 0);
-
-
-        document.getElementById(
-            "coinBalance"
-        ).textContent =
-            coins;
-
-
-        /* 100 Coins = ₹1 */
-
-        const rupees =
-            coins / 100;
-
-
-        document.getElementById(
-            "rupeeValue"
-        ).textContent =
-            "₹" + rupees.toFixed(2);
-
-
-        /* Load Tasks */
-
-        await loadTasks();
-
-
-        /* Load History */
-
-        await loadTaskHistory();
-
     }
-    catch(error){
+);
 
-        console.error(
-            "Member load error:",
-            error
-        );
-
-        alert(
-            "Unable to load member data.\n\n" +
-            error.message
-        );
-
-    }
-
-});
 
 
 /* =====================================================
@@ -608,9 +841,11 @@ async function loadTasks(){
 
 
     tasksContainer.innerHTML = `
+
         <div class="empty">
             Loading tasks...
         </div>
+
     `;
 
 
@@ -624,7 +859,9 @@ async function loadTasks(){
 
 
         const snapshot =
-            await getDocs(tasksRef);
+            await getDocs(
+                tasksRef
+            );
 
 
         tasksContainer.innerHTML = "";
@@ -633,138 +870,194 @@ async function loadTasks(){
         let activeTaskCount = 0;
 
 
-        snapshot.forEach((docSnap) => {
+        snapshot.forEach(
+            (docSnap) => {
 
-            const data =
-                docSnap.data();
+                const data =
+                    docSnap.data();
 
 
-            /* Only Active Tasks */
+                /* Only active tasks */
 
-            if(data.status !== "active"){
+                if(data.status !== "active"){
 
-                return;
+                    return;
+
+                }
+
+
+                activeTaskCount++;
+
+
+                const task =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                task.className =
+                    "task";
+
+
+                const title =
+                    escapeHtml(
+                        data.title ||
+                        "Untitled Task"
+                    );
+
+
+                const reward =
+                    Number(
+                        data.rewardCoins || 0
+                    );
+
+
+                const watchTime =
+                    Number(
+                        data.watchTime || 0
+                    );
+
+
+                const youtubeUrl =
+                    data.youtubeUrl || "";
+
+
+                task.innerHTML = `
+
+                    <h3>
+                        🎯 ${title}
+                    </h3>
+
+
+                    <span class="status">
+                        Active
+                    </span>
+
+
+                    <div class="task-info">
+
+                        <div>
+
+                            🪙 <b>Reward</b>
+
+                            <br>
+
+                            ${reward} Coins
+
+                        </div>
+
+
+                        <div>
+
+                            ⏱️ <b>Required Watch Time</b>
+
+                            <br>
+
+                            ${watchTime} Seconds
+
+                        </div>
+
+
+                        <div>
+
+                            ▶️ <b>Video</b>
+
+                            <br>
+
+                            YouTube Video
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        id="start-${docSnap.id}"
+                        onclick="startTask('${docSnap.id}')"
+                    >
+
+                        ▶️ Start Task
+
+                    </button>
+
+
+                    <div
+                        id="player-box-${docSnap.id}"
+                        class="youtube-player-box"
+                        style="display:none;"
+                    >
+
+                        <div
+                            id="player-${docSnap.id}"
+                            class="youtube-player"
+                        ></div>
+
+
+                        <div
+                            class="player-message"
+                        >
+
+                            ▶️ Press Play on the video
+                            to start earning watch time.
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="timer-${docSnap.id}"
+                        class="timer-box"
+                    >
+
+                        <b>
+                            ⏱️ Actual Watch Timer
+                        </b>
+
+
+                        <div
+                            id="timerValue-${docSnap.id}"
+                            class="timer-value"
+                        >
+                            ${watchTime} seconds
+                        </div>
+
+
+                        <div
+                            id="timerStatus-${docSnap.id}"
+                            class="timer-status timer-paused"
+                        >
+                            Waiting for video to play...
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="completed-${docSnap.id}"
+                        class="task-completed-box"
+                        style="display:none;"
+                    >
+
+                        ✅ Required watch time completed.
+
+                        <br><br>
+
+                        Reward Status:
+                        Pending Verification
+
+                    </div>
+
+                `;
+
+
+                tasksContainer.appendChild(
+                    task
+                );
 
             }
+        );
 
-
-            activeTaskCount++;
-
-
-            const task =
-                document.createElement("div");
-
-
-            task.className =
-                "task";
-
-
-            const title =
-                escapeHtml(
-                    data.title ||
-                    "Untitled Task"
-                );
-
-
-            const reward =
-                Number(
-                    data.rewardCoins || 0
-                );
-
-
-            const watchTime =
-                Number(
-                    data.watchTime || 0
-                );
-
-
-            const youtubeUrl =
-                escapeHtml(
-                    data.youtubeUrl || "#"
-                );
-
-
-            task.innerHTML = `
-
-                <h3>
-                    🎯 ${title}
-                </h3>
-
-                <span class="status">
-                    Active
-                </span>
-
-                <div class="task-info">
-
-                    <div>
-                        🪙 <b>Reward</b><br>
-                        ${reward} Coins
-                    </div>
-
-                    <div>
-                        ⏱️ <b>Watch Time</b><br>
-                        ${watchTime} Seconds
-                    </div>
-
-                    <div>
-                        ▶️ <b>Video</b><br>
-
-                        <a
-                            class="youtube-link"
-                            href="${youtubeUrl}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Open YouTube
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    id="start-${docSnap.id}"
-                    onclick="startTask('${docSnap.id}')"
-                >
-                    ▶️ Start Task
-                </button>
-
-
-                <div
-                    id="timer-${docSnap.id}"
-                    class="timer-box"
-                >
-
-                    <b>⏱️ Task Timer</b>
-
-                    <div
-                        id="timerValue-${docSnap.id}"
-                        class="timer-value"
-                    >
-                        -
-                    </div>
-
-                    <div
-                        id="timerStatus-${docSnap.id}"
-                        class="info"
-                    >
-                        Task not started.
-                    </div>
-
-                </div>
-
-            `;
-
-
-            tasksContainer.appendChild(
-                task
-            );
-
-        });
-
-
-        /* Task Count */
 
         document.getElementById(
             "taskCount"
@@ -772,14 +1065,14 @@ async function loadTasks(){
             activeTaskCount;
 
 
-        /* No Active Tasks */
-
         if(activeTaskCount === 0){
 
             tasksContainer.innerHTML = `
 
                 <div class="empty">
+
                     No active tasks available right now.
+
                 </div>
 
             `;
@@ -794,30 +1087,41 @@ async function loadTasks(){
             error
         );
 
+
         tasksContainer.innerHTML = `
 
             <div class="empty">
+
                 Unable to load tasks.
+
                 <br><br>
-                ${escapeHtml(error.message)}
+
+                ${escapeHtml(
+                    error.message
+                )}
+
             </div>
 
         `;
 
+
         document.getElementById(
             "taskCount"
-        ).textContent = "0";
+        ).textContent =
+            "0";
 
     }
 
 }
 
 
+
 /* =====================================================
    START TASK
    ===================================================== */
 
-window.startTask = async function(taskId){
+window.startTask =
+async function(taskId){
 
     try{
 
@@ -828,6 +1132,23 @@ window.startTask = async function(taskId){
             );
 
             return;
+
+        }
+
+
+        /*
+         * Prevent starting another timer
+         * for same task.
+         */
+
+        if(activeTaskTimers[taskId]){
+
+            alert(
+                "This task is already started."
+            );
+
+            return;
+
         }
 
 
@@ -842,7 +1163,9 @@ window.startTask = async function(taskId){
 
 
         const taskSnap =
-            await getDoc(taskRef);
+            await getDoc(
+                taskRef
+            );
 
 
         if(!taskSnap.exists()){
@@ -852,6 +1175,7 @@ window.startTask = async function(taskId){
             );
 
             return;
+
         }
 
 
@@ -859,7 +1183,7 @@ window.startTask = async function(taskId){
             taskSnap.data();
 
 
-        /* Check Active */
+        /* Check active */
 
         if(task.status !== "active"){
 
@@ -868,10 +1192,11 @@ window.startTask = async function(taskId){
             );
 
             return;
+
         }
 
 
-        /* Check YouTube URL */
+        /* YouTube URL */
 
         const youtubeUrl =
             task.youtubeUrl || "";
@@ -884,10 +1209,30 @@ window.startTask = async function(taskId){
             );
 
             return;
+
         }
 
 
-        /* Watch Time */
+        /* Extract YouTube video ID */
+
+        const videoId =
+            getYouTubeVideoId(
+                youtubeUrl
+            );
+
+
+        if(!videoId){
+
+            alert(
+                "Invalid YouTube video link."
+            );
+
+            return;
+
+        }
+
+
+        /* Required watch time */
 
         let watchTime =
             Number(
@@ -902,30 +1247,56 @@ window.startTask = async function(taskId){
         }
 
 
-        /* Timer Elements */
+        /* Elements */
+
+        const playerBox =
+            document.getElementById(
+                "player-box-" +
+                taskId
+            );
+
+
+        const playerContainer =
+            document.getElementById(
+                "player-" +
+                taskId
+            );
+
 
         const timerBox =
             document.getElementById(
-                "timer-" + taskId
+                "timer-" +
+                taskId
             );
 
 
         const timerValue =
             document.getElementById(
-                "timerValue-" + taskId
+                "timerValue-" +
+                taskId
             );
 
 
         const timerStatus =
             document.getElementById(
-                "timerStatus-" + taskId
+                "timerStatus-" +
+                taskId
             );
 
 
         const startButton =
             document.getElementById(
-                "start-" + taskId
+                "start-" +
+                taskId
             );
+
+
+        if(playerBox){
+
+            playerBox.style.display =
+                "block";
+
+        }
 
 
         if(timerBox){
@@ -938,10 +1309,8 @@ window.startTask = async function(taskId){
 
         if(startButton){
 
-            startButton.disabled = true;
-
-            startButton.style.opacity =
-                "0.6";
+            startButton.disabled =
+                true;
 
             startButton.textContent =
                 "Task Started";
@@ -949,22 +1318,11 @@ window.startTask = async function(taskId){
         }
 
 
-        /* Open YouTube */
-
-        window.open(
-            youtubeUrl,
-            "_blank"
-        );
-
-
-        let remaining =
-            watchTime;
-
-
         if(timerValue){
 
             timerValue.textContent =
-                remaining + " seconds";
+                watchTime +
+                " seconds";
 
         }
 
@@ -972,53 +1330,139 @@ window.startTask = async function(taskId){
         if(timerStatus){
 
             timerStatus.textContent =
-                "Please complete the required task time.";
+                "Waiting for video to play...";
+
+            timerStatus.className =
+                "timer-status timer-paused";
 
         }
 
 
-        /* Timer */
+        /*
+         * Wait until YouTube API is ready.
+         */
 
-        const timer =
-            setInterval(async () => {
-
-                remaining--;
-
-
-                if(timerValue){
-
-                    timerValue.textContent =
-                        remaining > 0
-                        ? remaining + " seconds"
-                        : "Completed";
-
-                }
+        await waitForYouTubeAPI();
 
 
-                if(remaining <= 0){
+        /*
+         * Create YouTube player.
+         */
 
-                    clearInterval(timer);
+        youtubePlayers[taskId] =
+            new YT.Player(
+                playerContainer,
+                {
+
+                    videoId:
+                        videoId,
+
+                    playerVars:{
+
+                        autoplay:0,
+
+                        controls:1,
+
+                        rel:0,
+
+                        modestbranding:1,
+
+                        playsinline:1
+
+                    },
 
 
-                    if(timerStatus){
+                    events:{
 
-                        timerStatus.textContent =
-                            "Required time completed.";
+                        onReady:
+                            function(event){
+
+                                console.log(
+                                    "YouTube player ready:",
+                                    taskId
+                                );
+
+                            },
+
+
+                        onStateChange:
+                            function(event){
+
+                                handleYouTubeState(
+                                    taskId,
+                                    event.data,
+                                    watchTime,
+                                    task
+                                );
+
+                            },
+
+
+                        onError:
+                            function(event){
+
+                                console.error(
+                                    "YouTube Player Error:",
+                                    event.data
+                                );
+
+
+                                if(timerStatus){
+
+                                    timerStatus.textContent =
+                                        "Unable to play this video.";
+
+                                }
+
+                            }
+
                     }
 
-
-                    /*
-                     * Save completion
-                     */
-
-                    await completeTask(
-                        taskId,
-                        task
-                    );
-
                 }
+            );
 
-            },1000);
+
+        /*
+         * Create timer state.
+         */
+
+        activeTaskTimers[taskId] = {
+
+            taskId:
+                taskId,
+
+            task:
+                task,
+
+            requiredSeconds:
+                watchTime,
+
+            remaining:
+                watchTime,
+
+            playing:
+                false,
+
+            pageVisible:
+                document.visibilityState ===
+                "visible",
+
+            interval:
+                null,
+
+            completed:
+                false
+
+        };
+
+
+        /*
+         * Start internal timer loop.
+         */
+
+        startTaskTimerLoop(
+            taskId
+        );
 
     }
     catch(error){
@@ -1028,6 +1472,7 @@ window.startTask = async function(taskId){
             error
         );
 
+
         alert(
             "Unable to start task.\n\n" +
             error.message
@@ -1036,6 +1481,462 @@ window.startTask = async function(taskId){
     }
 
 };
+
+
+
+/* =====================================================
+   HANDLE YOUTUBE PLAYER STATE
+   ===================================================== */
+
+function handleYouTubeState(
+    taskId,
+    state,
+    watchTime,
+    task
+){
+
+    const timer =
+        activeTaskTimers[taskId];
+
+
+    if(!timer){
+
+        return;
+
+    }
+
+
+    const timerStatus =
+        document.getElementById(
+            "timerStatus-" +
+            taskId
+        );
+
+
+    /*
+     * YT.PlayerState.PLAYING = 1
+     */
+
+    if(
+        state === YT.PlayerState.PLAYING
+    ){
+
+        timer.playing = true;
+
+
+        if(
+            timer.pageVisible
+        ){
+
+            if(timerStatus){
+
+                timerStatus.textContent =
+                    "▶️ Video is playing. Watch time is counting.";
+
+                timerStatus.className =
+                    "timer-status timer-running";
+
+            }
+
+        }
+        else{
+
+            timer.playing = false;
+
+            if(timerStatus){
+
+                timerStatus.textContent =
+                    "⏸️ Website is not active. Timer paused.";
+
+                timerStatus.className =
+                    "timer-status timer-paused";
+
+            }
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+     * PAUSED
+     */
+
+    if(
+        state === YT.PlayerState.PAUSED
+    ){
+
+        timer.playing = false;
+
+
+        if(timerStatus){
+
+            timerStatus.textContent =
+                "⏸️ Video paused. Timer paused.";
+
+            timerStatus.className =
+                "timer-status timer-paused";
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+     * BUFFERING
+     */
+
+    if(
+        state === YT.PlayerState.BUFFERING
+    ){
+
+        timer.playing = false;
+
+
+        if(timerStatus){
+
+            timerStatus.textContent =
+                "⏳ Video buffering. Timer paused.";
+
+            timerStatus.className =
+                "timer-status timer-paused";
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+     * ENDED
+     */
+
+    if(
+        state === YT.PlayerState.ENDED
+    ){
+
+        timer.playing = false;
+
+
+        if(timerStatus){
+
+            timerStatus.textContent =
+                "Video ended.";
+
+            timerStatus.className =
+                "timer-status timer-paused";
+
+        }
+
+    }
+
+}
+
+
+
+/* =====================================================
+   TIMER LOOP
+   ===================================================== */
+
+function startTaskTimerLoop(
+    taskId
+){
+
+    const timer =
+        activeTaskTimers[taskId];
+
+
+    if(!timer){
+
+        return;
+
+    }
+
+
+    /*
+     * Every second check:
+     *
+     * 1. Video is playing
+     * 2. Page is visible
+     *
+     * Only then decrease remaining time.
+     */
+
+    timer.interval =
+        setInterval(
+            async () => {
+
+                const current =
+                    activeTaskTimers[taskId];
+
+
+                if(!current){
+
+                    return;
+
+                }
+
+
+                if(current.completed){
+
+                    return;
+
+                }
+
+
+                /*
+                 * Actual condition
+                 */
+
+                const canCount =
+                    current.playing &&
+                    current.pageVisible;
+
+
+                if(!canCount){
+
+                    updateTimerDisplay(
+                        taskId
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Count one actual
+                 * playback second.
+                 */
+
+                current.remaining--;
+
+
+                updateTimerDisplay(
+                    taskId
+                );
+
+
+                /*
+                 * Required time completed.
+                 */
+
+                if(
+                    current.remaining <= 0
+                ){
+
+                    await finishTaskTimer(
+                        taskId
+                    );
+
+                }
+
+            },
+            1000
+        );
+
+}
+
+
+
+/* =====================================================
+   UPDATE TIMER DISPLAY
+   ===================================================== */
+
+function updateTimerDisplay(
+    taskId
+){
+
+    const timer =
+        activeTaskTimers[taskId];
+
+
+    if(!timer){
+
+        return;
+
+    }
+
+
+    const timerValue =
+        document.getElementById(
+            "timerValue-" +
+            taskId
+        );
+
+
+    if(!timerValue){
+
+        return;
+
+    }
+
+
+    if(
+        timer.remaining <= 0
+    ){
+
+        timerValue.textContent =
+            "Completed";
+
+        return;
+
+    }
+
+
+    timerValue.textContent =
+        timer.remaining +
+        " seconds";
+
+}
+
+
+
+/* =====================================================
+   FINISH TASK TIMER
+   ===================================================== */
+
+async function finishTaskTimer(
+    taskId
+){
+
+    const timer =
+        activeTaskTimers[taskId];
+
+
+    if(!timer){
+
+        return;
+
+    }
+
+
+    if(timer.completed){
+
+        return;
+
+    }
+
+
+    timer.completed =
+        true;
+
+
+    timer.playing =
+        false;
+
+
+    /*
+     * Stop timer interval.
+     */
+
+    if(timer.interval){
+
+        clearInterval(
+            timer.interval
+        );
+
+        timer.interval =
+            null;
+
+    }
+
+
+    const timerValue =
+        document.getElementById(
+            "timerValue-" +
+            taskId
+        );
+
+
+    const timerStatus =
+        document.getElementById(
+            "timerStatus-" +
+            taskId
+        );
+
+
+    const completedBox =
+        document.getElementById(
+            "completed-" +
+            taskId
+        );
+
+
+    if(timerValue){
+
+        timerValue.textContent =
+            "Completed";
+
+    }
+
+
+    if(timerStatus){
+
+        timerStatus.textContent =
+            "✅ Required watch time completed.";
+
+        timerStatus.className =
+            "timer-status timer-completed";
+
+    }
+
+
+    /*
+     * Pause video after required time.
+     */
+
+    const player =
+        youtubePlayers[taskId];
+
+
+    if(
+        player &&
+        typeof player.pauseVideo ===
+        "function"
+    ){
+
+        try{
+
+            player.pauseVideo();
+
+        }
+        catch(error){
+
+            console.log(
+                "Unable to pause player:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Save completion.
+     */
+
+    await completeTask(
+        taskId,
+        timer.task
+    );
+
+
+    if(completedBox){
+
+        completedBox.style.display =
+            "block";
+
+    }
+
+}
+
 
 
 /* =====================================================
@@ -1056,16 +1957,13 @@ async function completeTask(
             );
 
             return;
+
         }
 
 
         /*
-         * IMPORTANT
-         *
          * One Member + One Task
          * = One fixed completion document.
-         *
-         * This prevents duplicate completion.
          */
 
         const completionId =
@@ -1083,7 +1981,7 @@ async function completeTask(
 
 
         /*
-         * Check existing completion
+         * Check existing completion.
          */
 
         const existingSnap =
@@ -1110,11 +2008,12 @@ async function completeTask(
             await loadTaskHistory();
 
             return;
+
         }
 
 
         /*
-         * Prepare completion data
+         * Reward
          */
 
         const rewardCoins =
@@ -1123,6 +2022,10 @@ async function completeTask(
             );
 
 
+        /*
+         * Required watch time
+         */
+
         const requiredWatchTime =
             Number(
                 task.watchTime || 0
@@ -1130,10 +2033,13 @@ async function completeTask(
 
 
         /*
-         * SAVE TO FIRESTORE
+         * SAVE COMPLETION
          *
          * IMPORTANT:
-         * Coins are NOT added here.
+         *
+         * status = pending
+         *
+         * Member does NOT receive coins here.
          */
 
         await setDoc(
@@ -1147,7 +2053,8 @@ async function completeTask(
                     taskId,
 
                 taskTitle:
-                    task.title || "Task",
+                    task.title ||
+                    "Task",
 
                 rewardCoins:
                     rewardCoins,
@@ -1168,20 +2075,14 @@ async function completeTask(
         );
 
 
-        /*
-         * Success message
-         */
-
         alert(
             "Task completed successfully! 🎉\n\n" +
-            "Your completion has been recorded.\n\n" +
+
+            "Your actual video watch time has been recorded.\n\n" +
+
             "Reward Status: Pending Verification"
         );
 
-
-        /*
-         * Reload history
-         */
 
         await loadTaskHistory();
 
@@ -1193,6 +2094,7 @@ async function completeTask(
             error
         );
 
+
         alert(
             "Unable to save task completion.\n\n" +
             "Error:\n" +
@@ -1202,6 +2104,301 @@ async function completeTask(
     }
 
 }
+
+
+
+/* =====================================================
+   PAGE VISIBILITY
+   ===================================================== */
+
+document.addEventListener(
+    "visibilitychange",
+    function(){
+
+        const visible =
+            document.visibilityState ===
+            "visible";
+
+
+        Object.keys(
+            activeTaskTimers
+        ).forEach(
+            (taskId) => {
+
+                const timer =
+                    activeTaskTimers[taskId];
+
+
+                if(!timer){
+
+                    return;
+
+                }
+
+
+                timer.pageVisible =
+                    visible;
+
+
+                const timerStatus =
+                    document.getElementById(
+                        "timerStatus-" +
+                        taskId
+                    );
+
+
+                if(!visible){
+
+                    /*
+                     * Page hidden
+                     *
+                     * Force timer pause.
+                     */
+
+                    if(timerStatus){
+
+                        timerStatus.textContent =
+                            "⏸️ You left the website. Timer paused.";
+
+                        timerStatus.className =
+                            "timer-status timer-paused";
+
+                    }
+
+                    return;
+
+                }
+
+
+                /*
+                 * Page visible again.
+                 */
+
+                if(
+                    timer.playing
+                ){
+
+                    if(timerStatus){
+
+                        timerStatus.textContent =
+                            "▶️ Video is playing. Watch time resumed.";
+
+                        timerStatus.className =
+                            "timer-status timer-running";
+
+                    }
+
+                }
+                else{
+
+                    if(timerStatus){
+
+                        timerStatus.textContent =
+                            "⏸️ Press Play to continue watch time.";
+
+                        timerStatus.className =
+                            "timer-status timer-paused";
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+
+/* =====================================================
+   WAIT FOR YOUTUBE API
+   ===================================================== */
+
+function waitForYouTubeAPI(){
+
+    return new Promise(
+        (resolve) => {
+
+            if(
+                window.YT &&
+                window.YT.Player
+            ){
+
+                youtubeApiReady =
+                    true;
+
+                resolve();
+
+                return;
+
+            }
+
+
+            let attempts = 0;
+
+
+            const check =
+                setInterval(
+                    () => {
+
+                        attempts++;
+
+
+                        if(
+                            window.YT &&
+                            window.YT.Player
+                        ){
+
+                            clearInterval(
+                                check
+                            );
+
+                            youtubeApiReady =
+                                true;
+
+                            resolve();
+
+                            return;
+
+                        }
+
+
+                        /*
+                         * Maximum wait
+                         */
+
+                        if(
+                            attempts >= 100
+                        ){
+
+                            clearInterval(
+                                check
+                            );
+
+                            resolve();
+
+                        }
+
+                    },
+                    100
+                );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   GET YOUTUBE VIDEO ID
+   ===================================================== */
+
+function getYouTubeVideoId(
+    url
+){
+
+    try{
+
+        const parsed =
+            new URL(
+                url
+            );
+
+
+        /*
+         * Normal:
+         *
+         * youtube.com/watch?v=ID
+         */
+
+        if(
+            parsed.hostname.includes(
+                "youtube.com"
+            )
+        ){
+
+            const videoId =
+                parsed.searchParams.get(
+                    "v"
+                );
+
+
+            if(videoId){
+
+                return videoId;
+
+            }
+
+
+            /*
+             * Shorts:
+             *
+             * youtube.com/shorts/ID
+             */
+
+            const parts =
+                parsed.pathname.split(
+                    "/"
+                );
+
+
+            const shortsIndex =
+                parts.indexOf(
+                    "shorts"
+                );
+
+
+            if(
+                shortsIndex !== -1 &&
+                parts[
+                    shortsIndex + 1
+                ]
+            ){
+
+                return parts[
+                    shortsIndex + 1
+                ];
+
+            }
+
+        }
+
+
+        /*
+         * youtu.be/ID
+         */
+
+        if(
+            parsed.hostname ===
+            "youtu.be"
+        ){
+
+            return parsed.pathname
+                .replace(
+                    "/",
+                    ""
+                );
+
+        }
+
+
+    }
+    catch(error){
+
+        console.error(
+            "YouTube URL parsing error:",
+            error
+        );
+
+    }
+
+
+    return null;
+
+}
+
 
 
 /* =====================================================
@@ -1217,9 +2414,11 @@ async function loadTaskHistory(){
 
 
     historyContainer.innerHTML = `
+
         <div class="empty">
             Loading history...
         </div>
+
     `;
 
 
@@ -1228,12 +2427,15 @@ async function loadTaskHistory(){
         if(!currentMember){
 
             historyContainer.innerHTML = `
+
                 <div class="empty">
                     Please login again.
                 </div>
+
             `;
 
             return;
+
         }
 
 
@@ -1245,24 +2447,21 @@ async function loadTaskHistory(){
 
 
         /*
-         * Only use WHERE query here.
+         * Only WHERE query.
          *
-         * We intentionally do NOT use:
-         *
-         * orderBy("completedAt","desc")
-         *
-         * This avoids Firestore composite
-         * index problems.
+         * No composite index required.
          */
 
         const historyQuery =
             query(
                 completionRef,
+
                 where(
                     "memberId",
                     "==",
                     currentMember.uid
                 )
+
             );
 
 
@@ -1272,7 +2471,8 @@ async function loadTaskHistory(){
             );
 
 
-        historyContainer.innerHTML = "";
+        historyContainer.innerHTML =
+            "";
 
 
         if(snapshot.empty){
@@ -1286,164 +2486,205 @@ async function loadTaskHistory(){
             `;
 
             return;
+
         }
 
-
-        /*
-         * Convert Firestore documents
-         * into array for client-side sorting.
-         */
 
         const history = [];
 
 
-        snapshot.forEach((docSnap) => {
+        snapshot.forEach(
+            (docSnap) => {
 
-            history.push({
-                id: docSnap.id,
-                ...docSnap.data()
-            });
+                history.push({
 
-        });
+                    id:
+                        docSnap.id,
 
+                    ...docSnap.data()
 
-        /*
-         * Sort newest first.
-         */
-
-        history.sort((a,b) => {
-
-            const aTime =
-                a.completedAt &&
-                typeof a.completedAt.toMillis === "function"
-                ? a.completedAt.toMillis()
-                : 0;
-
-
-            const bTime =
-                b.completedAt &&
-                typeof b.completedAt.toMillis === "function"
-                ? b.completedAt.toMillis()
-                : 0;
-
-
-            return bTime - aTime;
-
-        });
-
-
-        /*
-         * Display history
-         */
-
-        history.forEach((data) => {
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                "history-item";
-
-
-            const title =
-                escapeHtml(
-                    data.taskTitle ||
-                    "Task"
-                );
-
-
-            const reward =
-                Number(
-                    data.rewardCoins || 0
-                );
-
-
-            const watchTime =
-                Number(
-                    data.watchTime || 0
-                );
-
-
-            let completedDate =
-                "Completed";
-
-
-            if(data.completedAt){
-
-                try{
-
-                    completedDate =
-                        data.completedAt
-                            .toDate()
-                            .toLocaleString();
-
-                }
-                catch(error){
-
-                    completedDate =
-                        "Completed";
-
-                }
+                });
 
             }
+        );
 
 
-            const rewardStatus =
-                formatRewardStatus(
-                    data.status
+        /*
+         * Newest first.
+         */
+
+        history.sort(
+            (a,b) => {
+
+                const aTime =
+                    a.completedAt &&
+                    typeof a.completedAt.toMillis ===
+                    "function"
+                    ? a.completedAt.toMillis()
+                    : 0;
+
+
+                const bTime =
+                    b.completedAt &&
+                    typeof b.completedAt.toMillis ===
+                    "function"
+                    ? b.completedAt.toMillis()
+                    : 0;
+
+
+                return bTime - aTime;
+
+            }
+        );
+
+
+        history.forEach(
+            (data) => {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "history-item";
+
+
+                const title =
+                    escapeHtml(
+                        data.taskTitle ||
+                        "Task"
+                    );
+
+
+                const reward =
+                    Number(
+                        data.rewardCoins || 0
+                    );
+
+
+                const watchTime =
+                    Number(
+                        data.watchTime || 0
+                    );
+
+
+                let completedDate =
+                    "Completed";
+
+
+                if(data.completedAt){
+
+                    try{
+
+                        completedDate =
+                            data.completedAt
+                                .toDate()
+                                .toLocaleString();
+
+                    }
+                    catch(error){
+
+                        completedDate =
+                            "Completed";
+
+                    }
+
+                }
+
+
+                const rewardStatus =
+                    formatRewardStatus(
+                        data.status
+                    );
+
+
+                let rewardClass =
+                    "pending-status";
+
+
+                if(
+                    data.status ===
+                    "approved"
+                ){
+
+                    rewardClass =
+                        "completed-status";
+
+                }
+
+
+                item.innerHTML = `
+
+                    <h3>
+                        🎯 ${title}
+                    </h3>
+
+
+                    <div class="history-info">
+
+                        <b>Task Status:</b>
+
+                        <span class="status completed-status">
+
+                            Completed
+
+                        </span>
+
+                        <br>
+
+
+                        <b>Reward:</b>
+
+                        ${reward}
+
+                        Coins
+
+                        <br>
+
+
+                        <b>Required Time:</b>
+
+                        ${watchTime}
+
+                        Seconds
+
+                        <br>
+
+
+                        <b>Completed:</b>
+
+                        ${escapeHtml(
+                            completedDate
+                        )}
+
+                        <br>
+
+
+                        <b>Reward Status:</b>
+
+                        <span
+                            class="status ${rewardClass}"
+                        >
+
+                            ${escapeHtml(
+                                rewardStatus
+                            )}
+
+                        </span>
+
+                    </div>
+
+                `;
+
+
+                historyContainer.appendChild(
+                    item
                 );
 
-
-            item.innerHTML = `
-
-                <h3>
-                    🎯 ${title}
-                </h3>
-
-                <div class="history-info">
-
-                    <b>Task Status:</b>
-
-                    <span class="status completed-status">
-                        Completed
-                    </span>
-
-                    <br>
-
-                    <b>Reward:</b>
-                    ${reward} Coins
-
-                    <br>
-
-                    <b>Required Time:</b>
-                    ${watchTime} Seconds
-
-                    <br>
-
-                    <b>Completed:</b>
-                    ${escapeHtml(completedDate)}
-
-                    <br>
-
-                    <b>Reward Status:</b>
-
-                    <span class="status pending-status">
-                        ${escapeHtml(rewardStatus)}
-                    </span>
-
-                </div>
-
-            `;
-
-
-            historyContainer.appendChild(
-                item
-            );
-
-        });
+            }
+        );
 
     }
     catch(error){
@@ -1453,6 +2694,7 @@ async function loadTaskHistory(){
             error
         );
 
+
         historyContainer.innerHTML = `
 
             <div class="empty">
@@ -1461,7 +2703,9 @@ async function loadTaskHistory(){
 
                 <br><br>
 
-                ${escapeHtml(error.message)}
+                ${escapeHtml(
+                    error.message
+                )}
 
             </div>
 
@@ -1472,11 +2716,14 @@ async function loadTaskHistory(){
 }
 
 
+
 /* =====================================================
    REWARD STATUS
    ===================================================== */
 
-function formatRewardStatus(status){
+function formatRewardStatus(
+    status
+){
 
     if(status === "approved"){
 
@@ -1504,15 +2751,50 @@ function formatRewardStatus(status){
 }
 
 
+
 /* =====================================================
    LOGOUT
    ===================================================== */
 
-window.logout = async function(){
+window.logout =
+async function(){
 
     try{
 
-        await signOut(auth);
+        /*
+         * Stop all timers.
+         */
+
+        Object.keys(
+            activeTaskTimers
+        ).forEach(
+            (taskId) => {
+
+                const timer =
+                    activeTaskTimers[
+                        taskId
+                    ];
+
+
+                if(
+                    timer &&
+                    timer.interval
+                ){
+
+                    clearInterval(
+                        timer.interval
+                    );
+
+                }
+
+            }
+        );
+
+
+        await signOut(
+            auth
+        );
+
 
         window.location.href =
             "index.html";
@@ -1530,11 +2812,13 @@ window.logout = async function(){
 };
 
 
+
 /* =====================================================
    COMING SOON
    ===================================================== */
 
-window.comingSoon = function(){
+window.comingSoon =
+function(){
 
     alert(
         "This feature will be activated soon."
@@ -1543,22 +2827,48 @@ window.comingSoon = function(){
 };
 
 
+
 /* =====================================================
    HTML ESCAPE
    ===================================================== */
 
-function escapeHtml(value){
+function escapeHtml(
+    value
+){
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    return String(
+        value
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
 </script>
+
 
 </body>
     </html>
