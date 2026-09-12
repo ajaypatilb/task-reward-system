@@ -170,6 +170,11 @@ header h2{
     color:#991b1b;
 }
 
+.paid-status{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
 .info{
     color:#666;
 }
@@ -301,65 +306,52 @@ header h2{
    WITHDRAWAL
    ===================================================== */
 
-.withdraw-box{
-    border:1px solid #e5e7eb;
-    padding:18px;
-    border-radius:10px;
-    background:#f9fafb;
+.withdraw-form{
+    margin-top:15px;
 }
 
-.withdraw-balance{
-    background:#eff6ff;
-    padding:15px;
-    border-radius:8px;
-    margin-bottom:15px;
+.withdraw-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
 }
 
-.withdraw-balance strong{
-    font-size:22px;
+.withdraw-group{
+    display:flex;
+    flex-direction:column;
 }
 
-.withdraw-form-group{
-    margin-bottom:15px;
+.withdraw-group.full{
+    grid-column:1 / -1;
 }
 
-.withdraw-form-group label{
-    display:block;
+.withdraw-group label{
     font-weight:bold;
-    margin-bottom:7px;
+    margin-bottom:6px;
 }
 
-.withdraw-form-group input{
-    width:100%;
+.withdraw-group input{
     padding:11px;
     border:1px solid #d1d5db;
     border-radius:7px;
-    font-size:15px;
+    font-size:14px;
 }
 
-.withdraw-form-group input:focus{
-    outline:none;
-    border-color:#2563eb;
-}
-
-.withdraw-amount-display{
-    background:#ecfdf5;
-    border:1px solid #bbf7d0;
-    padding:12px;
-    border-radius:7px;
-    font-weight:bold;
-    color:#166534;
+.withdraw-value{
+    background:#f9fafb;
+    padding:14px;
+    border-radius:8px;
+    margin-top:12px;
 }
 
 .withdraw-button{
+    margin-top:15px;
     background:#16a34a;
     color:white;
     border:0;
     padding:11px 18px;
     border-radius:7px;
     cursor:pointer;
-    font-size:15px;
-    font-weight:bold;
 }
 
 .withdraw-button:hover{
@@ -371,21 +363,21 @@ header h2{
     cursor:not-allowed;
 }
 
-.withdraw-history-item{
+.withdraw-item{
     border:1px solid #e5e7eb;
-    padding:15px;
     border-radius:9px;
+    padding:15px;
     margin-top:10px;
 }
 
-.withdraw-history-item h3{
-    margin:0 0 8px;
+.withdraw-item h3{
+    margin:0 0 10px;
 }
 
-.withdraw-history-info{
-    color:#555;
-    font-size:14px;
+.withdraw-info{
+    color:#666;
     line-height:1.7;
+    font-size:14px;
 }
 
 
@@ -401,6 +393,14 @@ header h2{
 
     .task-info{
         grid-template-columns:1fr;
+    }
+
+    .withdraw-grid{
+        grid-template-columns:1fr;
+    }
+
+    .withdraw-group.full{
+        grid-column:auto;
     }
 
     header h2{
@@ -473,7 +473,6 @@ header h2{
 
     <div class="cards">
 
-
         <div class="card">
 
             <h3>
@@ -520,7 +519,6 @@ header h2{
             </div>
 
         </div>
-
 
     </div>
 
@@ -587,111 +585,75 @@ header h2{
 
         </p>
 
+        <div class="withdraw-form">
 
-        <div class="withdraw-box">
+            <div class="withdraw-grid">
 
+                <div class="withdraw-group">
 
-            <!-- Available Balance -->
+                    <label>
+                        Coins to Withdraw
+                    </label>
 
-            <div class="withdraw-balance">
+                    <input
+                        type="number"
+                        id="withdrawCoins"
+                        min="1"
+                        step="1"
+                        placeholder="Example: 10"
+                        oninput="calculateWithdrawValue()"
+                    >
 
-                🪙 Available Coins:
-
-                <br>
-
-                <strong id="withdrawAvailableCoins">
-                    0
-                </strong>
-
-                Coins
-
-                <br><br>
-
-                💰 Available Value:
-
-                <strong id="withdrawAvailableRupees">
-                    ₹0.00
-                </strong>
-
-            </div>
+                </div>
 
 
-            <!-- Coins -->
+                <div class="withdraw-group">
 
-            <div class="withdraw-form-group">
+                    <label>
+                        UPI ID
+                    </label>
 
-                <label for="withdrawCoins">
+                    <input
+                        type="text"
+                        id="withdrawUpi"
+                        placeholder="example@upi"
+                    >
 
-                    🪙 Coins to Withdraw
-
-                </label>
-
-                <input
-                    type="number"
-                    id="withdrawCoins"
-                    min="1"
-                    step="1"
-                    placeholder="Enter coins"
-                    oninput="calculateWithdrawal()"
-                >
-
-            </div>
-
-
-            <!-- Amount -->
-
-            <div class="withdraw-form-group">
-
-                <label>
-                    💰 Withdrawal Amount
-                </label>
-
-                <div
-                    class="withdraw-amount-display"
-                    id="withdrawAmountDisplay"
-                >
-                    ₹0.00
                 </div>
 
             </div>
 
 
-            <!-- UPI -->
+            <div class="withdraw-value">
 
-            <div class="withdraw-form-group">
+                <b>
+                    Available Coins:
+                </b>
 
-                <label for="withdrawUpi">
+                <span id="withdrawAvailableCoins">
+                    0
+                </span>
 
-                    📱 UPI ID
+                <br><br>
 
-                </label>
+                <b>
+                    Withdrawal Value:
+                </b>
 
-                <input
-                    type="text"
-                    id="withdrawUpi"
-                    placeholder="example@upi"
-                    maxlength="100"
-                >
+                <span id="withdrawRupees">
+                    ₹0.00
+                </span>
 
             </div>
 
 
             <button
-                id="withdrawSubmitButton"
                 class="withdraw-button"
+                id="withdrawButton"
                 onclick="submitWithdrawal()"
             >
-
                 💸 Submit Withdrawal Request
-
             </button>
-
-
-            <p class="info">
-
-                Your withdrawal request will first be verified by the Owner.
-
-            </p>
 
         </div>
 
@@ -705,7 +667,7 @@ header h2{
     <div class="section">
 
         <h2>
-            📜 Withdrawal History
+            📋 Withdrawal History
         </h2>
 
         <div id="withdrawalHistory">
@@ -828,15 +790,7 @@ const db =
 
 let currentMember = null;
 
-
-/*
- * Current member coins.
- *
- * Used for withdrawal calculation.
- */
-
-let currentMemberCoins = 0;
-
+let currentMemberData = null;
 
 
 /*
@@ -854,7 +808,7 @@ const youtubePlayers = {};
 
 
 /*
- * YouTube API ready state.
+ * YouTube API ready state
  */
 
 let youtubeApiReady = false;
@@ -900,8 +854,6 @@ onAuthStateChanged(
             currentMember = user;
 
 
-            /* Get Member Data */
-
             const userRef =
                 doc(
                     db,
@@ -938,7 +890,9 @@ onAuthStateChanged(
                 userSnap.data();
 
 
-            /* Role Check */
+            currentMemberData =
+                data;
+
 
             if(data.role !== "member"){
 
@@ -958,8 +912,6 @@ onAuthStateChanged(
             }
 
 
-            /* Status Check */
-
             if(data.status !== "active"){
 
                 alert(
@@ -978,38 +930,22 @@ onAuthStateChanged(
             }
 
 
-            /* Member Name */
-
             document.getElementById(
                 "memberName"
             ).textContent =
                 data.name || "Member";
 
 
-            /* =================================================
-               COINS
-               ================================================= */
-
-            currentMemberCoins =
+            updateCoinDisplay(
                 Number(
                     data.coins || 0
-                );
+                )
+            );
 
-
-            updateCoinDisplay();
-
-
-            /* Load Tasks */
 
             await loadTasks();
 
-
-            /* Load Task History */
-
             await loadTaskHistory();
-
-
-            /* Load Withdrawal History */
 
             await loadWithdrawalHistory();
 
@@ -1037,11 +973,13 @@ onAuthStateChanged(
    UPDATE COIN DISPLAY
    ===================================================== */
 
-function updateCoinDisplay(){
+function updateCoinDisplay(
+    coins
+){
 
-    const coins =
+    coins =
         Number(
-            currentMemberCoins || 0
+            coins || 0
         );
 
 
@@ -1050,8 +988,6 @@ function updateCoinDisplay(){
     ).textContent =
         coins;
 
-
-    /* 100 Coins = ₹1 */
 
     const rupees =
         coins / 100;
@@ -1069,12 +1005,53 @@ function updateCoinDisplay(){
     ).textContent =
         coins;
 
+}
 
-    document.getElementById(
-        "withdrawAvailableRupees"
-    ).textContent =
-        "₹" +
-        rupees.toFixed(2);
+
+
+/* =====================================================
+   REFRESH MEMBER DATA
+   ===================================================== */
+
+async function refreshMemberData(){
+
+    if(!currentMember){
+
+        return;
+
+    }
+
+
+    const userRef =
+        doc(
+            db,
+            "users",
+            currentMember.uid
+        );
+
+
+    const userSnap =
+        await getDoc(
+            userRef
+        );
+
+
+    if(!userSnap.exists()){
+
+        return;
+
+    }
+
+
+    currentMemberData =
+        userSnap.data();
+
+
+    updateCoinDisplay(
+        Number(
+            currentMemberData.coins || 0
+        )
+    );
 
 }
 
@@ -1128,8 +1105,6 @@ async function loadTasks(){
                 const data =
                     docSnap.data();
 
-
-                /* Only active tasks */
 
                 if(data.status !== "active"){
 
@@ -1185,35 +1160,23 @@ async function loadTasks(){
                     <div class="task-info">
 
                         <div>
-
                             🪙 <b>Reward</b>
-
                             <br>
-
                             ${reward} Coins
-
                         </div>
 
 
                         <div>
-
                             ⏱️ <b>Required Watch Time</b>
-
                             <br>
-
                             ${watchTime} Seconds
-
                         </div>
 
 
                         <div>
-
                             ▶️ <b>Video</b>
-
                             <br>
-
                             YouTube Video
-
                         </div>
 
                     </div>
@@ -1241,9 +1204,7 @@ async function loadTasks(){
                         ></div>
 
 
-                        <div
-                            class="player-message"
-                        >
+                        <div class="player-message">
 
                             ▶️ Press Play on the video
                             to start earning watch time.
@@ -1395,8 +1356,6 @@ async function(taskId){
         }
 
 
-        /* Get Task */
-
         const taskRef =
             doc(
                 db,
@@ -1426,8 +1385,6 @@ async function(taskId){
             taskSnap.data();
 
 
-        /* Check active */
-
         if(task.status !== "active"){
 
             alert(
@@ -1438,8 +1395,6 @@ async function(taskId){
 
         }
 
-
-        /* YouTube URL */
 
         const youtubeUrl =
             task.youtubeUrl || "";
@@ -1455,8 +1410,6 @@ async function(taskId){
 
         }
 
-
-        /* Extract YouTube video ID */
 
         const videoId =
             getYouTubeVideoId(
@@ -1475,8 +1428,6 @@ async function(taskId){
         }
 
 
-        /* Required watch time */
-
         let watchTime =
             Number(
                 task.watchTime || 0
@@ -1489,8 +1440,6 @@ async function(taskId){
 
         }
 
-
-        /* Elements */
 
         const playerBox =
             document.getElementById(
@@ -1584,8 +1533,6 @@ async function(taskId){
         await waitForYouTubeAPI();
 
 
-        /* Create YouTube player */
-
         youtubePlayers[taskId] =
             new YT.Player(
                 playerContainer,
@@ -1608,11 +1555,10 @@ async function(taskId){
 
                     },
 
-
                     events:{
 
                         onReady:
-                            function(event){
+                            function(){
 
                                 console.log(
                                     "YouTube player ready:",
@@ -1658,8 +1604,6 @@ async function(taskId){
                 }
             );
 
-
-        /* Timer state */
 
         activeTaskTimers[taskId] = {
 
@@ -1721,9 +1665,7 @@ async function(taskId){
 
 function handleYouTubeState(
     taskId,
-    state,
-    watchTime,
-    task
+    state
 ){
 
     const timer =
@@ -2016,7 +1958,6 @@ async function finishTaskTimer(
 
     timer.completed =
         true;
-
 
     timer.playing =
         false;
@@ -2475,7 +2416,6 @@ function getYouTubeVideoId(
 
         }
 
-
     }
     catch(error){
 
@@ -2518,29 +2458,17 @@ async function loadTaskHistory(){
 
         if(!currentMember){
 
-            historyContainer.innerHTML = `
-
-                <div class="empty">
-                    Please login again.
-                </div>
-
-            `;
-
             return;
 
         }
 
 
-        const completionRef =
-            collection(
-                db,
-                "taskCompletions"
-            );
-
-
         const historyQuery =
             query(
-                completionRef,
+                collection(
+                    db,
+                    "taskCompletions"
+                ),
 
                 where(
                     "memberId",
@@ -2695,9 +2623,7 @@ async function loadTaskHistory(){
                         "completed-status";
 
                 }
-
-
-                if(
+                else if(
                     data.status ===
                     "rejected"
                 ){
@@ -2731,7 +2657,6 @@ async function loadTaskHistory(){
                         <b>Reward:</b>
 
                         ${reward}
-
                         Coins
 
                         <br>
@@ -2740,7 +2665,6 @@ async function loadTaskHistory(){
                         <b>Required Time:</b>
 
                         ${watchTime}
-
                         Seconds
 
                         <br>
@@ -2846,48 +2770,50 @@ function formatRewardStatus(
 
 
 /* =====================================================
-   WITHDRAWAL - CALCULATE AMOUNT
+   CALCULATE WITHDRAW VALUE
    ===================================================== */
 
-window.calculateWithdrawal =
+window.calculateWithdrawValue =
 function(){
 
-    const coinsInput =
-        document.getElementById(
-            "withdrawCoins"
-        );
-
-
-    const amountDisplay =
-        document.getElementById(
-            "withdrawAmountDisplay"
-        );
-
-
-    let coins =
+    const coins =
         Number(
-            coinsInput.value || 0
+            document.getElementById(
+                "withdrawCoins"
+            ).value || 0
         );
 
 
-    if(coins < 0){
-
-        coins = 0;
-
-    }
-
-
-    /*
-     * 100 Coins = ₹1
-     */
-
-    const amount =
-        coins / 100;
+    const availableCoins =
+        Number(
+            currentMemberData &&
+            currentMemberData.coins
+            || 0
+        );
 
 
-    amountDisplay.textContent =
+    const safeCoins =
+        Math.max(
+            0,
+            coins
+        );
+
+
+    const rupees =
+        safeCoins / 100;
+
+
+    document.getElementById(
+        "withdrawRupees"
+    ).textContent =
         "₹" +
-        amount.toFixed(2);
+        rupees.toFixed(2);
+
+
+    document.getElementById(
+        "withdrawAvailableCoins"
+    ).textContent =
+        availableCoins;
 
 };
 
@@ -2905,7 +2831,7 @@ async function(){
         if(!currentMember){
 
             alert(
-                "Login session expired. Please login again."
+                "Login session expired."
             );
 
             return;
@@ -2913,44 +2839,36 @@ async function(){
         }
 
 
-        const coinsInput =
-            document.getElementById(
-                "withdrawCoins"
-            );
+        await refreshMemberData();
 
 
-        const upiInput =
-            document.getElementById(
-                "withdrawUpi"
-            );
-
-
-        const submitButton =
-            document.getElementById(
-                "withdrawSubmitButton"
+        const availableCoins =
+            Number(
+                currentMemberData.coins || 0
             );
 
 
         const coins =
             Number(
-                coinsInput.value
+                document.getElementById(
+                    "withdrawCoins"
+                ).value
             );
 
 
         const upiId =
-            upiInput.value
-                .trim();
+            document.getElementById(
+                "withdrawUpi"
+            ).value.trim();
 
-
-        /* Coins validation */
 
         if(
-            !Number.isFinite(coins) ||
-            coins <= 0
+            !coins ||
+            coins < 1
         ){
 
             alert(
-                "Please enter a valid number of coins."
+                "Please enter valid coins."
             );
 
             return;
@@ -2958,43 +2876,18 @@ async function(){
         }
 
 
-        /*
-         * Only whole coins allowed.
-         */
-
         if(
-            !Number.isInteger(coins)
+            coins > availableCoins
         ){
 
             alert(
-                "Coins must be a whole number."
+                "You do not have enough coins."
             );
 
             return;
 
         }
 
-
-        /* Balance validation */
-
-        if(
-            coins >
-            currentMemberCoins
-        ){
-
-            alert(
-                "Insufficient coins.\n\n" +
-
-                "Available Coins: " +
-                currentMemberCoins
-            );
-
-            return;
-
-        }
-
-
-        /* UPI validation */
 
         if(!upiId){
 
@@ -3007,26 +2900,10 @@ async function(){
         }
 
 
-        /*
-         * Basic UPI format check.
-         *
-         * Example:
-         * name@upi
-         */
-
-        const upiPattern =
-            /^[a-zA-Z0-9._-]{2,}@[a-zA-Z0-9._-]{2,}$/;
-
-
-        if(
-            !upiPattern.test(
-                upiId
-            )
-        ){
+        if(!upiId.includes("@")){
 
             alert(
-                "Please enter a valid UPI ID.\n\n" +
-                "Example: example@upi"
+                "Please enter a valid UPI ID.\n\nExample: example@upi"
             );
 
             return;
@@ -3034,81 +2911,43 @@ async function(){
         }
 
 
-        /*
-         * Calculate amount.
-         */
-
-        const amount =
+        const rupees =
             coins / 100;
 
 
-        /*
-         * Disable button
-         * while request is saving.
-         */
+        const button =
+            document.getElementById(
+                "withdrawButton"
+            );
 
-        submitButton.disabled =
+
+        button.disabled =
             true;
 
-        submitButton.textContent =
+        button.textContent =
             "Submitting...";
 
 
-        /*
-         * Member information
-         */
-
-        const memberRef =
-            doc(
-                db,
-                "users",
-                currentMember.uid
-            );
-
-
-        const memberSnap =
-            await getDoc(
-                memberRef
-            );
-
-
-        if(!memberSnap.exists()){
-
-            throw new Error(
-                "Member account not found."
-            );
-
-        }
-
-
-        const memberData =
-            memberSnap.data();
-
-
-        /*
-         * Create withdrawal request.
-         *
-         * Member does NOT get coins deducted here.
-         *
-         * Owner will deduct coins only after
-         * approving the request using a transaction.
-         */
-
-        await addDoc(
+        const withdrawalsRef =
             collection(
                 db,
                 "withdrawals"
-            ),
+            );
+
+
+        await addDoc(
+            withdrawalsRef,
             {
 
                 memberId:
                     currentMember.uid,
 
                 memberName:
-                    memberData.name ||
+                    currentMemberData.name ||
                     "Member",
 
                 memberEmail:
+                    currentMemberData.email ||
                     currentMember.email ||
                     "",
 
@@ -3116,7 +2955,10 @@ async function(){
                     coins,
 
                 amount:
-                    amount,
+                    rupees,
+
+                rupees:
+                    rupees,
 
                 upiId:
                     upiId,
@@ -3131,38 +2973,38 @@ async function(){
         );
 
 
+        document.getElementById(
+            "withdrawCoins"
+        ).value =
+            "";
+
+
+        document.getElementById(
+            "withdrawUpi"
+        ).value =
+            "";
+
+
+        document.getElementById(
+            "withdrawRupees"
+        ).textContent =
+            "₹0.00";
+
+
         alert(
             "Withdrawal request submitted successfully! 🎉\n\n" +
 
             "Coins: " +
             coins +
+            "\n" +
 
-            "\nAmount: ₹" +
-            amount.toFixed(2) +
+            "Amount: ₹" +
+            rupees.toFixed(2) +
+            "\n\n" +
 
-            "\nUPI ID: " +
-            upiId +
-
-            "\n\nStatus: Pending Verification"
+            "Status: Pending"
         );
 
-
-        /*
-         * Clear form.
-         */
-
-        coinsInput.value =
-            "";
-
-        upiInput.value =
-            "";
-
-        calculateWithdrawal();
-
-
-        /*
-         * Reload withdrawal history.
-         */
 
         await loadWithdrawalHistory();
 
@@ -3170,35 +3012,30 @@ async function(){
     catch(error){
 
         console.error(
-            "Withdrawal request error:",
+            "Withdrawal error:",
             error
         );
 
 
         alert(
             "Unable to submit withdrawal request.\n\n" +
-            "Error:\n" +
             error.message
         );
 
     }
     finally{
 
-        const submitButton =
+        const button =
             document.getElementById(
-                "withdrawSubmitButton"
+                "withdrawButton"
             );
 
 
-        if(submitButton){
+        button.disabled =
+            false;
 
-            submitButton.disabled =
-                false;
-
-            submitButton.textContent =
-                "💸 Submit Withdrawal Request";
-
-        }
+        button.textContent =
+            "💸 Submit Withdrawal Request";
 
     }
 
@@ -3212,13 +3049,13 @@ async function(){
 
 async function loadWithdrawalHistory(){
 
-    const historyContainer =
+    const container =
         document.getElementById(
             "withdrawalHistory"
         );
 
 
-    historyContainer.innerHTML = `
+    container.innerHTML = `
 
         <div class="empty">
             Loading withdrawal history...
@@ -3231,29 +3068,17 @@ async function loadWithdrawalHistory(){
 
         if(!currentMember){
 
-            historyContainer.innerHTML = `
-
-                <div class="empty">
-                    Please login again.
-                </div>
-
-            `;
-
             return;
 
         }
 
 
-        const withdrawalRef =
-            collection(
-                db,
-                "withdrawals"
-            );
-
-
         const withdrawalQuery =
             query(
-                withdrawalRef,
+                collection(
+                    db,
+                    "withdrawals"
+                ),
 
                 where(
                     "memberId",
@@ -3270,13 +3095,13 @@ async function loadWithdrawalHistory(){
             );
 
 
-        historyContainer.innerHTML =
+        container.innerHTML =
             "";
 
 
         if(snapshot.empty){
 
-            historyContainer.innerHTML = `
+            container.innerHTML = `
 
                 <div class="empty">
 
@@ -3309,10 +3134,6 @@ async function loadWithdrawalHistory(){
             }
         );
 
-
-        /*
-         * Newest first.
-         */
 
         withdrawals.sort(
             (a,b) => {
@@ -3349,7 +3170,7 @@ async function loadWithdrawalHistory(){
 
 
                 item.className =
-                    "withdraw-history-item";
+                    "withdraw-item";
 
 
                 const coins =
@@ -3360,26 +3181,21 @@ async function loadWithdrawalHistory(){
 
                 const amount =
                     Number(
-                        data.amount || 0
+                        data.amount ??
+                        data.rupees ??
+                        coins / 100
                     );
 
 
-                const upiId =
-                    escapeHtml(
-                        data.upiId ||
-                        ""
-                    );
-
-
-                let requestedDate =
-                    "Request submitted";
+                let date =
+                    "Pending";
 
 
                 if(data.requestedAt){
 
                     try{
 
-                        requestedDate =
+                        date =
                             data.requestedAt
                                 .toDate()
                                 .toLocaleString();
@@ -3387,16 +3203,17 @@ async function loadWithdrawalHistory(){
                     }
                     catch(error){
 
-                        requestedDate =
-                            "Request submitted";
+                        date =
+                            "Requested";
 
                     }
 
                 }
 
 
-                let statusText =
-                    "Pending";
+                const status =
+                    data.status ||
+                    "pending";
 
 
                 let statusClass =
@@ -3404,26 +3221,18 @@ async function loadWithdrawalHistory(){
 
 
                 if(
-                    data.status ===
+                    status ===
                     "approved"
                 ){
-
-                    statusText =
-                        "Approved";
 
                     statusClass =
                         "completed-status";
 
                 }
-
-
-                if(
-                    data.status ===
+                else if(
+                    status ===
                     "rejected"
                 ){
-
-                    statusText =
-                        "Rejected";
 
                     statusClass =
                         "rejected-status";
@@ -3438,33 +3247,31 @@ async function loadWithdrawalHistory(){
                     </h3>
 
 
-                    <div class="withdraw-history-info">
+                    <div class="withdraw-info">
 
                         <b>Coins:</b>
-
                         ${coins}
 
                         <br>
 
 
                         <b>Amount:</b>
-
                         ₹${amount.toFixed(2)}
 
                         <br>
 
 
                         <b>UPI ID:</b>
-
-                        ${upiId}
+                        ${escapeHtml(
+                            data.upiId || "-"
+                        )}
 
                         <br>
 
 
                         <b>Requested:</b>
-
                         ${escapeHtml(
-                            requestedDate
+                            date
                         )}
 
                         <br>
@@ -3475,84 +3282,19 @@ async function loadWithdrawalHistory(){
                         <span
                             class="status ${statusClass}"
                         >
-
-                            ${statusText}
-
-                        </span>
-
-                `;
-
-
-                if(
-                    data.rejectionReason
-                ){
-
-                    item.innerHTML += `
-
-                        <br>
-
-                        <b>Reason:</b>
-
-                        ${escapeHtml(
-                            data.rejectionReason
-                        )}
-
-                    `;
-
-                }
-
-
-                if(
-                    data.processedAt
-                ){
-
-                    let processedDate =
-                        "";
-
-
-                    try{
-
-                        processedDate =
-                            data.processedAt
-                                .toDate()
-                                .toLocaleString();
-
-                    }
-                    catch(error){
-
-                        processedDate =
-                            "";
-
-                    }
-
-
-                    if(processedDate){
-
-                        item.innerHTML += `
-
-                            <br>
-
-                            <b>Processed:</b>
-
                             ${escapeHtml(
-                                processedDate
+                                formatWithdrawalStatus(
+                                    status
+                                )
                             )}
-
-                        `;
-
-                    }
-
-                }
-
-
-                item.innerHTML += `
+                        </span>
 
                     </div>
 
                 `;
 
 
-                historyContainer.appendChild(
+                container.appendChild(
                     item
                 );
 
@@ -3568,7 +3310,7 @@ async function loadWithdrawalHistory(){
         );
 
 
-        historyContainer.innerHTML = `
+        container.innerHTML = `
 
             <div class="empty">
 
@@ -3591,6 +3333,34 @@ async function loadWithdrawalHistory(){
 
 
 /* =====================================================
+   WITHDRAWAL STATUS
+   ===================================================== */
+
+function formatWithdrawalStatus(
+    status
+){
+
+    if(status === "approved"){
+
+        return "Approved";
+
+    }
+
+
+    if(status === "rejected"){
+
+        return "Rejected";
+
+    }
+
+
+    return "Pending";
+
+}
+
+
+
+/* =====================================================
    LOGOUT
    ===================================================== */
 
@@ -3598,10 +3368,6 @@ window.logout =
 async function(){
 
     try{
-
-        /*
-         * Stop all timers.
-         */
 
         Object.keys(
             activeTaskTimers
