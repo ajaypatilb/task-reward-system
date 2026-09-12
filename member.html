@@ -136,6 +136,7 @@ header h2{
 
 .task button:disabled{
     cursor:not-allowed;
+    opacity:.6;
 }
 
 .status{
@@ -146,6 +147,11 @@ header h2{
     color:#166534;
     font-size:12px;
     font-weight:bold;
+}
+
+.pending-status{
+    background:#fef3c7;
+    color:#92400e;
 }
 
 .completed-status{
@@ -378,16 +384,18 @@ import {
     getDoc,
     collection,
     getDocs,
-    addDoc,
+    setDoc,
     query,
     where,
-    orderBy,
     serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-/* Firebase Configuration */
+/* =====================================================
+   FIREBASE CONFIG
+   DO NOT CHANGE
+   ===================================================== */
 
 const firebaseConfig = {
 
@@ -415,7 +423,9 @@ const firebaseConfig = {
 };
 
 
-/* Initialize Firebase */
+/* =====================================================
+   INITIALIZE FIREBASE
+   ===================================================== */
 
 const app =
     initializeApp(firebaseConfig);
@@ -427,12 +437,16 @@ const db =
     getFirestore(app);
 
 
-/* Current Member */
+/* =====================================================
+   CURRENT MEMBER
+   ===================================================== */
 
 let currentMember = null;
 
 
-/* Check Member Login */
+/* =====================================================
+   CHECK MEMBER LOGIN
+   ===================================================== */
 
 onAuthStateChanged(auth, async (user) => {
 
@@ -525,7 +539,12 @@ onAuthStateChanged(auth, async (user) => {
             data.name || "Member";
 
 
-        /* Coins */
+        /* Coins
+
+           IMPORTANT:
+           We only READ coins.
+           We DO NOT increase coins here.
+        */
 
         const coins =
             Number(data.coins || 0);
@@ -561,7 +580,10 @@ onAuthStateChanged(auth, async (user) => {
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Member load error:",
+            error
+        );
 
         alert(
             "Unable to load member data.\n\n" +
@@ -573,7 +595,9 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 
-/* Load Active Tasks */
+/* =====================================================
+   LOAD ACTIVE TASKS
+   ===================================================== */
 
 async function loadTasks(){
 
@@ -765,12 +789,17 @@ async function loadTasks(){
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Task loading error:",
+            error
+        );
 
         tasksContainer.innerHTML = `
 
             <div class="empty">
                 Unable to load tasks.
+                <br><br>
+                ${escapeHtml(error.message)}
             </div>
 
         `;
@@ -784,7 +813,9 @@ async function loadTasks(){
 }
 
 
-/* Start Task */
+/* =====================================================
+   START TASK
+   ===================================================== */
 
 window.startTask = async function(taskId){
 
@@ -840,11 +871,7 @@ window.startTask = async function(taskId){
         }
 
 
-        const watchTime =
-            Number(
-                task.watchTime || 0
-            );
-
+        /* Check YouTube URL */
 
         const youtubeUrl =
             task.youtubeUrl || "";
@@ -857,6 +884,21 @@ window.startTask = async function(taskId){
             );
 
             return;
+        }
+
+
+        /* Watch Time */
+
+        let watchTime =
+            Number(
+                task.watchTime || 0
+            );
+
+
+        if(watchTime < 1){
+
+            watchTime = 1;
+
         }
 
 
@@ -907,9 +949,7 @@ window.startTask = async function(taskId){
         }
 
 
-        /*
-         * Open YouTube
-         */
+        /* Open YouTube */
 
         window.open(
             youtubeUrl,
@@ -919,13 +959,6 @@ window.startTask = async function(taskId){
 
         let remaining =
             watchTime;
-
-
-        if(remaining < 1){
-
-            remaining = 1;
-
-        }
 
 
         if(timerValue){
@@ -944,9 +977,7 @@ window.startTask = async function(taskId){
         }
 
 
-        /*
-         * Timer
-         */
+        /* Timer */
 
         const timer =
             setInterval(async () => {
@@ -973,9 +1004,12 @@ window.startTask = async function(taskId){
 
                         timerStatus.textContent =
                             "Required time completed.";
-
                     }
 
+
+                    /*
+                     * Save completion
+                     */
 
                     await completeTask(
                         taskId,
@@ -989,7 +1023,10 @@ window.startTask = async function(taskId){
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Start task error:",
+            error
+        );
 
         alert(
             "Unable to start task.\n\n" +
@@ -1001,7 +1038,9 @@ window.startTask = async function(taskId){
 };
 
 
-/* Complete Task */
+/* =====================================================
+   COMPLETE TASK
+   ===================================================== */
 
 async function completeTask(
     taskId,
@@ -1021,44 +1060,52 @@ async function completeTask(
 
 
         /*
-         * Check whether this member
-         * already completed this task.
+         * IMPORTANT
+         *
+         * One Member + One Task
+         * = One fixed completion document.
+         *
+         * This prevents duplicate completion.
          */
 
+        const completionId =
+            currentMember.uid +
+            "_" +
+            taskId;
+
+
         const completionRef =
-            collection(
+            doc(
                 db,
-                "taskCompletions"
+                "taskCompletions",
+                completionId
             );
 
 
-        const completionQuery =
-            query(
-                completionRef,
-                where(
-                    "memberId",
-                    "==",
-                    currentMember.uid
-                ),
-                where(
-                    "taskId",
-                    "==",
-                    taskId
+        /*
+         * Check existing completion
+         */
+
+        const existingSnap =
+            await getDoc(
+                completionRef
+            );
+
+
+        if(existingSnap.exists()){
+
+            const existingData =
+                existingSnap.data();
+
+
+            alert(
+                "You have already completed this task.\n\n" +
+                "Reward Status: " +
+                formatRewardStatus(
+                    existingData.status
                 )
             );
 
-
-        const existing =
-            await getDocs(
-                completionQuery
-            );
-
-
-        if(!existing.empty){
-
-            alert(
-                "You have already completed this task."
-            );
 
             await loadTaskHistory();
 
@@ -1067,10 +1114,29 @@ async function completeTask(
 
 
         /*
-         * Save completion record
+         * Prepare completion data
          */
 
-        await addDoc(
+        const rewardCoins =
+            Number(
+                task.rewardCoins || 0
+            );
+
+
+        const requiredWatchTime =
+            Number(
+                task.watchTime || 0
+            );
+
+
+        /*
+         * SAVE TO FIRESTORE
+         *
+         * IMPORTANT:
+         * Coins are NOT added here.
+         */
+
+        await setDoc(
             completionRef,
             {
 
@@ -1084,17 +1150,16 @@ async function completeTask(
                     task.title || "Task",
 
                 rewardCoins:
-                    Number(
-                        task.rewardCoins || 0
-                    ),
+                    rewardCoins,
 
                 watchTime:
-                    Number(
-                        task.watchTime || 0
-                    ),
+                    requiredWatchTime,
 
                 status:
-                    "completed",
+                    "pending",
+
+                rewardStatus:
+                    "Pending Verification",
 
                 completedAt:
                     serverTimestamp()
@@ -1103,22 +1168,34 @@ async function completeTask(
         );
 
 
+        /*
+         * Success message
+         */
+
         alert(
             "Task completed successfully! 🎉\n\n" +
             "Your completion has been recorded.\n\n" +
-            "Reward verification is pending."
+            "Reward Status: Pending Verification"
         );
 
+
+        /*
+         * Reload history
+         */
 
         await loadTaskHistory();
 
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "COMPLETE TASK ERROR:",
+            error
+        );
 
         alert(
             "Unable to save task completion.\n\n" +
+            "Error:\n" +
             error.message
         );
 
@@ -1127,7 +1204,9 @@ async function completeTask(
 }
 
 
-/* Load Task History */
+/* =====================================================
+   LOAD TASK HISTORY
+   ===================================================== */
 
 async function loadTaskHistory(){
 
@@ -1148,6 +1227,12 @@ async function loadTaskHistory(){
 
         if(!currentMember){
 
+            historyContainer.innerHTML = `
+                <div class="empty">
+                    Please login again.
+                </div>
+            `;
+
             return;
         }
 
@@ -1159,6 +1244,17 @@ async function loadTaskHistory(){
             );
 
 
+        /*
+         * Only use WHERE query here.
+         *
+         * We intentionally do NOT use:
+         *
+         * orderBy("completedAt","desc")
+         *
+         * This avoids Firestore composite
+         * index problems.
+         */
+
         const historyQuery =
             query(
                 completionRef,
@@ -1166,10 +1262,6 @@ async function loadTaskHistory(){
                     "memberId",
                     "==",
                     currentMember.uid
-                ),
-                orderBy(
-                    "completedAt",
-                    "desc"
                 )
             );
 
@@ -1197,11 +1289,54 @@ async function loadTaskHistory(){
         }
 
 
+        /*
+         * Convert Firestore documents
+         * into array for client-side sorting.
+         */
+
+        const history = [];
+
+
         snapshot.forEach((docSnap) => {
 
-            const data =
-                docSnap.data();
+            history.push({
+                id: docSnap.id,
+                ...docSnap.data()
+            });
 
+        });
+
+
+        /*
+         * Sort newest first.
+         */
+
+        history.sort((a,b) => {
+
+            const aTime =
+                a.completedAt &&
+                typeof a.completedAt.toMillis === "function"
+                ? a.completedAt.toMillis()
+                : 0;
+
+
+            const bTime =
+                b.completedAt &&
+                typeof b.completedAt.toMillis === "function"
+                ? b.completedAt.toMillis()
+                : 0;
+
+
+            return bTime - aTime;
+
+        });
+
+
+        /*
+         * Display history
+         */
+
+        history.forEach((data) => {
 
             const item =
                 document.createElement(
@@ -1256,6 +1391,12 @@ async function loadTaskHistory(){
             }
 
 
+            const rewardStatus =
+                formatRewardStatus(
+                    data.status
+                );
+
+
             item.innerHTML = `
 
                 <h3>
@@ -1264,7 +1405,8 @@ async function loadTaskHistory(){
 
                 <div class="history-info">
 
-                    <b>Status:</b>
+                    <b>Task Status:</b>
+
                     <span class="status completed-status">
                         Completed
                     </span>
@@ -1287,7 +1429,10 @@ async function loadTaskHistory(){
                     <br>
 
                     <b>Reward Status:</b>
-                    Pending Verification
+
+                    <span class="status pending-status">
+                        ${escapeHtml(rewardStatus)}
+                    </span>
 
                 </div>
 
@@ -1303,12 +1448,10 @@ async function loadTaskHistory(){
     }
     catch(error){
 
-        console.error(error);
-
-        /*
-         * Firestore may require an index
-         * for the history query.
-         */
+        console.error(
+            "History loading error:",
+            error
+        );
 
         historyContainer.innerHTML = `
 
@@ -1318,8 +1461,7 @@ async function loadTaskHistory(){
 
                 <br><br>
 
-                If Firebase asks for a Firestore index,
-                create the index and reload the page.
+                ${escapeHtml(error.message)}
 
             </div>
 
@@ -1330,7 +1472,41 @@ async function loadTaskHistory(){
 }
 
 
-/* Logout */
+/* =====================================================
+   REWARD STATUS
+   ===================================================== */
+
+function formatRewardStatus(status){
+
+    if(status === "approved"){
+
+        return "Approved";
+
+    }
+
+
+    if(status === "rejected"){
+
+        return "Rejected";
+
+    }
+
+
+    if(status === "paid"){
+
+        return "Paid";
+
+    }
+
+
+    return "Pending Verification";
+
+}
+
+
+/* =====================================================
+   LOGOUT
+   ===================================================== */
 
 window.logout = async function(){
 
@@ -1354,7 +1530,9 @@ window.logout = async function(){
 };
 
 
-/* Coming Soon */
+/* =====================================================
+   COMING SOON
+   ===================================================== */
 
 window.comingSoon = function(){
 
@@ -1365,7 +1543,9 @@ window.comingSoon = function(){
 };
 
 
-/* HTML Escape */
+/* =====================================================
+   HTML ESCAPE
+   ===================================================== */
 
 function escapeHtml(value){
 
