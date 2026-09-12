@@ -165,6 +165,11 @@ header h2{
     color:#166534;
 }
 
+.rejected-status{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
 .info{
     color:#666;
 }
@@ -289,6 +294,98 @@ header h2{
     border-radius:8px;
     color:#166534;
     font-weight:bold;
+}
+
+
+/* =====================================================
+   WITHDRAWAL
+   ===================================================== */
+
+.withdraw-box{
+    border:1px solid #e5e7eb;
+    padding:18px;
+    border-radius:10px;
+    background:#f9fafb;
+}
+
+.withdraw-balance{
+    background:#eff6ff;
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+.withdraw-balance strong{
+    font-size:22px;
+}
+
+.withdraw-form-group{
+    margin-bottom:15px;
+}
+
+.withdraw-form-group label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.withdraw-form-group input{
+    width:100%;
+    padding:11px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    font-size:15px;
+}
+
+.withdraw-form-group input:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+.withdraw-amount-display{
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    padding:12px;
+    border-radius:7px;
+    font-weight:bold;
+    color:#166534;
+}
+
+.withdraw-button{
+    background:#16a34a;
+    color:white;
+    border:0;
+    padding:11px 18px;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.withdraw-button:hover{
+    background:#15803d;
+}
+
+.withdraw-button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.withdraw-history-item{
+    border:1px solid #e5e7eb;
+    padding:15px;
+    border-radius:9px;
+    margin-top:10px;
+}
+
+.withdraw-history-item h3{
+    margin:0 0 8px;
+}
+
+.withdraw-history-info{
+    color:#555;
+    font-size:14px;
+    line-height:1.7;
 }
 
 
@@ -490,18 +587,134 @@ header h2{
 
         </p>
 
-        <p class="info">
 
-            Minimum withdrawal system will be added later.
+        <div class="withdraw-box">
 
-        </p>
 
-        <button
-            class="task"
-            onclick="comingSoon()"
-        >
-            Withdraw
-        </button>
+            <!-- Available Balance -->
+
+            <div class="withdraw-balance">
+
+                🪙 Available Coins:
+
+                <br>
+
+                <strong id="withdrawAvailableCoins">
+                    0
+                </strong>
+
+                Coins
+
+                <br><br>
+
+                💰 Available Value:
+
+                <strong id="withdrawAvailableRupees">
+                    ₹0.00
+                </strong>
+
+            </div>
+
+
+            <!-- Coins -->
+
+            <div class="withdraw-form-group">
+
+                <label for="withdrawCoins">
+
+                    🪙 Coins to Withdraw
+
+                </label>
+
+                <input
+                    type="number"
+                    id="withdrawCoins"
+                    min="1"
+                    step="1"
+                    placeholder="Enter coins"
+                    oninput="calculateWithdrawal()"
+                >
+
+            </div>
+
+
+            <!-- Amount -->
+
+            <div class="withdraw-form-group">
+
+                <label>
+                    💰 Withdrawal Amount
+                </label>
+
+                <div
+                    class="withdraw-amount-display"
+                    id="withdrawAmountDisplay"
+                >
+                    ₹0.00
+                </div>
+
+            </div>
+
+
+            <!-- UPI -->
+
+            <div class="withdraw-form-group">
+
+                <label for="withdrawUpi">
+
+                    📱 UPI ID
+
+                </label>
+
+                <input
+                    type="text"
+                    id="withdrawUpi"
+                    placeholder="example@upi"
+                    maxlength="100"
+                >
+
+            </div>
+
+
+            <button
+                id="withdrawSubmitButton"
+                class="withdraw-button"
+                onclick="submitWithdrawal()"
+            >
+
+                💸 Submit Withdrawal Request
+
+            </button>
+
+
+            <p class="info">
+
+                Your withdrawal request will first be verified by the Owner.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         WITHDRAWAL HISTORY
+         ===================================================== -->
+
+    <div class="section">
+
+        <h2>
+            📜 Withdrawal History
+        </h2>
+
+        <div id="withdrawalHistory">
+
+            <div class="empty">
+                Loading withdrawal history...
+            </div>
+
+        </div>
 
     </div>
 
@@ -548,6 +761,7 @@ import {
     collection,
     getDocs,
     setDoc,
+    addDoc,
     query,
     where,
     serverTimestamp
@@ -616,27 +830,31 @@ let currentMember = null;
 
 
 /*
- * Stores currently running task timers.
+ * Current member coins.
  *
- * taskId -> timer information
+ * Used for withdrawal calculation.
+ */
+
+let currentMemberCoins = 0;
+
+
+
+/*
+ * Stores currently running task timers.
  */
 
 const activeTaskTimers = {};
 
 
-
 /*
  * Stores YouTube players.
- *
- * taskId -> YouTube player
  */
 
 const youtubePlayers = {};
 
 
-
 /*
- * YouTube API ready state
+ * YouTube API ready state.
  */
 
 let youtubeApiReady = false;
@@ -770,33 +988,15 @@ onAuthStateChanged(
 
             /* =================================================
                COINS
-               IMPORTANT:
-               MEMBER ONLY READS COINS
                ================================================= */
 
-            const coins =
+            currentMemberCoins =
                 Number(
                     data.coins || 0
                 );
 
 
-            document.getElementById(
-                "coinBalance"
-            ).textContent =
-                coins;
-
-
-            /* 100 Coins = ₹1 */
-
-            const rupees =
-                coins / 100;
-
-
-            document.getElementById(
-                "rupeeValue"
-            ).textContent =
-                "₹" +
-                rupees.toFixed(2);
+            updateCoinDisplay();
 
 
             /* Load Tasks */
@@ -804,9 +1004,14 @@ onAuthStateChanged(
             await loadTasks();
 
 
-            /* Load History */
+            /* Load Task History */
 
             await loadTaskHistory();
+
+
+            /* Load Withdrawal History */
+
+            await loadWithdrawalHistory();
 
         }
         catch(error){
@@ -825,6 +1030,53 @@ onAuthStateChanged(
 
     }
 );
+
+
+
+/* =====================================================
+   UPDATE COIN DISPLAY
+   ===================================================== */
+
+function updateCoinDisplay(){
+
+    const coins =
+        Number(
+            currentMemberCoins || 0
+        );
+
+
+    document.getElementById(
+        "coinBalance"
+    ).textContent =
+        coins;
+
+
+    /* 100 Coins = ₹1 */
+
+    const rupees =
+        coins / 100;
+
+
+    document.getElementById(
+        "rupeeValue"
+    ).textContent =
+        "₹" +
+        rupees.toFixed(2);
+
+
+    document.getElementById(
+        "withdrawAvailableCoins"
+    ).textContent =
+        coins;
+
+
+    document.getElementById(
+        "withdrawAvailableRupees"
+    ).textContent =
+        "₹" +
+        rupees.toFixed(2);
+
+}
 
 
 
@@ -916,10 +1168,6 @@ async function loadTasks(){
                     Number(
                         data.watchTime || 0
                     );
-
-
-                const youtubeUrl =
-                    data.youtubeUrl || "";
 
 
                 task.innerHTML = `
@@ -1136,11 +1384,6 @@ async function(taskId){
         }
 
 
-        /*
-         * Prevent starting another timer
-         * for same task.
-         */
-
         if(activeTaskTimers[taskId]){
 
             alert(
@@ -1338,16 +1581,10 @@ async function(taskId){
         }
 
 
-        /*
-         * Wait until YouTube API is ready.
-         */
-
         await waitForYouTubeAPI();
 
 
-        /*
-         * Create YouTube player.
-         */
+        /* Create YouTube player */
 
         youtubePlayers[taskId] =
             new YT.Player(
@@ -1422,9 +1659,7 @@ async function(taskId){
             );
 
 
-        /*
-         * Create timer state.
-         */
+        /* Timer state */
 
         activeTaskTimers[taskId] = {
 
@@ -1455,10 +1690,6 @@ async function(taskId){
 
         };
 
-
-        /*
-         * Start internal timer loop.
-         */
 
         startTaskTimerLoop(
             taskId
@@ -1513,10 +1744,6 @@ function handleYouTubeState(
         );
 
 
-    /*
-     * YT.PlayerState.PLAYING = 1
-     */
-
     if(
         state === YT.PlayerState.PLAYING
     ){
@@ -1524,9 +1751,7 @@ function handleYouTubeState(
         timer.playing = true;
 
 
-        if(
-            timer.pageVisible
-        ){
+        if(timer.pageVisible){
 
             if(timerStatus){
 
@@ -1560,10 +1785,6 @@ function handleYouTubeState(
     }
 
 
-    /*
-     * PAUSED
-     */
-
     if(
         state === YT.PlayerState.PAUSED
     ){
@@ -1586,10 +1807,6 @@ function handleYouTubeState(
     }
 
 
-    /*
-     * BUFFERING
-     */
-
     if(
         state === YT.PlayerState.BUFFERING
     ){
@@ -1611,10 +1828,6 @@ function handleYouTubeState(
 
     }
 
-
-    /*
-     * ENDED
-     */
 
     if(
         state === YT.PlayerState.ENDED
@@ -1658,15 +1871,6 @@ function startTaskTimerLoop(
     }
 
 
-    /*
-     * Every second check:
-     *
-     * 1. Video is playing
-     * 2. Page is visible
-     *
-     * Only then decrease remaining time.
-     */
-
     timer.interval =
         setInterval(
             async () => {
@@ -1689,10 +1893,6 @@ function startTaskTimerLoop(
                 }
 
 
-                /*
-                 * Actual condition
-                 */
-
                 const canCount =
                     current.playing &&
                     current.pageVisible;
@@ -1709,11 +1909,6 @@ function startTaskTimerLoop(
                 }
 
 
-                /*
-                 * Count one actual
-                 * playback second.
-                 */
-
                 current.remaining--;
 
 
@@ -1721,10 +1916,6 @@ function startTaskTimerLoop(
                     taskId
                 );
 
-
-                /*
-                 * Required time completed.
-                 */
 
                 if(
                     current.remaining <= 0
@@ -1831,10 +2022,6 @@ async function finishTaskTimer(
         false;
 
 
-    /*
-     * Stop timer interval.
-     */
-
     if(timer.interval){
 
         clearInterval(
@@ -1887,10 +2074,6 @@ async function finishTaskTimer(
     }
 
 
-    /*
-     * Pause video after required time.
-     */
-
     const player =
         youtubePlayers[taskId];
 
@@ -1917,10 +2100,6 @@ async function finishTaskTimer(
 
     }
 
-
-    /*
-     * Save completion.
-     */
 
     await completeTask(
         taskId,
@@ -1961,11 +2140,6 @@ async function completeTask(
         }
 
 
-        /*
-         * One Member + One Task
-         * = One fixed completion document.
-         */
-
         const completionId =
             currentMember.uid +
             "_" +
@@ -1980,35 +2154,17 @@ async function completeTask(
             );
 
 
-        /*
-         * Reward
-         */
-
         const rewardCoins =
             Number(
                 task.rewardCoins || 0
             );
 
 
-        /*
-         * Required watch time
-         */
-
         const requiredWatchTime =
             Number(
                 task.watchTime || 0
             );
 
-
-        /*
-         * SAVE COMPLETION
-         *
-         * Direct create.
-         *
-         * We intentionally do NOT use getDoc()
-         * before saving because a new document
-         * cannot be read using resource.data.
-         */
 
         await setDoc(
             completionRef,
@@ -2071,7 +2227,8 @@ async function completeTask(
 
     }
 
-            }
+}
+
 
 
 /* =====================================================
@@ -2116,12 +2273,6 @@ document.addEventListener(
 
                 if(!visible){
 
-                    /*
-                     * Page hidden
-                     *
-                     * Force timer pause.
-                     */
-
                     if(timerStatus){
 
                         timerStatus.textContent =
@@ -2137,13 +2288,7 @@ document.addEventListener(
                 }
 
 
-                /*
-                 * Page visible again.
-                 */
-
-                if(
-                    timer.playing
-                ){
+                if(timer.playing){
 
                     if(timerStatus){
 
@@ -2231,10 +2376,6 @@ function waitForYouTubeAPI(){
                         }
 
 
-                        /*
-                         * Maximum wait
-                         */
-
                         if(
                             attempts >= 100
                         ){
@@ -2274,12 +2415,6 @@ function getYouTubeVideoId(
             );
 
 
-        /*
-         * Normal:
-         *
-         * youtube.com/watch?v=ID
-         */
-
         if(
             parsed.hostname.includes(
                 "youtube.com"
@@ -2298,12 +2433,6 @@ function getYouTubeVideoId(
 
             }
 
-
-            /*
-             * Shorts:
-             *
-             * youtube.com/shorts/ID
-             */
 
             const parts =
                 parsed.pathname.split(
@@ -2332,10 +2461,6 @@ function getYouTubeVideoId(
 
         }
 
-
-        /*
-         * youtu.be/ID
-         */
 
         if(
             parsed.hostname ===
@@ -2413,12 +2538,6 @@ async function loadTaskHistory(){
             );
 
 
-        /*
-         * Only WHERE query.
-         *
-         * No composite index required.
-         */
-
         const historyQuery =
             query(
                 completionRef,
@@ -2475,10 +2594,6 @@ async function loadTaskHistory(){
             }
         );
 
-
-        /*
-         * Newest first.
-         */
 
         history.sort(
             (a,b) => {
@@ -2578,6 +2693,17 @@ async function loadTaskHistory(){
 
                     rewardClass =
                         "completed-status";
+
+                }
+
+
+                if(
+                    data.status ===
+                    "rejected"
+                ){
+
+                    rewardClass =
+                        "rejected-status";
 
                 }
 
@@ -2720,6 +2846,751 @@ function formatRewardStatus(
 
 
 /* =====================================================
+   WITHDRAWAL - CALCULATE AMOUNT
+   ===================================================== */
+
+window.calculateWithdrawal =
+function(){
+
+    const coinsInput =
+        document.getElementById(
+            "withdrawCoins"
+        );
+
+
+    const amountDisplay =
+        document.getElementById(
+            "withdrawAmountDisplay"
+        );
+
+
+    let coins =
+        Number(
+            coinsInput.value || 0
+        );
+
+
+    if(coins < 0){
+
+        coins = 0;
+
+    }
+
+
+    /*
+     * 100 Coins = ₹1
+     */
+
+    const amount =
+        coins / 100;
+
+
+    amountDisplay.textContent =
+        "₹" +
+        amount.toFixed(2);
+
+};
+
+
+
+/* =====================================================
+   SUBMIT WITHDRAWAL
+   ===================================================== */
+
+window.submitWithdrawal =
+async function(){
+
+    try{
+
+        if(!currentMember){
+
+            alert(
+                "Login session expired. Please login again."
+            );
+
+            return;
+
+        }
+
+
+        const coinsInput =
+            document.getElementById(
+                "withdrawCoins"
+            );
+
+
+        const upiInput =
+            document.getElementById(
+                "withdrawUpi"
+            );
+
+
+        const submitButton =
+            document.getElementById(
+                "withdrawSubmitButton"
+            );
+
+
+        const coins =
+            Number(
+                coinsInput.value
+            );
+
+
+        const upiId =
+            upiInput.value
+                .trim();
+
+
+        /* Coins validation */
+
+        if(
+            !Number.isFinite(coins) ||
+            coins <= 0
+        ){
+
+            alert(
+                "Please enter a valid number of coins."
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Only whole coins allowed.
+         */
+
+        if(
+            !Number.isInteger(coins)
+        ){
+
+            alert(
+                "Coins must be a whole number."
+            );
+
+            return;
+
+        }
+
+
+        /* Balance validation */
+
+        if(
+            coins >
+            currentMemberCoins
+        ){
+
+            alert(
+                "Insufficient coins.\n\n" +
+
+                "Available Coins: " +
+                currentMemberCoins
+            );
+
+            return;
+
+        }
+
+
+        /* UPI validation */
+
+        if(!upiId){
+
+            alert(
+                "Please enter your UPI ID."
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Basic UPI format check.
+         *
+         * Example:
+         * name@upi
+         */
+
+        const upiPattern =
+            /^[a-zA-Z0-9._-]{2,}@[a-zA-Z0-9._-]{2,}$/;
+
+
+        if(
+            !upiPattern.test(
+                upiId
+            )
+        ){
+
+            alert(
+                "Please enter a valid UPI ID.\n\n" +
+                "Example: example@upi"
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Calculate amount.
+         */
+
+        const amount =
+            coins / 100;
+
+
+        /*
+         * Disable button
+         * while request is saving.
+         */
+
+        submitButton.disabled =
+            true;
+
+        submitButton.textContent =
+            "Submitting...";
+
+
+        /*
+         * Member information
+         */
+
+        const memberRef =
+            doc(
+                db,
+                "users",
+                currentMember.uid
+            );
+
+
+        const memberSnap =
+            await getDoc(
+                memberRef
+            );
+
+
+        if(!memberSnap.exists()){
+
+            throw new Error(
+                "Member account not found."
+            );
+
+        }
+
+
+        const memberData =
+            memberSnap.data();
+
+
+        /*
+         * Create withdrawal request.
+         *
+         * Member does NOT get coins deducted here.
+         *
+         * Owner will deduct coins only after
+         * approving the request using a transaction.
+         */
+
+        await addDoc(
+            collection(
+                db,
+                "withdrawals"
+            ),
+            {
+
+                memberId:
+                    currentMember.uid,
+
+                memberName:
+                    memberData.name ||
+                    "Member",
+
+                memberEmail:
+                    currentMember.email ||
+                    "",
+
+                coins:
+                    coins,
+
+                amount:
+                    amount,
+
+                upiId:
+                    upiId,
+
+                status:
+                    "pending",
+
+                requestedAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        alert(
+            "Withdrawal request submitted successfully! 🎉\n\n" +
+
+            "Coins: " +
+            coins +
+
+            "\nAmount: ₹" +
+            amount.toFixed(2) +
+
+            "\nUPI ID: " +
+            upiId +
+
+            "\n\nStatus: Pending Verification"
+        );
+
+
+        /*
+         * Clear form.
+         */
+
+        coinsInput.value =
+            "";
+
+        upiInput.value =
+            "";
+
+        calculateWithdrawal();
+
+
+        /*
+         * Reload withdrawal history.
+         */
+
+        await loadWithdrawalHistory();
+
+    }
+    catch(error){
+
+        console.error(
+            "Withdrawal request error:",
+            error
+        );
+
+
+        alert(
+            "Unable to submit withdrawal request.\n\n" +
+            "Error:\n" +
+            error.message
+        );
+
+    }
+    finally{
+
+        const submitButton =
+            document.getElementById(
+                "withdrawSubmitButton"
+            );
+
+
+        if(submitButton){
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "💸 Submit Withdrawal Request";
+
+        }
+
+    }
+
+};
+
+
+
+/* =====================================================
+   LOAD WITHDRAWAL HISTORY
+   ===================================================== */
+
+async function loadWithdrawalHistory(){
+
+    const historyContainer =
+        document.getElementById(
+            "withdrawalHistory"
+        );
+
+
+    historyContainer.innerHTML = `
+
+        <div class="empty">
+            Loading withdrawal history...
+        </div>
+
+    `;
+
+
+    try{
+
+        if(!currentMember){
+
+            historyContainer.innerHTML = `
+
+                <div class="empty">
+                    Please login again.
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        const withdrawalRef =
+            collection(
+                db,
+                "withdrawals"
+            );
+
+
+        const withdrawalQuery =
+            query(
+                withdrawalRef,
+
+                where(
+                    "memberId",
+                    "==",
+                    currentMember.uid
+                )
+
+            );
+
+
+        const snapshot =
+            await getDocs(
+                withdrawalQuery
+            );
+
+
+        historyContainer.innerHTML =
+            "";
+
+
+        if(snapshot.empty){
+
+            historyContainer.innerHTML = `
+
+                <div class="empty">
+
+                    No withdrawal requests yet.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        const withdrawals = [];
+
+
+        snapshot.forEach(
+            (docSnap) => {
+
+                withdrawals.push({
+
+                    id:
+                        docSnap.id,
+
+                    ...docSnap.data()
+
+                });
+
+            }
+        );
+
+
+        /*
+         * Newest first.
+         */
+
+        withdrawals.sort(
+            (a,b) => {
+
+                const aTime =
+                    a.requestedAt &&
+                    typeof a.requestedAt.toMillis ===
+                    "function"
+                    ? a.requestedAt.toMillis()
+                    : 0;
+
+
+                const bTime =
+                    b.requestedAt &&
+                    typeof b.requestedAt.toMillis ===
+                    "function"
+                    ? b.requestedAt.toMillis()
+                    : 0;
+
+
+                return bTime - aTime;
+
+            }
+        );
+
+
+        withdrawals.forEach(
+            (data) => {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "withdraw-history-item";
+
+
+                const coins =
+                    Number(
+                        data.coins || 0
+                    );
+
+
+                const amount =
+                    Number(
+                        data.amount || 0
+                    );
+
+
+                const upiId =
+                    escapeHtml(
+                        data.upiId ||
+                        ""
+                    );
+
+
+                let requestedDate =
+                    "Request submitted";
+
+
+                if(data.requestedAt){
+
+                    try{
+
+                        requestedDate =
+                            data.requestedAt
+                                .toDate()
+                                .toLocaleString();
+
+                    }
+                    catch(error){
+
+                        requestedDate =
+                            "Request submitted";
+
+                    }
+
+                }
+
+
+                let statusText =
+                    "Pending";
+
+
+                let statusClass =
+                    "pending-status";
+
+
+                if(
+                    data.status ===
+                    "approved"
+                ){
+
+                    statusText =
+                        "Approved";
+
+                    statusClass =
+                        "completed-status";
+
+                }
+
+
+                if(
+                    data.status ===
+                    "rejected"
+                ){
+
+                    statusText =
+                        "Rejected";
+
+                    statusClass =
+                        "rejected-status";
+
+                }
+
+
+                item.innerHTML = `
+
+                    <h3>
+                        💸 Withdrawal Request
+                    </h3>
+
+
+                    <div class="withdraw-history-info">
+
+                        <b>Coins:</b>
+
+                        ${coins}
+
+                        <br>
+
+
+                        <b>Amount:</b>
+
+                        ₹${amount.toFixed(2)}
+
+                        <br>
+
+
+                        <b>UPI ID:</b>
+
+                        ${upiId}
+
+                        <br>
+
+
+                        <b>Requested:</b>
+
+                        ${escapeHtml(
+                            requestedDate
+                        )}
+
+                        <br>
+
+
+                        <b>Status:</b>
+
+                        <span
+                            class="status ${statusClass}"
+                        >
+
+                            ${statusText}
+
+                        </span>
+
+                `;
+
+
+                if(
+                    data.rejectionReason
+                ){
+
+                    item.innerHTML += `
+
+                        <br>
+
+                        <b>Reason:</b>
+
+                        ${escapeHtml(
+                            data.rejectionReason
+                        )}
+
+                    `;
+
+                }
+
+
+                if(
+                    data.processedAt
+                ){
+
+                    let processedDate =
+                        "";
+
+
+                    try{
+
+                        processedDate =
+                            data.processedAt
+                                .toDate()
+                                .toLocaleString();
+
+                    }
+                    catch(error){
+
+                        processedDate =
+                            "";
+
+                    }
+
+
+                    if(processedDate){
+
+                        item.innerHTML += `
+
+                            <br>
+
+                            <b>Processed:</b>
+
+                            ${escapeHtml(
+                                processedDate
+                            )}
+
+                        `;
+
+                    }
+
+                }
+
+
+                item.innerHTML += `
+
+                    </div>
+
+                `;
+
+
+                historyContainer.appendChild(
+                    item
+                );
+
+            }
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "Withdrawal history error:",
+            error
+        );
+
+
+        historyContainer.innerHTML = `
+
+            <div class="empty">
+
+                Unable to load withdrawal history.
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =====================================================
    LOGOUT
    ===================================================== */
 
@@ -2781,21 +3652,6 @@ async function(){
 
 
 /* =====================================================
-   COMING SOON
-   ===================================================== */
-
-window.comingSoon =
-function(){
-
-    alert(
-        "This feature will be activated soon."
-    );
-
-};
-
-
-
-/* =====================================================
    HTML ESCAPE
    ===================================================== */
 
@@ -2838,4 +3694,4 @@ function escapeHtml(
 
 
 </body>
-    </html>
+</html>
