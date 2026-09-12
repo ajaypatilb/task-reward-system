@@ -134,6 +134,10 @@ header h2{
     background:#1d4ed8;
 }
 
+.task button:disabled{
+    cursor:not-allowed;
+}
+
 .status{
     display:inline-block;
     padding:5px 10px;
@@ -142,6 +146,11 @@ header h2{
     color:#166534;
     font-size:12px;
     font-weight:bold;
+}
+
+.completed-status{
+    background:#dcfce7;
+    color:#166534;
 }
 
 .info{
@@ -178,9 +187,21 @@ header h2{
     margin-top:5px;
 }
 
-.complete-button{
-    background:#16a34a !important;
+.history-item{
+    border:1px solid #e5e7eb;
+    padding:15px;
+    border-radius:9px;
     margin-top:10px;
+}
+
+.history-item h3{
+    margin:0 0 8px;
+}
+
+.history-info{
+    color:#666;
+    font-size:14px;
+    line-height:1.6;
 }
 
 @media(max-width:700px){
@@ -301,9 +322,13 @@ header h2{
 
         <h2>📊 Task History</h2>
 
-        <p class="info">
-            Your completed tasks will appear here.
-        </p>
+        <div id="taskHistory">
+
+            <div class="empty">
+                Loading history...
+            </div>
+
+        </div>
 
     </div>
 
@@ -352,7 +377,12 @@ import {
     doc,
     getDoc,
     collection,
-    getDocs
+    getDocs,
+    addDoc,
+    query,
+    where,
+    orderBy,
+    serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
@@ -397,6 +427,11 @@ const db =
     getFirestore(app);
 
 
+/* Current Member */
+
+let currentMember = null;
+
+
 /* Check Member Login */
 
 onAuthStateChanged(auth, async (user) => {
@@ -411,6 +446,9 @@ onAuthStateChanged(auth, async (user) => {
 
 
     try{
+
+        currentMember = user;
+
 
         /* Get Member Data */
 
@@ -515,6 +553,11 @@ onAuthStateChanged(auth, async (user) => {
 
         await loadTasks();
 
+
+        /* Load History */
+
+        await loadTaskHistory();
+
     }
     catch(error){
 
@@ -575,7 +618,9 @@ async function loadTasks(){
             /* Only Active Tasks */
 
             if(data.status !== "active"){
+
                 return;
+
             }
 
 
@@ -655,10 +700,12 @@ async function loadTasks(){
 
 
                 <button
+                    id="start-${docSnap.id}"
                     onclick="startTask('${docSnap.id}')"
                 >
                     ▶️ Start Task
                 </button>
+
 
                 <div
                     id="timer-${docSnap.id}"
@@ -678,7 +725,7 @@ async function loadTasks(){
                         id="timerStatus-${docSnap.id}"
                         class="info"
                     >
-                        Task started...
+                        Task not started.
                     </div>
 
                 </div>
@@ -743,6 +790,16 @@ window.startTask = async function(taskId){
 
     try{
 
+        if(!currentMember){
+
+            alert(
+                "Please login again."
+            );
+
+            return;
+        }
+
+
         /* Get Task */
 
         const taskRef =
@@ -803,7 +860,7 @@ window.startTask = async function(taskId){
         }
 
 
-        /* Show Timer */
+        /* Timer Elements */
 
         const timerBox =
             document.getElementById(
@@ -823,6 +880,12 @@ window.startTask = async function(taskId){
             );
 
 
+        const startButton =
+            document.getElementById(
+                "start-" + taskId
+            );
+
+
         if(timerBox){
 
             timerBox.style.display =
@@ -831,8 +894,21 @@ window.startTask = async function(taskId){
         }
 
 
+        if(startButton){
+
+            startButton.disabled = true;
+
+            startButton.style.opacity =
+                "0.6";
+
+            startButton.textContent =
+                "Task Started";
+
+        }
+
+
         /*
-         * Open YouTube video
+         * Open YouTube
          */
 
         window.open(
@@ -869,47 +945,11 @@ window.startTask = async function(taskId){
 
 
         /*
-         * Disable Start button
-         */
-
-        const buttons =
-            document.querySelectorAll(
-                ".task button"
-            );
-
-
-        buttons.forEach((button) => {
-
-            const onclickValue =
-                button.getAttribute(
-                    "onclick"
-                );
-
-
-            if(
-                onclickValue &&
-                onclickValue.includes(taskId)
-            ){
-
-                button.disabled = true;
-
-                button.style.opacity =
-                    "0.6";
-
-                button.textContent =
-                    "Task Started";
-
-            }
-
-        });
-
-
-        /*
          * Timer
          */
 
         const timer =
-            setInterval(() => {
+            setInterval(async () => {
 
                 remaining--;
 
@@ -933,11 +973,13 @@ window.startTask = async function(taskId){
 
                         timerStatus.textContent =
                             "Required time completed.";
+
                     }
 
 
-                    showTaskCompleteMessage(
-                        taskId
+                    await completeTask(
+                        taskId,
+                        task
                     );
 
                 }
@@ -959,17 +1001,331 @@ window.startTask = async function(taskId){
 };
 
 
-/* Task Complete Message */
+/* Complete Task */
 
-function showTaskCompleteMessage(taskId){
+async function completeTask(
+    taskId,
+    task
+){
 
-    alert(
-        "Required watch time completed.\n\n" +
-        "Task ID: " +
-        taskId +
-        "\n\n" +
-        "Task completion verification will be added next."
-    );
+    try{
+
+        if(!currentMember){
+
+            alert(
+                "Login session expired."
+            );
+
+            return;
+        }
+
+
+        /*
+         * Check whether this member
+         * already completed this task.
+         */
+
+        const completionRef =
+            collection(
+                db,
+                "taskCompletions"
+            );
+
+
+        const completionQuery =
+            query(
+                completionRef,
+                where(
+                    "memberId",
+                    "==",
+                    currentMember.uid
+                ),
+                where(
+                    "taskId",
+                    "==",
+                    taskId
+                )
+            );
+
+
+        const existing =
+            await getDocs(
+                completionQuery
+            );
+
+
+        if(!existing.empty){
+
+            alert(
+                "You have already completed this task."
+            );
+
+            await loadTaskHistory();
+
+            return;
+        }
+
+
+        /*
+         * Save completion record
+         */
+
+        await addDoc(
+            completionRef,
+            {
+
+                memberId:
+                    currentMember.uid,
+
+                taskId:
+                    taskId,
+
+                taskTitle:
+                    task.title || "Task",
+
+                rewardCoins:
+                    Number(
+                        task.rewardCoins || 0
+                    ),
+
+                watchTime:
+                    Number(
+                        task.watchTime || 0
+                    ),
+
+                status:
+                    "completed",
+
+                completedAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        alert(
+            "Task completed successfully! 🎉\n\n" +
+            "Your completion has been recorded.\n\n" +
+            "Reward verification is pending."
+        );
+
+
+        await loadTaskHistory();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to save task completion.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* Load Task History */
+
+async function loadTaskHistory(){
+
+    const historyContainer =
+        document.getElementById(
+            "taskHistory"
+        );
+
+
+    historyContainer.innerHTML = `
+        <div class="empty">
+            Loading history...
+        </div>
+    `;
+
+
+    try{
+
+        if(!currentMember){
+
+            return;
+        }
+
+
+        const completionRef =
+            collection(
+                db,
+                "taskCompletions"
+            );
+
+
+        const historyQuery =
+            query(
+                completionRef,
+                where(
+                    "memberId",
+                    "==",
+                    currentMember.uid
+                ),
+                orderBy(
+                    "completedAt",
+                    "desc"
+                )
+            );
+
+
+        const snapshot =
+            await getDocs(
+                historyQuery
+            );
+
+
+        historyContainer.innerHTML = "";
+
+
+        if(snapshot.empty){
+
+            historyContainer.innerHTML = `
+
+                <div class="empty">
+                    No completed tasks yet.
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        snapshot.forEach((docSnap) => {
+
+            const data =
+                docSnap.data();
+
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "history-item";
+
+
+            const title =
+                escapeHtml(
+                    data.taskTitle ||
+                    "Task"
+                );
+
+
+            const reward =
+                Number(
+                    data.rewardCoins || 0
+                );
+
+
+            const watchTime =
+                Number(
+                    data.watchTime || 0
+                );
+
+
+            let completedDate =
+                "Completed";
+
+
+            if(data.completedAt){
+
+                try{
+
+                    completedDate =
+                        data.completedAt
+                            .toDate()
+                            .toLocaleString();
+
+                }
+                catch(error){
+
+                    completedDate =
+                        "Completed";
+
+                }
+
+            }
+
+
+            item.innerHTML = `
+
+                <h3>
+                    🎯 ${title}
+                </h3>
+
+                <div class="history-info">
+
+                    <b>Status:</b>
+                    <span class="status completed-status">
+                        Completed
+                    </span>
+
+                    <br>
+
+                    <b>Reward:</b>
+                    ${reward} Coins
+
+                    <br>
+
+                    <b>Required Time:</b>
+                    ${watchTime} Seconds
+
+                    <br>
+
+                    <b>Completed:</b>
+                    ${escapeHtml(completedDate)}
+
+                    <br>
+
+                    <b>Reward Status:</b>
+                    Pending Verification
+
+                </div>
+
+            `;
+
+
+            historyContainer.appendChild(
+                item
+            );
+
+        });
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        /*
+         * Firestore may require an index
+         * for the history query.
+         */
+
+        historyContainer.innerHTML = `
+
+            <div class="empty">
+
+                Unable to load task history.
+
+                <br><br>
+
+                If Firebase asks for a Firestore index,
+                create the index and reload the page.
+
+            </div>
+
+        `;
+
+    }
 
 }
 
@@ -1025,4 +1381,4 @@ function escapeHtml(value){
 </script>
 
 </body>
-</html>
+    </html>
