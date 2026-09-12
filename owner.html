@@ -2,15 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Owner Dashboard - Task Reward System</title>
 
 <style>
-
 *{
     box-sizing:border-box;
     font-family:Arial,sans-serif;
@@ -18,37 +15,120 @@
 
 body{
     margin:0;
-    background:#f3f4f6;
+    background:#f4f6f9;
     color:#222;
 }
 
-header{
-    background:#1f2937;
-    color:white;
-    padding:16px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-header h2{
-    margin:0;
-    font-size:20px;
-}
-
-.logout{
-    background:#ef4444;
-    color:white;
-    border:0;
-    padding:9px 15px;
-    border-radius:7px;
+button{
     cursor:pointer;
 }
 
-.container{
-    max-width:1200px;
-    margin:25px auto;
-    padding:0 15px;
+.hidden{
+    display:none!important;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    height:60px;
+    background:#111827;
+    color:white;
+    display:flex;
+    align-items:center;
+    padding:0 16px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.menuBtn{
+    border:none;
+    background:transparent;
+    color:white;
+    font-size:27px;
+    margin-right:15px;
+    padding:4px 8px;
+}
+
+.logo{
+    font-size:19px;
+    font-weight:bold;
+    flex:1;
+}
+
+.logoutBtn{
+    background:#dc2626;
+    border:none;
+    color:white;
+    padding:9px 14px;
+    border-radius:7px;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    position:fixed;
+    top:60px;
+    left:0;
+    width:250px;
+    height:calc(100vh - 60px);
+    background:#1f2937;
+    color:white;
+    z-index:900;
+    transform:translateX(-100%);
+    transition:.25s;
+    overflow-y:auto;
+}
+
+.sidebar.open{
+    transform:translateX(0);
+}
+
+.sidebarTitle{
+    padding:18px;
+    font-size:18px;
+    font-weight:bold;
+    border-bottom:1px solid #374151;
+}
+
+.menuItem{
+    width:100%;
+    border:none;
+    background:transparent;
+    color:white;
+    text-align:left;
+    padding:14px 18px;
+    font-size:15px;
+}
+
+.menuItem:hover{
+    background:#374151;
+}
+
+.menuItem.active{
+    background:#2563eb;
+}
+
+/* Overlay */
+
+.overlay{
+    position:fixed;
+    inset:60px 0 0 0;
+    background:rgba(0,0,0,.35);
+    z-index:800;
+    display:none;
+}
+
+.overlay.show{
+    display:block;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    padding:20px;
+    max-width:1400px;
+    margin:auto;
 }
 
 .welcome{
@@ -56,2510 +136,1386 @@ header h2{
     padding:20px;
     border-radius:12px;
     margin-bottom:20px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
-.welcome h2{
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.pageTitle{
     margin-top:0;
 }
 
-.cards{
+/* ================= CARDS ================= */
+
+.stats{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:15px;
-    margin-bottom:25px;
+    margin-bottom:20px;
 }
+
+.stat{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+.stat h3{
+    margin:0 0 8px;
+    font-size:14px;
+    color:#6b7280;
+}
+
+.stat strong{
+    font-size:27px;
+}
+
+/* ================= SECTION ================= */
 
 .card{
-    background:white;
-    padding:22px;
-    border-radius:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.card h3{
-    margin:0 0 10px;
-    font-size:15px;
-    color:#666;
-}
-
-.card .value{
-    font-size:28px;
-    font-weight:bold;
-}
-
-.section{
     background:white;
     padding:20px;
     border-radius:12px;
     margin-bottom:20px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
-.section h2{
+.card h2{
     margin-top:0;
 }
 
-.table-wrap{
+/* ================= TABLE ================= */
+
+.tableWrap{
     overflow-x:auto;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:750px;
+    min-width:700px;
 }
 
-th,
-td{
+th,td{
     padding:11px;
     border-bottom:1px solid #e5e7eb;
     text-align:left;
-    vertical-align:top;
+    font-size:14px;
 }
 
 th{
-    background:#f9fafb;
+    background:#f3f4f6;
 }
 
-.status{
-    display:inline-block;
-    padding:5px 10px;
-    border-radius:15px;
-    font-size:12px;
-    font-weight:bold;
-}
-
-.active-status{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.pending-status{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.completed-status{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.rejected-status{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.inactive-status{
-    background:#e5e7eb;
-    color:#374151;
-}
-
-.approved-status{
-    background:#dbeafe;
-    color:#1e40af;
-}
+/* ================= BUTTONS ================= */
 
 .btn{
-    border:0;
+    border:none;
     padding:8px 12px;
     border-radius:6px;
-    cursor:pointer;
-    color:white;
     margin:2px;
+    font-size:13px;
 }
 
-.btn:hover{
-    opacity:.9;
-}
-
-.btn-green{
-    background:#16a34a;
-}
-
-.btn-red{
-    background:#dc2626;
-}
-
-.btn-blue{
+.blue{
     background:#2563eb;
+    color:white;
 }
 
-.btn-gray{
+.green{
+    background:#16a34a;
+    color:white;
+}
+
+.red{
+    background:#dc2626;
+    color:white;
+}
+
+.gray{
     background:#6b7280;
+    color:white;
 }
 
-.btn:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-}
+/* ================= FORM ================= */
 
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-
-.form-group{
-    display:flex;
-    flex-direction:column;
-}
-
-.form-group.full{
-    grid-column:1 / -1;
-}
-
-.form-group label{
-    font-weight:bold;
-    margin-bottom:6px;
-}
-
-.form-group input,
-.form-group select{
+input,select{
+    width:100%;
     padding:11px;
     border:1px solid #d1d5db;
     border-radius:7px;
+    margin-bottom:12px;
+}
+
+label{
     font-size:14px;
-}
-
-.create-button{
-    margin-top:15px;
-    background:#2563eb;
-    color:white;
-    border:0;
-    padding:11px 18px;
-    border-radius:7px;
-    cursor:pointer;
-}
-
-.task-card{
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    padding:16px;
-    margin-top:12px;
-}
-
-.task-card h3{
-    margin:0 0 10px;
-}
-
-.task-info{
-    color:#666;
-    line-height:1.7;
-}
-
-.completion-card{
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    padding:16px;
-    margin-top:12px;
-}
-
-.completion-card h3{
-    margin:0 0 10px;
-}
-
-.completion-info{
-    color:#666;
-    line-height:1.7;
-}
-
-.withdraw-card{
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    padding:16px;
-    margin-top:12px;
-}
-
-.withdraw-card h3{
-    margin:0 0 10px;
-}
-
-.withdraw-info{
-    color:#666;
-    line-height:1.7;
-}
-
-.settings-box{
-    background:#f9fafb;
-    border-radius:9px;
-    padding:15px;
-}
-
-.empty{
-    text-align:center;
-    padding:20px;
-    color:#777;
-}
-
-.info{
-    color:#666;
-}
-
-.warning{
-    background:#fff7ed;
-    border:1px solid #fed7aa;
-    color:#9a3412;
-    padding:12px;
-    border-radius:8px;
-    margin-top:10px;
-}
-
-.success{
-    background:#ecfdf5;
-    border:1px solid #bbf7d0;
-    color:#166534;
-    padding:12px;
-    border-radius:8px;
-    margin-top:10px;
-}
-
-
-/* =====================================================
-   FEATURES PAGE
-   ===================================================== */
-
-.features-section{
-    background:white;
-    padding:20px;
-    border-radius:12px;
-    margin-bottom:20px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.features-section h2{
-    margin-top:0;
-}
-
-.features-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    margin-top:15px;
-}
-
-.feature-card{
-    background:#f9fafb;
-    border:1px solid #e5e7eb;
-    border-radius:12px;
-    padding:18px;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.feature-card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(0,0,0,.10);
-}
-
-.feature-icon{
-    font-size:30px;
-    margin-bottom:10px;
-}
-
-.feature-card h3{
-    margin:0 0 7px;
-}
-
-.feature-card p{
-    margin:0;
-    color:#666;
-    font-size:14px;
-    line-height:1.5;
-}
-
-
-/* =====================================================
-   REPORT CARDS
-   ===================================================== */
-
-.report-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-top:15px;
-}
-
-.report-card{
-    background:#f9fafb;
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    padding:16px;
-}
-
-.report-card h3{
-    margin:0 0 8px;
-    font-size:14px;
-    color:#666;
-}
-
-.report-value{
-    font-size:25px;
     font-weight:bold;
-}
-
-
-/* =====================================================
-   NOTIFICATION BOX
-   ===================================================== */
-
-.notification-box{
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    padding:15px;
-    margin-top:12px;
-    background:#f9fafb;
-}
-
-.notification-box strong{
     display:block;
     margin-bottom:5px;
 }
 
+/* ================= TABS ================= */
 
-/* =====================================================
-   SECURITY BOX
-   ===================================================== */
-
-.security-list{
-    margin:0;
-    padding-left:20px;
-    line-height:2;
+.tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
 }
 
-.security-ok{
-    color:#166534;
+.tab{
+    border:none;
+    padding:10px 16px;
+    border-radius:7px;
+    background:#e5e7eb;
     font-weight:bold;
 }
 
-
-/* =====================================================
-   MOBILE
-   ===================================================== */
-
-@media(max-width:900px){
-
-    .cards{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .features-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .report-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
+.tab.active{
+    background:#2563eb;
+    color:white;
 }
 
-@media(max-width:650px){
-
-    .cards{
-        grid-template-columns:1fr;
-    }
-
-    .features-grid{
-        grid-template-columns:1fr;
-    }
-
-    .report-grid{
-        grid-template-columns:1fr;
-    }
-
-    .form-grid{
-        grid-template-columns:1fr;
-    }
-
-    .form-group.full{
-        grid-column:auto;
-    }
-
-    header h2{
-        font-size:17px;
-    }
-
+.withdrawTab{
+    display:none;
 }
 
+.withdrawTab.active{
+    display:block;
+}
+
+/* ================= FEATURE CARDS ================= */
+
+.featureGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.featureCard{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+.featureIcon{
+    font-size:32px;
+}
+
+.featureCard h3{
+    margin:10px 0 6px;
+}
+
+.featureCard p{
+    color:#6b7280;
+    font-size:14px;
+}
+
+/* ================= SECURITY ================= */
+
+.securityBox{
+    background:#eff6ff;
+    border-left:4px solid #2563eb;
+    padding:15px;
+    border-radius:7px;
+    line-height:1.7;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:800px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .featureGrid{
+        grid-template-columns:1fr;
+    }
+
+    .main{
+        padding:12px;
+    }
+}
+
+@media(max-width:500px){
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .logo{
+        font-size:16px;
+    }
+
+    .logoutBtn{
+        padding:8px 10px;
+    }
+}
 </style>
-
 </head>
-
 
 <body>
 
+<!-- ================= HEADER ================= -->
 
 <header>
 
-    <h2>
-        🪙 Task Reward System
-    </h2>
+    <button class="menuBtn" onclick="toggleSidebar()">☰</button>
 
-    <button
-        class="logout"
-        onclick="logout()"
-    >
+    <div class="logo">
+        🪙 Task Reward System
+    </div>
+
+    <button class="logoutBtn" onclick="logout()">
         Logout
     </button>
 
 </header>
 
 
-<div class="container">
+<!-- ================= SIDEBAR ================= -->
 
+<div class="sidebar" id="sidebar">
 
-<!-- =====================================================
-     WELCOME
-     ===================================================== -->
-
-<div class="welcome">
-
-    <h2>
-        👑 Owner Dashboard
-    </h2>
-
-    <p class="info">
-        Manage members, tasks, task verification and withdrawals.
-    </p>
-
-</div>
-
-
-<!-- =====================================================
-     DASHBOARD CARDS
-     ===================================================== -->
-
-<div class="cards">
-
-    <div class="card">
-
-        <h3>
-            👥 Total Members
-        </h3>
-
-        <div
-            class="value"
-            id="totalMembers"
-        >
-            0
-        </div>
-
+    <div class="sidebarTitle">
+        👑 Owner Menu
     </div>
 
-
-    <div class="card">
-
-        <h3>
-            🟢 Active Members
-        </h3>
-
-        <div
-            class="value"
-            id="activeMembers"
-        >
-            0
-        </div>
-
-    </div>
-
-
-    <div class="card">
-
-        <h3>
-            🎯 Total Tasks
-        </h3>
-
-        <div
-            class="value"
-            id="totalTasks"
-        >
-            0
-        </div>
-
-    </div>
-
-
-    <div class="card">
-
-        <h3>
-            🪙 Total Member Coins
-        </h3>
-
-        <div
-            class="value"
-            id="totalCoins"
-        >
-            0
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     OWNER FEATURES
-     ===================================================== -->
-
-<div
-    class="features-section"
-    id="features"
->
-
-    <h2>
-        ⚙️ Owner Features
-    </h2>
-
-    <p class="info">
-        Quick access to all Task Reward System management features.
-    </p>
-
-
-    <div class="features-grid">
-
-
-        <div
-            class="feature-card"
-            onclick="goToSection('membersSection')"
-        >
-
-            <div class="feature-icon">
-                👥
-            </div>
-
-            <h3>
-                Member Management
-            </h3>
-
-            <p>
-                View members, status, Member ID and available coins.
-            </p>
-
-        </div>
-
-
-        <div
-            class="feature-card"
-            onclick="goToSection('taskManagement')"
-        >
-
-            <div class="feature-icon">
-                🎯
-            </div>
-
-            <h3>
-                Task Management
-            </h3>
-
-            <p>
-                Create and manage YouTube tasks, rewards and watch time.
-            </p>
-
-        </div>
-
-
-        <div
-            class="feature-card"
-            onclick="goToSection('completionsSection')"
-        >
-
-            <div class="feature-icon">
-                ✅
-            </div>
-
-            <h3>
-                Task Verification
-            </h3>
-
-            <p>
-                Verify completed tasks and approve or reject rewards.
-            </p>
-
-        </div>
-
-
-        <div
-            class="feature-card"
-            onclick="goToSection('rewardSettings')"
-        >
-
-            <div class="feature-icon">
-                🪙
-            </div>
-
-            <h3>
-                Rewards
-            </h3>
-
-            <p>
-                View member coins and current coin-to-rupee exchange rate.
-            </p>
-
-        </div>
-
-
-        <div
-            class="feature-card"
-            onclick="goToSection('withdrawalsSection')"
-        >
-
-            <div class="feature-icon">
-                💸
-            </div>
-
-            <h3>
-                Withdrawals
-            </h3>
-
-            <p>
-                Review UPI details and approve or reject withdrawal requests.
-            </p>
-
-        </div>
-
-
-        <div
-            class="feature-card"
-            onclick="showSystemReport()"
-        >
-
-            <div class="feature-icon">
-                📊
-            </div>
-
-            <h3>
-                Reports
-            </h3>
-
-            <p>
-                View a quick summary of members, tasks, coins and withdrawals.
-            </p>
-
-        </div>
-
-
-        <div
-            class="feature-card"
-            onclick="showNotifications()"
-        >
-
-            <div class="feature-icon">
-                🔔
-            </div>
-
-            <h3>
-                Notifications
-            </h3>
-
-            <p>
-                Check pending task verifications and withdrawal requests.
-            </p>
-
-        </div>
-
-
-        <div
-            class="feature-card"
-            onclick="showSecurityInfo()"
-        >
-
-            <div class="feature-icon">
-                🔐
-            </div>
-
-            <h3>
-                Security
-            </h3>
-
-            <p>
-                Owner-only controls and secure reward verification.
-            </p>
-
-        </div>
-
-
-        <div
-            class="feature-card"
-            onclick="goToSection('rewardSettings')"
-        >
-
-            <div class="feature-icon">
-                ⚙️
-            </div>
-
-            <h3>
-                Settings
-            </h3>
-
-            <p>
-                Manage reward and exchange-rate settings.
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     MEMBERS
-     ===================================================== -->
-
-<div
-    class="section"
-    id="membersSection"
->
-
-    <h2>
+    <button class="menuItem active"
+            onclick="showPage('dashboardPage',this)">
+        🏠 Dashboard
+    </button>
+
+    <button class="menuItem"
+            onclick="showPage('membersPage',this)">
         👥 Members
-    </h2>
+    </button>
 
-    <div
-        id="members"
-        class="table-wrap"
-    >
+    <button class="menuItem"
+            onclick="showPage('tasksPage',this)">
+        🎯 Tasks
+    </button>
 
-        <div class="empty">
-            Loading members...
+    <button class="menuItem"
+            onclick="showPage('verificationPage',this)">
+        ✅ Verification
+    </button>
+
+    <button class="menuItem"
+            onclick="showPage('withdrawalPage',this)">
+        💸 Withdrawals
+    </button>
+
+    <button class="menuItem"
+            onclick="showPage('reportsPage',this)">
+        📊 Reports
+    </button>
+
+    <button class="menuItem"
+            onclick="showPage('rewardPage',this)">
+        🪙 Rewards
+    </button>
+
+    <button class="menuItem"
+            onclick="showPage('securityPage',this)">
+        🔐 Security
+    </button>
+
+    <button class="menuItem"
+            onclick="refreshAllData()">
+        🔄 Refresh Data
+    </button>
+
+    <button class="menuItem" onclick="logout()">
+        🚪 Logout
+    </button>
+
+</div>
+
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboardPage" class="page active">
+
+    <div class="welcome">
+
+        <h1>👑 Owner Dashboard</h1>
+
+        <p>
+            Manage members, tasks, verification and withdrawals.
+        </p>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3>Total Members</h3>
+            <strong id="totalMembers">0</strong>
+        </div>
+
+        <div class="stat">
+            <h3>Active Members</h3>
+            <strong id="activeMembers">0</strong>
+        </div>
+
+        <div class="stat">
+            <h3>Total Tasks</h3>
+            <strong id="totalTasks">0</strong>
+        </div>
+
+        <div class="stat">
+            <h3>Total Member Coins</h3>
+            <strong id="totalCoins">0</strong>
         </div>
 
     </div>
 
-</div>
 
+    <div class="stats">
 
-<!-- =====================================================
-     TASK COMPLETION VERIFICATION
-     ===================================================== -->
+        <div class="stat">
+            <h3>Pending Verification</h3>
+            <strong id="pendingVerification">0</strong>
+        </div>
 
-<div
-    class="section"
-    id="completionsSection"
->
-
-    <h2>
-        ✅ Task Completion Verification
-    </h2>
-
-    <p class="info">
-        Verify completed tasks before reward coins are added.
-    </p>
-
-    <div id="completions">
-
-        <div class="empty">
-            Loading task completions...
+        <div class="stat">
+            <h3>Pending Withdrawals</h3>
+            <strong id="pendingWithdrawals">0</strong>
         </div>
 
     </div>
 
-</div>
+</section>
 
 
-<!-- =====================================================
-     TASK MANAGEMENT
-     ===================================================== -->
+<!-- ================= MEMBERS ================= -->
 
-<div
-    class="section"
-    id="taskManagement"
->
+<section id="membersPage" class="page">
 
-    <h2>
-        🎯 Task Management
-    </h2>
+    <div class="card">
 
-    <form id="taskForm">
+        <h2 class="pageTitle">👥 Members</h2>
 
-        <div class="form-grid">
+        <div class="tableWrap">
 
+            <table>
 
-            <div class="form-group">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Coins</th>
+                        <th>Status</th>
+                        <th>Member ID</th>
+                    </tr>
+                </thead>
 
-                <label>
-                    Task Title
-                </label>
+                <tbody id="membersTable">
+                </tbody>
 
-                <input
-                    type="text"
-                    id="taskTitle"
-                    required
-                    placeholder="Example: Watch YouTube Video"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Reward Coins
-                </label>
-
-                <input
-                    type="number"
-                    id="taskReward"
-                    min="1"
-                    step="1"
-                    required
-                    placeholder="Example: 10"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Required Watch Time (Seconds)
-                </label>
-
-                <input
-                    type="number"
-                    id="taskWatchTime"
-                    min="1"
-                    step="1"
-                    required
-                    placeholder="Example: 30"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    YouTube Video URL
-                </label>
-
-                <input
-                    type="url"
-                    id="taskYoutubeUrl"
-                    required
-                    placeholder="https://www.youtube.com/watch?v=..."
-                >
-
-            </div>
+            </table>
 
         </div>
 
+    </div>
 
-        <button
-            type="submit"
-            class="create-button"
-        >
+</section>
+
+
+<!-- ================= TASKS ================= -->
+
+<section id="tasksPage" class="page">
+
+    <div class="card">
+
+        <h2>🎯 Create New Task</h2>
+
+        <label>Task Title</label>
+        <input id="taskTitle" placeholder="Enter task title">
+
+        <label>YouTube URL</label>
+        <input id="youtubeUrl" placeholder="https://youtube.com/...">
+
+        <label>Reward Coins</label>
+        <input id="rewardCoins" type="number" min="1">
+
+        <label>Required Watch Time (Seconds)</label>
+        <input id="watchTime" type="number" min="1">
+
+        <button class="btn blue" onclick="createTask()">
             ➕ Create Task
         </button>
 
-    </form>
+        <p id="taskMessage"></p>
+
+    </div>
 
 
-    <div
-        id="taskMessage"
-        style="display:none;"
-    ></div>
+    <div class="card">
 
-</div>
+        <h2>📺 Existing Tasks</h2>
 
+        <div class="tableWrap">
 
-<!-- =====================================================
-     EXISTING TASKS
-     ===================================================== -->
+            <table>
 
-<div class="section">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Reward</th>
+                        <th>Watch Time</th>
+                        <th>YouTube</th>
+                        <th>Task ID</th>
+                    </tr>
+                </thead>
 
-    <h2>
-        📋 Existing Tasks
-    </h2>
+                <tbody id="tasksTable">
+                </tbody>
 
-    <div id="tasks">
+            </table>
 
-        <div class="empty">
-            Loading tasks...
         </div>
 
     </div>
 
-</div>
+</section>
 
 
-<!-- =====================================================
-     WITHDRAWAL REQUESTS
-     ===================================================== -->
+<!-- ================= VERIFICATION ================= -->
 
-<div
-    class="section"
-    id="withdrawalsSection"
->
+<section id="verificationPage" class="page">
 
-    <h2>
-        💸 Withdrawal Requests
-    </h2>
+    <div class="card">
 
-    <p class="info">
-        Approve only after checking the member's UPI details.
-    </p>
+        <h2>✅ Task Completion Verification</h2>
 
-    <div id="withdrawals">
+        <div class="tableWrap">
 
-        <div class="empty">
-            Loading withdrawal requests...
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Member</th>
+                        <th>Reward</th>
+                        <th>Required</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="completionTable">
+                </tbody>
+
+            </table>
+
         </div>
 
     </div>
 
-</div>
+</section>
 
 
-<!-- =====================================================
-     REWARD SETTINGS
-     ===================================================== -->
+<!-- ================= WITHDRAWAL ================= -->
 
-<div
-    class="section"
-    id="rewardSettings"
->
+<section id="withdrawalPage" class="page">
 
-    <h2>
-        ⚙️ Reward Settings
-    </h2>
+    <div class="card">
 
-    <div class="settings-box">
+        <h2>💸 Withdrawal Requests</h2>
 
-        <b>
-            Current Exchange Rate
-        </b>
+        <div class="tabs">
 
-        <p>
-            100 Coins = ₹1
-        </p>
+            <button
+                class="tab active"
+                onclick="showWithdrawalTab('pendingWithdrawalsTab',this)">
+                ⏳ Pending
+            </button>
 
-        <p class="info">
-            Example: 1,000 Coins = ₹10
-        </p>
+            <button
+                class="tab"
+                onclick="showWithdrawalTab('completedWithdrawalsTab',this)">
+                ✅ Completed
+            </button>
 
-    </div>
+            <button
+                class="tab"
+                onclick="showWithdrawalTab('rejectedWithdrawalsTab',this)">
+                ❌ Rejected
+            </button>
 
-</div>
-
-
-<!-- =====================================================
-     REPORTS
-     ===================================================== -->
-
-<div
-    class="section"
-    id="reportsSection"
->
-
-    <h2>
-        📊 System Reports
-    </h2>
-
-    <p class="info">
-        Current Task Reward System summary.
-    </p>
+        </div>
 
 
-    <div class="report-grid">
+        <!-- PENDING -->
 
+        <div id="pendingWithdrawalsTab"
+             class="withdrawTab active">
 
-        <div class="report-card">
+            <div class="tableWrap">
 
-            <h3>
-                👥 Total Members
-            </h3>
+                <table>
 
-            <div
-                class="report-value"
-                id="reportMembers"
-            >
-                0
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Coins</th>
+                            <th>Amount</th>
+                            <th>UPI ID</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="pendingWithdrawalTable">
+                    </tbody>
+
+                </table>
+
             </div>
 
         </div>
 
 
-        <div class="report-card">
+        <!-- COMPLETED -->
 
-            <h3>
-                🟢 Active Members
-            </h3>
+        <div id="completedWithdrawalsTab"
+             class="withdrawTab">
 
-            <div
-                class="report-value"
-                id="reportActiveMembers"
-            >
-                0
+            <div class="tableWrap">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Coins</th>
+                            <th>Amount</th>
+                            <th>UPI ID</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="completedWithdrawalTable">
+                    </tbody>
+
+                </table>
+
             </div>
 
         </div>
 
 
-        <div class="report-card">
+        <!-- REJECTED -->
 
-            <h3>
-                🎯 Total Tasks
-            </h3>
+        <div id="rejectedWithdrawalsTab"
+             class="withdrawTab">
 
-            <div
-                class="report-value"
-                id="reportTasks"
-            >
-                0
-            </div>
+            <div class="tableWrap">
 
-        </div>
+                <table>
 
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Coins</th>
+                            <th>Amount</th>
+                            <th>UPI ID</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
 
-        <div class="report-card">
+                    <tbody id="rejectedWithdrawalTable">
+                    </tbody>
 
-            <h3>
-                🪙 Member Coins
-            </h3>
+                </table>
 
-            <div
-                class="report-value"
-                id="reportCoins"
-            >
-                0
             </div>
 
         </div>
 
     </div>
 
-</div>
+</section>
 
 
-<!-- =====================================================
-     NOTIFICATIONS
-     ===================================================== -->
+<!-- ================= REPORTS ================= -->
 
-<div
-    class="section"
-    id="notificationsSection"
->
+<section id="reportsPage" class="page">
 
-    <h2>
-        🔔 Notifications
-    </h2>
+    <div class="card">
 
-    <div id="notificationContent">
+        <h2>📊 Reports</h2>
 
-        <div class="empty">
-            Loading notifications...
+        <div class="stats">
+
+            <div class="stat">
+                <h3>Total Members</h3>
+                <strong id="reportMembers">0</strong>
+            </div>
+
+            <div class="stat">
+                <h3>Active Members</h3>
+                <strong id="reportActiveMembers">0</strong>
+            </div>
+
+            <div class="stat">
+                <h3>Total Tasks</h3>
+                <strong id="reportTasks">0</strong>
+            </div>
+
+            <div class="stat">
+                <h3>Total Coins</h3>
+                <strong id="reportCoins">0</strong>
+            </div>
+
         </div>
 
     </div>
 
-</div>
+</section>
 
 
-<!-- =====================================================
-     SECURITY
-     ===================================================== -->
+<!-- ================= REWARDS ================= -->
 
-<div
-    class="section"
-    id="securitySection"
->
+<section id="rewardPage" class="page">
 
-    <h2>
-        🔐 Security & Controls
-    </h2>
+    <div class="card">
 
-    <div class="settings-box">
+        <h2>🪙 Reward Settings</h2>
 
-        <ul class="security-list">
+        <div class="securityBox">
 
-            <li class="security-ok">
-                ✅ Owner-only dashboard access
-            </li>
+            <h3>Current Exchange Rate</h3>
 
-            <li class="security-ok">
-                ✅ Member coins cannot be changed by members
-            </li>
+            <p>
+                <strong>100 Coins = ₹1</strong>
+            </p>
 
-            <li class="security-ok">
-                ✅ Task reward is taken from the original task
-            </li>
+            <p>
+                Example:
+                1,000 Coins = ₹10
+            </p>
 
-            <li class="security-ok">
-                ✅ Withdrawal approval uses Firestore transaction
-            </li>
-
-            <li class="security-ok">
-                ✅ Insufficient coin balance is blocked
-            </li>
-
-            <li class="security-ok">
-                ✅ Task completion reward validation is enabled
-            </li>
-
-            <li class="security-ok">
-                ✅ Firestore Security Rules protect database access
-            </li>
-
-        </ul>
+        </div>
 
     </div>
 
-</div>
+</section>
 
 
-</div>
+<!-- ================= SECURITY ================= -->
 
+<section id="securityPage" class="page">
+
+    <div class="card">
+
+        <h2>🔐 Security</h2>
+
+        <div class="securityBox">
+
+            <h3>Current Security Protection</h3>
+
+            <ul>
+
+                <li>
+                    Member cannot change their role.
+                </li>
+
+                <li>
+                    Member cannot change their status.
+                </li>
+
+                <li>
+                    Member cannot directly increase their coins.
+                </li>
+
+                <li>
+                    Completion reward is validated against the actual task reward.
+                </li>
+
+                <li>
+                    Required watch time is checked against the task.
+                </li>
+
+                <li>
+                    Withdrawal amount is checked against requested coins.
+                </li>
+
+                <li>
+                    Owner approval uses Firestore transaction.
+                </li>
+
+                <li>
+                    Only Owner can approve or reject requests.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<!-- ================= FIREBASE ================= -->
 
 <script type="module">
 
-
-/* =====================================================
-   FIREBASE IMPORTS
-   ===================================================== */
-
 import {
     initializeApp
-}
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
     getAuth,
     onAuthStateChanged,
     signOut
-}
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import {
     getFirestore,
-    doc,
-    getDoc,
-    getDocs,
     collection,
     addDoc,
-    updateDoc,
+    getDocs,
+    doc,
+    getDoc,
     runTransaction,
-    serverTimestamp
-}
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+    query,
+    orderBy
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-/* =====================================================
-   FIREBASE CONFIG
-   DO NOT CHANGE
-   ===================================================== */
+/* ================= FIREBASE CONFIG ================= */
 
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyAH030c2ydOmijyUwmT60CC7vvnyXxyOdY",
-
-    authDomain:
-        "task-reward-system-af46f.firebaseapp.com",
-
-    projectId:
-        "task-reward-system-af46f",
-
-    storageBucket:
-        "task-reward-system-af46f.firebasestorage.app",
-
-    messagingSenderId:
-        "64322126165",
-
-    appId:
-        "1:64322126165:web:7aae7a6e4792ab4f092fdc",
-
-    measurementId:
-        "G-6P3R9F3ZQT"
-
+    apiKey: "AIzaSyAH030c2ydomijyUwmT60CC7vvnyXxyOdY",
+    authDomain: "task-reward-system-af46f.firebaseapp.com",
+    projectId: "task-reward-system-af46f",
+    storageBucket: "task-reward-system-af46f.firebasestorage.app",
+    messagingSenderId: "64322126165",
+    appId: "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+    measurementId: "G-6P3R9F3ZQT"
 };
 
 
-/* =====================================================
-   INITIALIZE FIREBASE
-   ===================================================== */
+const app = initializeApp(firebaseConfig);
 
-const app =
-    initializeApp(
-        firebaseConfig
-    );
+const auth = getAuth(app);
 
-const auth =
-    getAuth(app);
-
-const db =
-    getFirestore(app);
-
-
-/* =====================================================
-   OWNER UID
-   ===================================================== */
+const db = getFirestore(app);
 
 const OWNER_UID =
     "cqx3we5X1jX2gpo7xqpqaTqrpDg2";
 
 
-/* =====================================================
-   OWNER AUTH CHECK
-   ===================================================== */
+/* ================= GLOBAL DATA ================= */
 
-onAuthStateChanged(
-    auth,
-    async (user) => {
+let allWithdrawals = [];
 
-        if(!user){
+let pendingVerificationCount = 0;
 
-            window.location.href =
-                "index.html";
+let pendingWithdrawalCount = 0;
+
+
+/* ================= SIDEBAR ================= */
+
+window.toggleSidebar = function(){
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+    document
+        .getElementById("overlay")
+        .classList.toggle("show");
+
+};
+
+
+/* ================= PAGE NAVIGATION ================= */
+
+window.showPage = function(pageId,button){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page=>{
+            page.classList.remove("active");
+        });
+
+    const page =
+        document.getElementById(pageId);
+
+    if(page){
+        page.classList.add("active");
+    }
+
+
+    document
+        .querySelectorAll(".menuItem")
+        .forEach(item=>{
+            item.classList.remove("active");
+        });
+
+
+    if(button){
+        button.classList.add("active");
+    }
+
+
+    document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+    document
+        .getElementById("overlay")
+        .classList.remove("show");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+};
+
+
+/* ================= WITHDRAWAL TABS ================= */
+
+window.showWithdrawalTab =
+function(tabId,button){
+
+    document
+        .querySelectorAll(".withdrawTab")
+        .forEach(tab=>{
+            tab.classList.remove("active");
+        });
+
+    document
+        .getElementById(tabId)
+        .classList.add("active");
+
+
+    document
+        .querySelectorAll(".tabs .tab")
+        .forEach(tab=>{
+            tab.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+};
+
+
+/* ================= AUTH ================= */
+
+onAuthStateChanged(auth,async(user)=>{
+
+    if(!user){
+
+        window.location.href="index.html";
+
+        return;
+
+    }
+
+
+    if(user.uid !== OWNER_UID){
+
+        alert("Access denied.");
+
+        await signOut(auth);
+
+        window.location.href="index.html";
+
+        return;
+
+    }
+
+
+    try{
+
+        const userSnap =
+            await getDoc(
+                doc(db,"users",user.uid)
+            );
+
+
+        if(!userSnap.exists()
+           || userSnap.data().role !== "owner"){
+
+            alert("Owner access required.");
+
+            await signOut(auth);
+
+            window.location.href="index.html";
 
             return;
 
         }
 
 
-        try{
+        await refreshAllData();
 
-            if(
-                user.uid !==
-                OWNER_UID
-            ){
+    }catch(error){
 
-                alert(
-                    "Access denied."
-                );
+        console.error(error);
 
-                await signOut(
-                    auth
-                );
-
-                window.location.href =
-                    "index.html";
-
-                return;
-
-            }
-
-
-            const ownerRef =
-                doc(
-                    db,
-                    "users",
-                    user.uid
-                );
-
-
-            const ownerSnap =
-                await getDoc(
-                    ownerRef
-                );
-
-
-            if(!ownerSnap.exists()){
-
-                alert(
-                    "Owner account data not found."
-                );
-
-                await signOut(
-                    auth
-                );
-
-                window.location.href =
-                    "index.html";
-
-                return;
-
-            }
-
-
-            const ownerData =
-                ownerSnap.data();
-
-
-            if(
-                ownerData.role !==
-                "owner"
-            ){
-
-                alert(
-                    "Access denied."
-                );
-
-                await signOut(
-                    auth
-                );
-
-                window.location.href =
-                    "index.html";
-
-                return;
-
-            }
-
-
-            await loadMembers();
-
-            await loadTasks();
-
-            await loadCompletions();
-
-            await loadWithdrawals();
-
-            await updateReports();
-
-            await updateNotifications();
-
-        }
-        catch(error){
-
-            console.error(
-                "Owner loading error:",
-                error
-            );
-
-            alert(
-                "Unable to load owner dashboard.\n\n" +
-                error.message
-            );
-
-        }
+        alert(
+            "Error loading Owner Dashboard: "
+            + error.message
+        );
 
     }
-);
+
+});
 
 
-/* =====================================================
-   LOAD MEMBERS
-   ===================================================== */
+/* ================= LOAD MEMBERS ================= */
 
 async function loadMembers(){
 
-    const container =
-        document.getElementById(
-            "members"
+    const snapshot =
+        await getDocs(
+            collection(db,"users")
         );
 
 
-    container.innerHTML = `
-        <div class="empty">
-            Loading members...
-        </div>
-    `;
+    const table =
+        document.getElementById("membersTable");
+
+    table.innerHTML="";
 
 
-    try{
+    let total=0;
 
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "users"
-                )
-            );
+    let active=0;
+
+    let coins=0;
 
 
-        const members = [];
+    snapshot.forEach(item=>{
 
-        let activeCount = 0;
-
-        let totalCoins = 0;
+        const data=item.data();
 
 
-        snapshot.forEach(
-            (docSnap) => {
-
-                const data =
-                    docSnap.data();
-
-
-                if(
-                    data.role !==
-                    "member"
-                ){
-
-                    return;
-
-                }
-
-
-                const coins =
-                    Number(
-                        data.coins || 0
-                    );
-
-
-                members.push({
-
-                    id:
-                        docSnap.id,
-
-                    ...data
-
-                });
-
-
-                if(
-                    data.status ===
-                    "active"
-                ){
-
-                    activeCount++;
-
-                }
-
-
-                totalCoins +=
-                    coins;
-
-            }
-        );
-
-
-        document.getElementById(
-            "totalMembers"
-        ).textContent =
-            members.length;
-
-
-        document.getElementById(
-            "activeMembers"
-        ).textContent =
-            activeCount;
-
-
-        document.getElementById(
-            "totalCoins"
-        ).textContent =
-            totalCoins;
-
-
-        document.getElementById(
-            "reportMembers"
-        ).textContent =
-            members.length;
-
-
-        document.getElementById(
-            "reportActiveMembers"
-        ).textContent =
-            activeCount;
-
-
-        document.getElementById(
-            "reportCoins"
-        ).textContent =
-            totalCoins;
-
-
-        if(members.length === 0){
-
-            container.innerHTML = `
-                <div class="empty">
-                    No members found.
-                </div>
-            `;
-
+        if(data.role !== "member"){
             return;
-
         }
 
 
-        let html = `
+        total++;
 
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Name</th>
-
-                        <th>Email</th>
-
-                        <th>Coins</th>
-
-                        <th>Status</th>
-
-                        <th>Member ID</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-        `;
+        if(data.status === "active"){
+            active++;
+        }
 
 
-        members.forEach(
-            (member) => {
-
-                const status =
-                    member.status ||
-                    "pending";
+        coins += Number(data.coins || 0);
 
 
-                const statusClass =
-                    status === "active"
-                    ? "active-status"
-                    : status === "pending"
-                    ? "pending-status"
-                    : "inactive-status";
+        table.innerHTML += `
 
+        <tr>
 
-                html += `
+            <td>
+                ${escapeHtml(data.name || "-")}
+            </td>
 
-                    <tr>
+            <td>
+                ${escapeHtml(data.email || "-")}
+            </td>
 
-                        <td>
-                            ${escapeHtml(
-                                member.name ||
-                                "Member"
-                            )}
-                        </td>
+            <td>
+                ${Number(data.coins || 0)}
+            </td>
 
-                        <td>
-                            ${escapeHtml(
-                                member.email ||
-                                "-"
-                            )}
-                        </td>
+            <td>
+                ${escapeHtml(data.status || "-")}
+            </td>
 
-                        <td>
-                            ${Number(
-                                member.coins || 0
-                            )}
-                        </td>
+            <td>
+                ${escapeHtml(item.id)}
+            </td>
 
-                        <td>
-
-                            <span
-                                class="status ${statusClass}"
-                            >
-                                ${escapeHtml(
-                                    status
-                                )}
-                            </span>
-
-                        </td>
-
-                        <td>
-                            ${escapeHtml(
-                                member.id
-                            )}
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
-        );
-
-
-        html += `
-
-                </tbody>
-
-            </table>
+        </tr>
 
         `;
 
-
-        container.innerHTML =
-            html;
-
-    }
-    catch(error){
-
-        console.error(
-            "Members loading error:",
-            error
-        );
+    });
 
 
-        container.innerHTML = `
+    document.getElementById("totalMembers")
+        .textContent=total;
 
-            <div class="empty">
+    document.getElementById("activeMembers")
+        .textContent=active;
 
-                Unable to load members.
+    document.getElementById("totalCoins")
+        .textContent=coins;
 
-                <br><br>
 
-                ${escapeHtml(
-                    error.message
-                )}
+    document.getElementById("reportMembers")
+        .textContent=total;
 
-            </div>
+    document.getElementById("reportActiveMembers")
+        .textContent=active;
 
-        `;
-
-    }
+    document.getElementById("reportCoins")
+        .textContent=coins;
 
 }
 
 
-/* =====================================================
-   LOAD TASKS
-   ===================================================== */
+/* ================= CREATE TASK ================= */
+
+window.createTask = async function(){
+
+    const title =
+        document
+        .getElementById("taskTitle")
+        .value.trim();
+
+
+    const youtubeUrl =
+        document
+        .getElementById("youtubeUrl")
+        .value.trim();
+
+
+    const rewardCoins =
+        Number(
+            document
+            .getElementById("rewardCoins")
+            .value
+        );
+
+
+    const watchTime =
+        Number(
+            document
+            .getElementById("watchTime")
+            .value
+        );
+
+
+    if(!title ||
+       !youtubeUrl ||
+       rewardCoins <= 0 ||
+       watchTime <= 0){
+
+        alert("Please enter valid task details.");
+
+        return;
+
+    }
+
+
+    try{
+
+        await addDoc(
+            collection(db,"tasks"),
+            {
+                title:title,
+                youtubeUrl:youtubeUrl,
+                rewardCoins:rewardCoins,
+                watchTime:watchTime,
+                status:"active",
+                createdAt:new Date()
+            }
+        );
+
+
+        document.getElementById("taskTitle").value="";
+        document.getElementById("youtubeUrl").value="";
+        document.getElementById("rewardCoins").value="";
+        document.getElementById("watchTime").value="";
+
+
+        document.getElementById("taskMessage")
+            .textContent="Task created successfully.";
+
+
+        await loadTasks();
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Task creation failed: "
+            + error.message
+        );
+
+    }
+
+};
+
+
+/* ================= LOAD TASKS ================= */
 
 async function loadTasks(){
 
-    const container =
-        document.getElementById(
-            "tasks"
+    const snapshot =
+        await getDocs(
+            collection(db,"tasks")
         );
 
 
-    container.innerHTML = `
-        <div class="empty">
-            Loading tasks...
-        </div>
-    `;
+    const table =
+        document.getElementById("tasksTable");
 
+    table.innerHTML="";
 
-    try{
 
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "tasks"
-                )
-            );
+    let total=0;
 
 
-        const tasks = [];
+    snapshot.forEach(item=>{
 
+        const data=item.data();
 
-        snapshot.forEach(
-            (docSnap) => {
+        total++;
 
-                tasks.push({
 
-                    id:
-                        docSnap.id,
+        table.innerHTML += `
 
-                    ...docSnap.data()
+        <tr>
 
-                });
+            <td>
+                ${escapeHtml(data.title || "-")}
+            </td>
 
-            }
-        );
+            <td>
+                ${escapeHtml(data.status || "-")}
+            </td>
 
+            <td>
+                ${Number(data.rewardCoins || 0)}
+            </td>
 
-        document.getElementById(
-            "totalTasks"
-        ).textContent =
-            tasks.length;
+            <td>
+                ${Number(data.watchTime || 0)} sec
+            </td>
 
+            <td>
+                <a href="${escapeAttribute(data.youtubeUrl || "#")}"
+                   target="_blank">
+                   Open
+                </a>
+            </td>
 
-        document.getElementById(
-            "reportTasks"
-        ).textContent =
-            tasks.length;
+            <td>
+                ${escapeHtml(item.id)}
+            </td>
 
-
-        if(tasks.length === 0){
-
-            container.innerHTML = `
-                <div class="empty">
-                    No tasks created yet.
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        tasks.sort(
-            (a,b) => {
-
-                const aTime =
-                    a.createdAt &&
-                    typeof a.createdAt.toMillis ===
-                    "function"
-                    ? a.createdAt.toMillis()
-                    : 0;
-
-
-                const bTime =
-                    b.createdAt &&
-                    typeof b.createdAt.toMillis ===
-                    "function"
-                    ? b.createdAt.toMillis()
-                    : 0;
-
-
-                return bTime - aTime;
-
-            }
-        );
-
-
-        container.innerHTML = "";
-
-
-        tasks.forEach(
-            (task) => {
-
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                card.className =
-                    "task-card";
-
-
-                const status =
-                    task.status ||
-                    "inactive";
-
-
-                const statusClass =
-                    status === "active"
-                    ? "active-status"
-                    : "inactive-status";
-
-
-                card.innerHTML = `
-
-                    <h3>
-                        🎯 ${escapeHtml(
-                            task.title ||
-                            "Untitled Task"
-                        )}
-                    </h3>
-
-
-                    <span
-                        class="status ${statusClass}"
-                    >
-                        ${escapeHtml(
-                            status
-                        )}
-                    </span>
-
-
-                    <div class="task-info">
-
-                        <b>Reward:</b>
-                        ${Number(
-                            task.rewardCoins || 0
-                        )}
-                        Coins
-
-                        <br>
-
-                        <b>Watch Time:</b>
-                        ${Number(
-                            task.watchTime || 0
-                        )}
-                        Seconds
-
-                        <br>
-
-                        <b>YouTube:</b>
-                        ${escapeHtml(
-                            task.youtubeUrl ||
-                            "-"
-                        )}
-
-                        <br>
-
-                        <b>Task ID:</b>
-                        ${escapeHtml(
-                            task.id
-                        )}
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(
-                    card
-                );
-
-            }
-        );
-
-    }
-    catch(error){
-
-        console.error(
-            "Tasks loading error:",
-            error
-        );
-
-
-        container.innerHTML = `
-
-            <div class="empty">
-
-                Unable to load tasks.
-
-                <br><br>
-
-                ${escapeHtml(
-                    error.message
-                )}
-
-            </div>
+        </tr>
 
         `;
 
-    }
+    });
+
+
+    document.getElementById("totalTasks")
+        .textContent=total;
+
+    document.getElementById("reportTasks")
+        .textContent=total;
 
 }
 
 
-/* =====================================================
-   CREATE TASK
-   ===================================================== */
-
-document.getElementById(
-    "taskForm"
-).addEventListener(
-    "submit",
-    async function(event){
-
-        event.preventDefault();
-
-
-        const title =
-            document.getElementById(
-                "taskTitle"
-            ).value.trim();
-
-
-        const rewardCoins =
-            Number(
-                document.getElementById(
-                    "taskReward"
-                ).value
-            );
-
-
-        const watchTime =
-            Number(
-                document.getElementById(
-                    "taskWatchTime"
-                ).value
-            );
-
-
-        const youtubeUrl =
-            document.getElementById(
-                "taskYoutubeUrl"
-            ).value.trim();
-
-
-        const message =
-            document.getElementById(
-                "taskMessage"
-            );
-
-
-        message.style.display =
-            "none";
-
-
-        if(!title){
-
-            alert(
-                "Please enter task title."
-            );
-
-            return;
-
-        }
-
-
-        if(
-            !Number.isInteger(
-                rewardCoins
-            ) ||
-            rewardCoins <= 0
-        ){
-
-            alert(
-                "Reward coins must be a positive whole number."
-            );
-
-            return;
-
-        }
-
-
-        if(
-            !Number.isInteger(
-                watchTime
-            ) ||
-            watchTime <= 0
-        ){
-
-            alert(
-                "Watch time must be a positive whole number."
-            );
-
-            return;
-
-        }
-
-
-        if(!youtubeUrl){
-
-            alert(
-                "Please enter YouTube URL."
-            );
-
-            return;
-
-        }
-
-
-        try{
-
-            await addDoc(
-                collection(
-                    db,
-                    "tasks"
-                ),
-                {
-
-                    title:
-                        title,
-
-                    rewardCoins:
-                        rewardCoins,
-
-                    watchTime:
-                        watchTime,
-
-                    youtubeUrl:
-                        youtubeUrl,
-
-                    status:
-                        "active",
-
-                    createdAt:
-                        serverTimestamp()
-
-                }
-            );
-
-
-            document.getElementById(
-                "taskForm"
-            ).reset();
-
-
-            message.className =
-                "success";
-
-
-            message.textContent =
-                "Task created successfully!";
-
-
-            message.style.display =
-                "block";
-
-
-            await loadTasks();
-
-            await updateReports();
-
-        }
-        catch(error){
-
-            console.error(
-                "Create task error:",
-                error
-            );
-
-
-            message.className =
-                "warning";
-
-
-            message.textContent =
-                "Unable to create task: " +
-                error.message;
-
-
-            message.style.display =
-                "block";
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   LOAD TASK COMPLETIONS
-   ===================================================== */
+/* ================= LOAD COMPLETIONS ================= */
 
 async function loadCompletions(){
 
-    const container =
-        document.getElementById(
-            "completions"
+    const snapshot =
+        await getDocs(
+            collection(db,"taskCompletions")
         );
 
 
-    container.innerHTML = `
-        <div class="empty">
-            Loading task completions...
-        </div>
-    `;
+    const table =
+        document.getElementById("completionTable");
+
+    table.innerHTML="";
 
 
-    try{
-
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "taskCompletions"
-                )
-            );
+    pendingVerificationCount=0;
 
 
-        const completions = [];
+    for(const item of snapshot.docs){
+
+        const data=item.data();
 
 
-        snapshot.forEach(
-            (docSnap) => {
+        let memberName =
+            data.memberName || "-";
 
-                completions.push({
 
-                    id:
-                        docSnap.id,
+        if(data.memberId){
 
-                    ...docSnap.data()
+            try{
 
-                });
+                const memberSnap =
+                    await getDoc(
+                        doc(
+                            db,
+                            "users",
+                            data.memberId
+                        )
+                    );
+
+
+                if(memberSnap.exists()){
+
+                    memberName =
+                        memberSnap.data().name
+                        || memberName;
+
+                }
+
+            }catch(error){
+
+                console.log(error);
 
             }
-        );
-
-
-        completions.sort(
-            (a,b) => {
-
-                const aTime =
-                    a.completedAt &&
-                    typeof a.completedAt.toMillis ===
-                    "function"
-                    ? a.completedAt.toMillis()
-                    : 0;
-
-
-                const bTime =
-                    b.completedAt &&
-                    typeof b.completedAt.toMillis ===
-                    "function"
-                    ? b.completedAt.toMillis()
-                    : 0;
-
-
-                return bTime - aTime;
-
-            }
-        );
-
-
-        if(completions.length === 0){
-
-            container.innerHTML = `
-                <div class="empty">
-                    No task completions found.
-                </div>
-            `;
-
-            await updateNotifications();
-
-            return;
 
         }
 
 
-        container.innerHTML = "";
-
-
-        for(
-            const completion of completions
+        if(
+            data.status === "pending"
+            ||
+            data.rewardStatus ===
+            "Pending Verification"
         ){
 
-            await createCompletionCard(
-                container,
-                completion
-            );
+            pendingVerificationCount++;
 
         }
 
 
-        await updateNotifications();
-
-    }
-    catch(error){
-
-        console.error(
-            "Completions loading error:",
-            error
-        );
+        let action="";
 
 
-        container.innerHTML = `
+        if(
+            data.status === "pending"
+            ||
+            data.rewardStatus ===
+            "Pending Verification"
+        ){
 
-            <div class="empty">
+            action = `
 
-                Unable to load completions.
+            <button
+                class="btn green"
+                onclick="approveCompletion('${item.id}')">
+                Approve
+            </button>
 
-                <br><br>
+            <button
+                class="btn red"
+                onclick="rejectCompletion('${item.id}')">
+                Reject
+            </button>
 
+            `;
+
+        }else{
+
+            action =
+                escapeHtml(
+                    data.status
+                    ||
+                    data.rewardStatus
+                    ||
+                    "-"
+                );
+
+        }
+
+
+        table.innerHTML += `
+
+        <tr>
+
+            <td>
+                ${escapeHtml(data.taskTitle || "-")}
+            </td>
+
+            <td>
+                ${escapeHtml(memberName)}
+            </td>
+
+            <td>
+                ${Number(data.rewardCoins || 0)}
+            </td>
+
+            <td>
+                ${Number(data.requiredWatchTime || data.watchTime || 0)}
+                sec
+            </td>
+
+            <td>
+                ${Number(data.watchTime || 0)}
+                sec
+            </td>
+
+            <td>
                 ${escapeHtml(
-                    error.message
+                    data.status ||
+                    data.rewardStatus ||
+                    "-"
                 )}
+            </td>
 
-            </div>
+            <td>
+                ${action}
+            </td>
 
-        `;
-
-    }
-
-}
-
-
-/* =====================================================
-   CREATE COMPLETION CARD
-   ===================================================== */
-
-async function createCompletionCard(
-    container,
-    completion
-){
-
-    const card =
-        document.createElement(
-            "div"
-        );
-
-
-    card.className =
-        "completion-card";
-
-
-    let memberName =
-        "Member";
-
-
-    let memberEmail =
-        "-";
-
-
-    let taskReward =
-        Number(
-            completion.rewardCoins || 0
-        );
-
-
-    let taskWatchTime =
-        Number(
-            completion.watchTime || 0
-        );
-
-
-    let taskExists =
-        false;
-
-
-    try{
-
-        const memberRef =
-            doc(
-                db,
-                "users",
-                completion.memberId
-            );
-
-
-        const memberSnap =
-            await getDoc(
-                memberRef
-            );
-
-
-        if(memberSnap.exists()){
-
-            const memberData =
-                memberSnap.data();
-
-
-            memberName =
-                memberData.name ||
-                "Member";
-
-
-            memberEmail =
-                memberData.email ||
-                "-";
-
-        }
-
-
-        if(completion.taskId){
-
-            const taskRef =
-                doc(
-                    db,
-                    "tasks",
-                    completion.taskId
-                );
-
-
-            const taskSnap =
-                await getDoc(
-                    taskRef
-                );
-
-
-            if(taskSnap.exists()){
-
-                taskExists =
-                    true;
-
-
-                const taskData =
-                    taskSnap.data();
-
-
-                taskReward =
-                    Number(
-                        taskData.rewardCoins ||
-                        0
-                    );
-
-
-                taskWatchTime =
-                    Number(
-                        taskData.watchTime ||
-                        0
-                    );
-
-            }
-
-        }
-
-    }
-    catch(error){
-
-        console.error(
-            "Completion details error:",
-            error
-        );
-
-    }
-
-
-    const status =
-        completion.status ||
-        "pending";
-
-
-    let statusClass =
-        "pending-status";
-
-
-    if(status === "approved"){
-
-        statusClass =
-            "completed-status";
-
-    }
-    else if(status === "rejected"){
-
-        statusClass =
-            "rejected-status";
-
-    }
-
-
-    let date =
-        "Unknown";
-
-
-    if(completion.completedAt){
-
-        try{
-
-            date =
-                completion.completedAt
-                    .toDate()
-                    .toLocaleString();
-
-        }
-        catch(error){
-
-            date =
-                "Completed";
-
-        }
-
-    }
-
-
-    let buttons = "";
-
-
-    if(status === "pending"){
-
-        buttons = `
-
-            <br>
-
-            <button
-                class="btn btn-green"
-                onclick="approveCompletion('${completion.id}')"
-            >
-                ✅ Approve
-            </button>
-
-
-            <button
-                class="btn btn-red"
-                onclick="rejectCompletion('${completion.id}')"
-            >
-                ❌ Reject
-            </button>
+        </tr>
 
         `;
 
     }
 
 
-    card.innerHTML = `
-
-        <h3>
-            🎯 ${escapeHtml(
-                completion.taskTitle ||
-                "Task"
-            )}
-        </h3>
-
-
-        <div class="completion-info">
-
-            <b>Member:</b>
-            ${escapeHtml(
-                memberName
-            )}
-
-            <br>
-
-            <b>Email:</b>
-            ${escapeHtml(
-                memberEmail
-            )}
-
-            <br>
-
-            <b>Task ID:</b>
-            ${escapeHtml(
-                completion.taskId ||
-                "-"
-            )}
-
-            <br>
-
-            <b>Task Reward:</b>
-            ${taskReward}
-            Coins
-
-            <br>
-
-            <b>Required Watch Time:</b>
-            ${taskWatchTime}
-            Seconds
-
-            <br>
-
-            <b>Submitted Watch Time:</b>
-            ${Number(
-                completion.watchTime || 0
-            )}
-            Seconds
-
-            <br>
-
-            <b>Completed:</b>
-            ${escapeHtml(
-                date
-            )}
-
-            <br>
-
-            <b>Status:</b>
-
-            <span
-                class="status ${statusClass}"
-            >
-                ${escapeHtml(
-                    status
-                )}
-            </span>
-
-        </div>
-
-
-        ${
-            !taskExists
-            ?
-            `
-                <div class="warning">
-                    ⚠️ Original task no longer exists.
-                    This completion should not be rewarded.
-                </div>
-            `
-            :
-            ""
-        }
-
-
-        ${buttons}
-
-    `;
-
-
-    container.appendChild(
-        card
-    );
+    document.getElementById("pendingVerification")
+        .textContent=pendingVerificationCount;
 
 }
 
 
-/* =====================================================
-   APPROVE COMPLETION
-   ===================================================== */
+/* ================= APPROVE COMPLETION ================= */
 
 window.approveCompletion =
 async function(completionId){
 
     if(!confirm(
-        "Approve this task completion?\n\n" +
-        "Reward will be taken from the original task."
+        "Approve this task completion?"
     )){
 
         return;
@@ -2569,17 +1525,17 @@ async function(completionId){
 
     try{
 
-        const completionRef =
-            doc(
-                db,
-                "taskCompletions",
-                completionId
-            );
-
-
         await runTransaction(
             db,
-            async (transaction) => {
+            async(transaction)=>{
+
+                const completionRef =
+                    doc(
+                        db,
+                        "taskCompletions",
+                        completionId
+                    );
+
 
                 const completionSnap =
                     await transaction.get(
@@ -2587,12 +1543,10 @@ async function(completionId){
                     );
 
 
-                if(
-                    !completionSnap.exists()
-                ){
+                if(!completionSnap.exists()){
 
                     throw new Error(
-                        "Task completion not found."
+                        "Completion not found."
                     );
 
                 }
@@ -2603,34 +1557,11 @@ async function(completionId){
 
 
                 if(
-                    completion.status !==
-                    "pending"
+                    completion.status !== "pending"
                 ){
 
                     throw new Error(
-                        "This completion has already been processed."
-                    );
-
-                }
-
-
-                if(
-                    !completion.memberId
-                ){
-
-                    throw new Error(
-                        "Member ID is missing."
-                    );
-
-                }
-
-
-                if(
-                    !completion.taskId
-                ){
-
-                    throw new Error(
-                        "Task ID is missing."
+                        "This completion is already processed."
                     );
 
                 }
@@ -2645,17 +1576,13 @@ async function(completionId){
 
 
                 const taskSnap =
-                    await transaction.get(
-                        taskRef
-                    );
+                    await transaction.get(taskRef);
 
 
-                if(
-                    !taskSnap.exists()
-                ){
+                if(!taskSnap.exists()){
 
                     throw new Error(
-                        "Original task no longer exists. Reward cannot be approved."
+                        "Task not found."
                     );
 
                 }
@@ -2663,62 +1590,6 @@ async function(completionId){
 
                 const task =
                     taskSnap.data();
-
-
-                if(
-                    task.status !==
-                    "active"
-                ){
-
-                    throw new Error(
-                        "This task is no longer active. Reward cannot be approved."
-                    );
-
-                }
-
-
-                const rewardCoins =
-                    Number(
-                        task.rewardCoins || 0
-                    );
-
-
-                const requiredWatchTime =
-                    Number(
-                        task.watchTime || 0
-                    );
-
-
-                const submittedWatchTime =
-                    Number(
-                        completion.watchTime || 0
-                    );
-
-
-                if(
-                    !Number.isInteger(
-                        rewardCoins
-                    ) ||
-                    rewardCoins <= 0
-                ){
-
-                    throw new Error(
-                        "Invalid reward configured in task."
-                    );
-
-                }
-
-
-                if(
-                    submittedWatchTime <
-                    requiredWatchTime
-                ){
-
-                    throw new Error(
-                        "Required watch time was not completed."
-                    );
-
-                }
 
 
                 const memberRef =
@@ -2735,12 +1606,10 @@ async function(completionId){
                     );
 
 
-                if(
-                    !memberSnap.exists()
-                ){
+                if(!memberSnap.exists()){
 
                     throw new Error(
-                        "Member account not found."
+                        "Member not found."
                     );
 
                 }
@@ -2750,48 +1619,49 @@ async function(completionId){
                     memberSnap.data();
 
 
-                if(
-                    member.role !==
-                    "member"
-                ){
+                if(member.role !== "member"){
 
                     throw new Error(
-                        "Invalid member account."
+                        "Invalid member."
                     );
 
                 }
 
 
-                if(
-                    member.status !==
-                    "active"
-                ){
+                if(member.status !== "active"){
 
                     throw new Error(
-                        "Member account is not active."
+                        "Member is not active."
                     );
 
                 }
 
 
-                const oldCoins =
-                    Number(
-                        member.coins || 0
+                const reward =
+                    Number(task.rewardCoins);
+
+
+                if(
+                    Number(completion.rewardCoins)
+                    !== reward
+                ){
+
+                    throw new Error(
+                        "Reward mismatch."
                     );
+
+                }
 
 
                 const newCoins =
-                    oldCoins +
-                    rewardCoins;
+                    Number(member.coins || 0)
+                    + reward;
 
 
                 transaction.update(
                     memberRef,
                     {
-
-                        coins:
-                            newCoins
-
+                        coins:newCoins
                     }
                 );
 
@@ -2799,22 +1669,9 @@ async function(completionId){
                 transaction.update(
                     completionRef,
                     {
-
-                        status:
-                            "approved",
-
-                        rewardStatus:
-                            "Approved",
-
-                        rewardCoins:
-                            rewardCoins,
-
-                        approvedAt:
-                            serverTimestamp(),
-
-                        approvedBy:
-                            OWNER_UID
-
+                        status:"approved",
+                        rewardStatus:"Approved",
+                        approvedAt:new Date()
                     }
                 );
 
@@ -2823,7 +1680,7 @@ async function(completionId){
 
 
         alert(
-            "Task completion approved successfully! ✅"
+            "Completion approved and reward added."
         );
 
 
@@ -2831,22 +1688,14 @@ async function(completionId){
 
         await loadCompletions();
 
-        await updateReports();
 
-        await updateNotifications();
+    }catch(error){
 
-    }
-    catch(error){
-
-        console.error(
-            "Approve completion error:",
-            error
-        );
-
+        console.error(error);
 
         alert(
-            "Unable to approve completion.\n\n" +
-            error.message
+            "Approval failed: "
+            + error.message
         );
 
     }
@@ -2854,527 +1703,13 @@ async function(completionId){
 };
 
 
-/* =====================================================
-   REJECT COMPLETION
-   ===================================================== */
+/* ================= REJECT COMPLETION ================= */
 
 window.rejectCompletion =
 async function(completionId){
 
-    const reason =
-        prompt(
-            "Enter rejection reason:"
-        );
-
-
-    if(reason === null){
-
-        return;
-
-    }
-
-
-    const rejectionReason =
-        reason.trim();
-
-
-    try{
-
-        const completionRef =
-            doc(
-                db,
-                "taskCompletions",
-                completionId
-            );
-
-
-        const completionSnap =
-            await getDoc(
-                completionRef
-            );
-
-
-        if(
-            !completionSnap.exists()
-        ){
-
-            throw new Error(
-                "Completion not found."
-            );
-
-        }
-
-
-        const completion =
-            completionSnap.data();
-
-
-        if(
-            completion.status !==
-            "pending"
-        ){
-
-            throw new Error(
-                "This completion has already been processed."
-            );
-
-        }
-
-
-        await updateDoc(
-            completionRef,
-            {
-
-                status:
-                    "rejected",
-
-                rewardStatus:
-                    "Rejected",
-
-                rejectionReason:
-                    rejectionReason ||
-                    "Rejected by owner.",
-
-                rejectedAt:
-                    serverTimestamp(),
-
-                rejectedBy:
-                    OWNER_UID
-
-            }
-        );
-
-
-        alert(
-            "Task completion rejected."
-        );
-
-
-        await loadCompletions();
-
-        await updateNotifications();
-
-    }
-    catch(error){
-
-        console.error(
-            "Reject completion error:",
-            error
-        );
-
-
-        alert(
-            "Unable to reject completion.\n\n" +
-            error.message
-        );
-
-    }
-
-};
-
-
-/* =====================================================
-   LOAD WITHDRAWALS
-   ===================================================== */
-
-async function loadWithdrawals(){
-
-    const container =
-        document.getElementById(
-            "withdrawals"
-        );
-
-
-    container.innerHTML = `
-        <div class="empty">
-            Loading withdrawal requests...
-        </div>
-    `;
-
-
-    try{
-
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "withdrawals"
-                )
-            );
-
-
-        const withdrawals = [];
-
-
-        snapshot.forEach(
-            (docSnap) => {
-
-                withdrawals.push({
-
-                    id:
-                        docSnap.id,
-
-                    ...docSnap.data()
-
-                });
-
-            }
-        );
-
-
-        withdrawals.sort(
-            (a,b) => {
-
-                const aTime =
-                    a.requestedAt &&
-                    typeof a.requestedAt.toMillis ===
-                    "function"
-                    ? a.requestedAt.toMillis()
-                    : 0;
-
-
-                const bTime =
-                    b.requestedAt &&
-                    typeof b.requestedAt.toMillis ===
-                    "function"
-                    ? b.requestedAt.toMillis()
-                    : 0;
-
-
-                return bTime - aTime;
-
-            }
-        );
-
-
-        if(withdrawals.length === 0){
-
-            container.innerHTML = `
-                <div class="empty">
-                    No withdrawal requests found.
-                </div>
-            `;
-
-            await updateNotifications();
-
-            return;
-
-        }
-
-
-        container.innerHTML = "";
-
-
-        withdrawals.forEach(
-            (withdrawal) => {
-
-                createWithdrawalCard(
-                    container,
-                    withdrawal
-                );
-
-            }
-        );
-
-
-        await updateNotifications();
-
-    }
-    catch(error){
-
-        console.error(
-            "Withdrawals loading error:",
-            error
-        );
-
-
-        container.innerHTML = `
-
-            <div class="empty">
-
-                Unable to load withdrawals.
-
-                <br><br>
-
-                ${escapeHtml(
-                    error.message
-                )}
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =====================================================
-   CREATE WITHDRAWAL CARD
-   ===================================================== */
-
-function createWithdrawalCard(
-    container,
-    withdrawal
-){
-
-    const card =
-        document.createElement(
-            "div"
-        );
-
-
-    card.className =
-        "withdraw-card";
-
-
-    const coins =
-        Number(
-            withdrawal.coins || 0
-        );
-
-
-    const amount =
-        Number(
-            withdrawal.amount ??
-            withdrawal.rupees ??
-            coins / 100
-        );
-
-
-    const status =
-        withdrawal.status ||
-        "pending";
-
-
-    let statusClass =
-        "pending-status";
-
-
-    if(status === "approved"){
-
-        statusClass =
-            "completed-status";
-
-    }
-    else if(status === "rejected"){
-
-        statusClass =
-            "rejected-status";
-
-    }
-
-
-    let requestedDate =
-        "Unknown";
-
-
-    if(withdrawal.requestedAt){
-
-        try{
-
-            requestedDate =
-                withdrawal.requestedAt
-                    .toDate()
-                    .toLocaleString();
-
-        }
-        catch(error){
-
-            requestedDate =
-                "Requested";
-
-        }
-
-    }
-
-
-    let processedDate =
-        "";
-
-
-    if(withdrawal.processedAt){
-
-        try{
-
-            processedDate =
-                withdrawal.processedAt
-                    .toDate()
-                    .toLocaleString();
-
-        }
-        catch(error){
-
-            processedDate =
-                "";
-
-        }
-
-    }
-
-
-    let actionButtons = "";
-
-
-    if(status === "pending"){
-
-        actionButtons = `
-
-            <br>
-
-            <button
-                class="btn btn-green"
-                onclick="approveWithdrawal('${withdrawal.id}')"
-            >
-                ✅ Approve
-            </button>
-
-
-            <button
-                class="btn btn-red"
-                onclick="rejectWithdrawal('${withdrawal.id}')"
-            >
-                ❌ Reject
-            </button>
-
-        `;
-
-    }
-
-
-    card.innerHTML = `
-
-        <h3>
-            💸 Withdrawal Request
-        </h3>
-
-
-        <div class="withdraw-info">
-
-            <b>Member Name:</b>
-            ${escapeHtml(
-                withdrawal.memberName ||
-                "Member"
-            )}
-
-            <br>
-
-            <b>Member Email:</b>
-            ${escapeHtml(
-                withdrawal.memberEmail ||
-                "-"
-            )}
-
-            <br>
-
-            <b>Member ID:</b>
-            ${escapeHtml(
-                withdrawal.memberId ||
-                "-"
-            )}
-
-            <br>
-
-            <b>Coins:</b>
-            ${coins}
-
-            <br>
-
-            <b>Amount:</b>
-            ₹${amount.toFixed(2)}
-
-            <br>
-
-            <b>UPI ID:</b>
-            ${escapeHtml(
-                withdrawal.upiId ||
-                "-"
-            )}
-
-            <br>
-
-            <b>Requested:</b>
-            ${escapeHtml(
-                requestedDate
-            )}
-
-            <br>
-
-            <b>Status:</b>
-
-            <span
-                class="status ${statusClass}"
-            >
-                ${escapeHtml(
-                    formatWithdrawalStatus(
-                        status
-                    )
-                )}
-            </span>
-
-
-            ${
-                withdrawal.rejectionReason
-                ?
-                `
-                    <br>
-
-                    <b>
-                        Rejection Reason:
-                    </b>
-
-                    ${escapeHtml(
-                        withdrawal.rejectionReason
-                    )}
-                `
-                :
-                ""
-            }
-
-
-            ${
-                processedDate
-                ?
-                `
-                    <br>
-
-                    <b>
-                        Processed:
-                    </b>
-
-                    ${escapeHtml(
-                        processedDate
-                    )}
-                `
-                :
-                ""
-            }
-
-        </div>
-
-
-        ${actionButtons}
-
-    `;
-
-
-    container.appendChild(
-        card
-    );
-
-}
-
-
-/* =====================================================
-   APPROVE WITHDRAWAL
-   ===================================================== */
-
-window.approveWithdrawal =
-async function(withdrawalId){
-
     if(!confirm(
-        "Approve this withdrawal?\n\n" +
-        "The requested coins will be deducted from the member balance."
+        "Reject this task completion?"
     )){
 
         return;
@@ -3384,17 +1719,291 @@ async function(withdrawalId){
 
     try{
 
-        const withdrawalRef =
-            doc(
-                db,
-                "withdrawals",
-                withdrawalId
+        await runTransaction(
+            db,
+            async(transaction)=>{
+
+                const completionRef =
+                    doc(
+                        db,
+                        "taskCompletions",
+                        completionId
+                    );
+
+
+                const snap =
+                    await transaction.get(
+                        completionRef
+                    );
+
+
+                if(!snap.exists()){
+
+                    throw new Error(
+                        "Completion not found."
+                    );
+
+                }
+
+
+                const data=snap.data();
+
+
+                if(data.status !== "pending"){
+
+                    throw new Error(
+                        "Already processed."
+                    );
+
+                }
+
+
+                transaction.update(
+                    completionRef,
+                    {
+                        status:"rejected",
+                        rewardStatus:"Rejected",
+                        rejectedAt:new Date()
+                    }
+                );
+
+            }
+        );
+
+
+        alert("Completion rejected.");
+
+        await loadCompletions();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Rejection failed: "
+            + error.message
+        );
+
+    }
+
+};
+
+
+/* ================= LOAD WITHDRAWALS ================= */
+
+async function loadWithdrawals(){
+
+    const snapshot =
+        await getDocs(
+            collection(db,"withdrawals")
+        );
+
+
+    allWithdrawals =
+        snapshot.docs.map(
+            item=>({
+                id:item.id,
+                ...item.data()
+            })
+        );
+
+
+    renderWithdrawals();
+
+}
+
+
+/* ================= RENDER WITHDRAWALS ================= */
+
+function renderWithdrawals(){
+
+    const pendingTable =
+        document.getElementById(
+            "pendingWithdrawalTable"
+        );
+
+    const completedTable =
+        document.getElementById(
+            "completedWithdrawalTable"
+        );
+
+    const rejectedTable =
+        document.getElementById(
+            "rejectedWithdrawalTable"
+        );
+
+
+    pendingTable.innerHTML="";
+    completedTable.innerHTML="";
+    rejectedTable.innerHTML="";
+
+
+    let pending=0;
+
+
+    allWithdrawals.forEach(data=>{
+
+        const status =
+            String(data.status || "")
+            .toLowerCase();
+
+
+        const member =
+            escapeHtml(
+                data.memberName || "-"
             );
 
 
+        const coins =
+            Number(data.coins || 0);
+
+
+        const amount =
+            Number(data.amount || 0);
+
+
+        const upi =
+            escapeHtml(
+                data.upiId || "-"
+            );
+
+
+        const date =
+            formatDate(
+                data.approvedAt ||
+                data.rejectedAt ||
+                data.requestedAt
+            );
+
+
+        if(status === "pending"){
+
+            pending++;
+
+
+            pendingTable.innerHTML += `
+
+            <tr>
+
+                <td>${member}</td>
+
+                <td>${coins}</td>
+
+                <td>₹${amount.toFixed(2)}</td>
+
+                <td>${upi}</td>
+
+                <td>${date}</td>
+
+                <td>
+
+                    <button
+                        class="btn green"
+                        onclick="approveWithdrawal('${data.id}')">
+                        Approve
+                    </button>
+
+                    <button
+                        class="btn red"
+                        onclick="rejectWithdrawal('${data.id}')">
+                        Reject
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        }
+
+
+        else if(status === "approved"){
+
+            completedTable.innerHTML += `
+
+            <tr>
+
+                <td>${member}</td>
+
+                <td>${coins}</td>
+
+                <td>₹${amount.toFixed(2)}</td>
+
+                <td>${upi}</td>
+
+                <td>${date}</td>
+
+            </tr>
+
+            `;
+
+        }
+
+
+        else if(status === "rejected"){
+
+            rejectedTable.innerHTML += `
+
+            <tr>
+
+                <td>${member}</td>
+
+                <td>${coins}</td>
+
+                <td>₹${amount.toFixed(2)}</td>
+
+                <td>${upi}</td>
+
+                <td>${date}</td>
+
+            </tr>
+
+            `;
+
+        }
+
+    });
+
+
+    pendingWithdrawalCount=pending;
+
+
+    document.getElementById(
+        "pendingWithdrawals"
+    ).textContent=pending;
+
+}
+
+
+/* ================= APPROVE WITHDRAWAL ================= */
+
+window.approveWithdrawal =
+async function(withdrawalId){
+
+    if(!confirm(
+        "Approve this withdrawal?"
+    )){
+
+        return;
+
+    }
+
+
+    try{
+
         await runTransaction(
             db,
-            async (transaction) => {
+            async(transaction)=>{
+
+                const withdrawalRef =
+                    doc(
+                        db,
+                        "withdrawals",
+                        withdrawalId
+                    );
+
 
                 const withdrawalSnap =
                     await transaction.get(
@@ -3402,12 +2011,10 @@ async function(withdrawalId){
                     );
 
 
-                if(
-                    !withdrawalSnap.exists()
-                ){
+                if(!withdrawalSnap.exists()){
 
                     throw new Error(
-                        "Withdrawal request not found."
+                        "Withdrawal not found."
                     );
 
                 }
@@ -3423,27 +2030,7 @@ async function(withdrawalId){
                 ){
 
                     throw new Error(
-                        "This withdrawal has already been processed."
-                    );
-
-                }
-
-
-                const requestedCoins =
-                    Number(
-                        withdrawal.coins || 0
-                    );
-
-
-                if(
-                    !Number.isInteger(
-                        requestedCoins
-                    ) ||
-                    requestedCoins <= 0
-                ){
-
-                    throw new Error(
-                        "Invalid withdrawal coin amount."
+                        "Withdrawal already processed."
                     );
 
                 }
@@ -3463,12 +2050,10 @@ async function(withdrawalId){
                     );
 
 
-                if(
-                    !memberSnap.exists()
-                ){
+                if(!memberSnap.exists()){
 
                     throw new Error(
-                        "Member account not found."
+                        "Member not found."
                     );
 
                 }
@@ -3478,16 +2063,10 @@ async function(withdrawalId){
                     memberSnap.data();
 
 
-                if(
-                    member.role !==
-                    "member"
-                ){
-
-                    throw new Error(
-                        "Invalid member account."
+                const requestedCoins =
+                    Number(
+                        withdrawal.coins
                     );
-
-                }
 
 
                 const currentCoins =
@@ -3497,12 +2076,12 @@ async function(withdrawalId){
 
 
                 if(
-                    requestedCoins >
-                    currentCoins
+                    currentCoins <
+                    requestedCoins
                 ){
 
                     throw new Error(
-                        "Insufficient member coin balance."
+                        "Insufficient member balance."
                     );
 
                 }
@@ -3516,10 +2095,7 @@ async function(withdrawalId){
                 transaction.update(
                     memberRef,
                     {
-
-                        coins:
-                            newCoins
-
+                        coins:newCoins
                     }
                 );
 
@@ -3527,16 +2103,8 @@ async function(withdrawalId){
                 transaction.update(
                     withdrawalRef,
                     {
-
-                        status:
-                            "approved",
-
-                        processedAt:
-                            serverTimestamp(),
-
-                        processedBy:
-                            OWNER_UID
-
+                        status:"approved",
+                        approvedAt:new Date()
                     }
                 );
 
@@ -3545,8 +2113,7 @@ async function(withdrawalId){
 
 
         alert(
-            "Withdrawal approved successfully! ✅\n\n" +
-            "Coins have been deducted from the member balance."
+            "Withdrawal approved successfully."
         );
 
 
@@ -3554,22 +2121,14 @@ async function(withdrawalId){
 
         await loadWithdrawals();
 
-        await updateReports();
 
-        await updateNotifications();
+    }catch(error){
 
-    }
-    catch(error){
-
-        console.error(
-            "Approve withdrawal error:",
-            error
-        );
-
+        console.error(error);
 
         alert(
-            "Unable to approve withdrawal.\n\n" +
-            error.message
+            "Withdrawal approval failed: "
+            + error.message
         );
 
     }
@@ -3577,72 +2136,56 @@ async function(withdrawalId){
 };
 
 
-/* =====================================================
-   REJECT WITHDRAWAL
-   ===================================================== */
+/* ================= REJECT WITHDRAWAL ================= */
 
 window.rejectWithdrawal =
 async function(withdrawalId){
 
-    const reason =
-        prompt(
-            "Enter rejection reason:"
-        );
-
-
-    if(reason === null){
+    if(!confirm(
+        "Reject this withdrawal?"
+    )){
 
         return;
 
     }
 
 
-    const rejectionReason =
-        reason.trim();
-
-
     try{
-
-        const withdrawalRef =
-            doc(
-                db,
-                "withdrawals",
-                withdrawalId
-            );
-
 
         await runTransaction(
             db,
-            async (transaction) => {
+            async(transaction)=>{
 
-                const withdrawalSnap =
+                const withdrawalRef =
+                    doc(
+                        db,
+                        "withdrawals",
+                        withdrawalId
+                    );
+
+
+                const snap =
                     await transaction.get(
                         withdrawalRef
                     );
 
 
-                if(
-                    !withdrawalSnap.exists()
-                ){
+                if(!snap.exists()){
 
                     throw new Error(
-                        "Withdrawal request not found."
+                        "Withdrawal not found."
                     );
 
                 }
 
 
-                const withdrawal =
-                    withdrawalSnap.data();
+                const data=snap.data();
 
 
-                if(
-                    withdrawal.status !==
-                    "pending"
-                ){
+                if(data.status !== "pending"){
 
                     throw new Error(
-                        "This withdrawal has already been processed."
+                        "Already processed."
                     );
 
                 }
@@ -3651,20 +2194,8 @@ async function(withdrawalId){
                 transaction.update(
                     withdrawalRef,
                     {
-
-                        status:
-                            "rejected",
-
-                        rejectionReason:
-                            rejectionReason ||
-                            "Rejected by owner.",
-
-                        processedAt:
-                            serverTimestamp(),
-
-                        processedBy:
-                            OWNER_UID
-
+                        status:"rejected",
+                        rejectedAt:new Date()
                     }
                 );
 
@@ -3673,27 +2204,20 @@ async function(withdrawalId){
 
 
         alert(
-            "Withdrawal rejected.\n\n" +
-            "Member coins were not deducted."
+            "Withdrawal rejected."
         );
 
 
         await loadWithdrawals();
 
-        await updateNotifications();
 
-    }
-    catch(error){
+    }catch(error){
 
-        console.error(
-            "Reject withdrawal error:",
-            error
-        );
-
+        console.error(error);
 
         alert(
-            "Unable to reject withdrawal.\n\n" +
-            error.message
+            "Rejection failed: "
+            + error.message
         );
 
     }
@@ -3701,452 +2225,28 @@ async function(withdrawalId){
 };
 
 
-/* =====================================================
-   WITHDRAWAL STATUS
-   ===================================================== */
+/* ================= REFRESH ================= */
 
-function formatWithdrawalStatus(
-    status
-){
-
-    if(status === "approved"){
-
-        return "Approved";
-
-    }
-
-
-    if(status === "rejected"){
-
-        return "Rejected";
-
-    }
-
-
-    return "Pending";
-
-}
-
-
-/* =====================================================
-   FEATURES NAVIGATION
-   ===================================================== */
-
-window.goToSection =
-function(sectionId){
-
-    const section =
-        document.getElementById(
-            sectionId
-        );
-
-
-    if(!section){
-
-        return;
-
-    }
-
-
-    section.scrollIntoView({
-
-        behavior:
-            "smooth",
-
-        block:
-            "start"
-
-    });
-
-};
-
-
-/* =====================================================
-   SYSTEM REPORT
-   ===================================================== */
-
-window.showSystemReport =
-function(){
-
-    goToSection(
-        "reportsSection"
-    );
-
-};
-
-
-/* =====================================================
-   NOTIFICATIONS
-   ===================================================== */
-
-window.showNotifications =
-function(){
-
-    goToSection(
-        "notificationsSection"
-    );
-
-};
-
-
-/* =====================================================
-   SECURITY
-   ===================================================== */
-
-window.showSecurityInfo =
-function(){
-
-    goToSection(
-        "securitySection"
-    );
-
-};
-
-
-/* =====================================================
-   UPDATE REPORTS
-   ===================================================== */
-
-async function updateReports(){
-
-    try{
-
-        const membersSnapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "users"
-                )
-            );
-
-
-        let members = 0;
-
-        let activeMembers = 0;
-
-        let totalCoins = 0;
-
-
-        membersSnapshot.forEach(
-            (docSnap) => {
-
-                const data =
-                    docSnap.data();
-
-
-                if(
-                    data.role !==
-                    "member"
-                ){
-
-                    return;
-
-                }
-
-
-                members++;
-
-
-                if(
-                    data.status ===
-                    "active"
-                ){
-
-                    activeMembers++;
-
-                }
-
-
-                totalCoins +=
-                    Number(
-                        data.coins || 0
-                    );
-
-            }
-        );
-
-
-        const tasksSnapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "tasks"
-                )
-            );
-
-
-        const tasks =
-            tasksSnapshot.size;
-
-
-        document.getElementById(
-            "reportMembers"
-        ).textContent =
-            members;
-
-
-        document.getElementById(
-            "reportActiveMembers"
-        ).textContent =
-            activeMembers;
-
-
-        document.getElementById(
-            "reportTasks"
-        ).textContent =
-            tasks;
-
-
-        document.getElementById(
-            "reportCoins"
-        ).textContent =
-            totalCoins;
-
-    }
-    catch(error){
-
-        console.error(
-            "Reports update error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   UPDATE NOTIFICATIONS
-   ===================================================== */
-
-async function updateNotifications(){
-
-    const container =
-        document.getElementById(
-            "notificationContent"
-        );
-
-
-    if(!container){
-
-        return;
-
-    }
-
-
-    try{
-
-        const completionSnapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "taskCompletions"
-                )
-            );
-
-
-        let pendingCompletions = 0;
-
-
-        completionSnapshot.forEach(
-            (docSnap) => {
-
-                const data =
-                    docSnap.data();
-
-
-                if(
-                    data.status ===
-                    "pending"
-                ){
-
-                    pendingCompletions++;
-
-                }
-
-            }
-        );
-
-
-        const withdrawalSnapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "withdrawals"
-                )
-            );
-
-
-        let pendingWithdrawals = 0;
-
-
-        withdrawalSnapshot.forEach(
-            (docSnap) => {
-
-                const data =
-                    docSnap.data();
-
-
-                if(
-                    data.status ===
-                    "pending"
-                ){
-
-                    pendingWithdrawals++;
-
-                }
-
-            }
-        );
-
-
-        let html = "";
-
-
-        if(
-            pendingCompletions === 0 &&
-            pendingWithdrawals === 0
-        ){
-
-            html = `
-
-                <div class="success">
-
-                    ✅ No pending actions.
-
-                    <br>
-
-                    Owner dashboard is up to date.
-
-                </div>
-
-            `;
-
-        }
-        else{
-
-            if(
-                pendingCompletions > 0
-            ){
-
-                html += `
-
-                    <div class="notification-box">
-
-                        <strong>
-                            ✅ Task Verification
-                        </strong>
-
-                        ${pendingCompletions}
-                        pending task completion(s)
-                        require verification.
-
-                        <br><br>
-
-                        <button
-                            class="btn btn-blue"
-                            onclick="goToSection('completionsSection')"
-                        >
-                            Open Verification
-                        </button>
-
-                    </div>
-
-                `;
-
-            }
-
-
-            if(
-                pendingWithdrawals > 0
-            ){
-
-                html += `
-
-                    <div class="notification-box">
-
-                        <strong>
-                            💸 Withdrawal Requests
-                        </strong>
-
-                        ${pendingWithdrawals}
-                        pending withdrawal request(s)
-                        require review.
-
-                        <br><br>
-
-                        <button
-                            class="btn btn-blue"
-                            onclick="goToSection('withdrawalsSection')"
-                        >
-                            Open Withdrawals
-                        </button>
-
-                    </div>
-
-                `;
-
-            }
-
-        }
-
-
-        container.innerHTML =
-            html;
-
-    }
-    catch(error){
-
-        console.error(
-            "Notifications update error:",
-            error
-        );
-
-
-        container.innerHTML = `
-
-            <div class="warning">
-
-                Unable to load notifications.
-
-                <br><br>
-
-                ${escapeHtml(
-                    error.message
-                )}
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =====================================================
-   LOGOUT
-   ===================================================== */
-
-window.logout =
+window.refreshAllData =
 async function(){
 
     try{
 
-        await signOut(
-            auth
-        );
+        await loadMembers();
 
+        await loadTasks();
 
-        window.location.href =
-            "index.html";
+        await loadCompletions();
 
-    }
-    catch(error){
+        await loadWithdrawals();
+
+    }catch(error){
+
+        console.error(error);
 
         alert(
-            "Logout failed: " +
-            error.message
+            "Refresh failed: "
+            + error.message
         );
 
     }
@@ -4154,47 +2254,98 @@ async function(){
 };
 
 
-/* =====================================================
-   HTML ESCAPE
-   ===================================================== */
+/* ================= LOGOUT ================= */
 
-function escapeHtml(
-    value
-){
+window.logout = async function(){
 
-    return String(
-        value
-    )
+    try{
 
-    .replace(
-        /&/g,
-        "&amp;"
-    )
+        await signOut(auth);
 
-    .replace(
-        /</g,
-        "&lt;"
-    )
+        window.location.href="index.html";
 
-    .replace(
-        />/g,
-        "&gt;"
-    )
+    }catch(error){
 
-    .replace(
-        /"/g,
-        "&quot;"
-    )
+        console.error(error);
 
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+        alert(
+            "Logout failed: "
+            + error.message
+        );
+
+    }
+
+};
+
+
+/* ================= HELPERS ================= */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return String(value ?? "")
+        .replace(/"/g,"%22")
+        .replace(/'/g,"%27")
+        .replace(/</g,"%3C")
+        .replace(/>/g,"%3E");
+
+}
+
+
+function formatDate(value){
+
+    if(!value){
+        return "-";
+    }
+
+
+    try{
+
+        if(
+            typeof value === "object"
+            &&
+            value.seconds
+        ){
+
+            return new Date(
+                value.seconds * 1000
+            ).toLocaleString();
+
+        }
+
+
+        if(
+            value instanceof Date
+        ){
+
+            return value.toLocaleString();
+
+        }
+
+
+        return new Date(value)
+            .toLocaleString();
+
+    }catch(error){
+
+        return "-";
+
+    }
 
 }
 
 </script>
-
 
 </body>
 </html>
