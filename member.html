@@ -436,6 +436,25 @@ th{
     margin:7px 0;
 }
 
+.withdrawStats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:12px;
+    margin-top:15px;
+}
+
+.withdrawStat{
+    background:#f8fafc;
+    padding:14px;
+    border-radius:8px;
+}
+
+.withdrawStat strong{
+    display:block;
+    margin-top:5px;
+    font-size:20px;
+}
+
 @media(max-width:600px){
 
     .main{
@@ -489,6 +508,7 @@ th{
 
 </div>
 
+
 <div class="sidebar" id="sidebar">
 
     <div class="sidebarHeader">
@@ -503,56 +523,36 @@ th{
 
     </div>
 
-    <div
-        class="menuItem"
-        data-page="dashboard"
-    >
+    <div class="menuItem" data-page="dashboard">
         🏠 Dashboard
     </div>
 
-    <div
-        class="menuItem"
-        data-page="newTasks"
-    >
+    <div class="menuItem" data-page="newTasks">
         ▶️ New Tasks
     </div>
 
-    <div
-        class="menuItem"
-        data-page="completedTasks"
-    >
+    <div class="menuItem" data-page="completedTasks">
         ✅ Completed Tasks
     </div>
 
-    <div
-        class="menuItem"
-        data-page="withdraw"
-    >
+    <div class="menuItem" data-page="withdraw">
         💰 Withdraw
     </div>
 
-    <div
-        class="menuItem"
-        data-page="withdrawalHistory"
-    >
+    <div class="menuItem" data-page="withdrawalHistory">
         📜 Withdrawal History
     </div>
 
-    <div
-        class="menuItem"
-        data-page="profile"
-    >
+    <div class="menuItem" data-page="profile">
         👤 Profile
     </div>
 
-    <div
-        class="menuItem logout"
-        id="logoutMenu"
-    >
+    <div class="menuItem logout" id="logoutMenu">
         🚪 Logout
     </div>
 
 </div>
+
 
 <div
     class="overlay"
@@ -560,12 +560,10 @@ th{
     onclick="closeMemberMenu()"
 ></div>
 
+
 <div class="main">
 
-    <div
-        id="authMessage"
-        class="message"
-    ></div>
+    <div id="authMessage" class="message"></div>
 
 
     <!-- =================================================
@@ -641,6 +639,52 @@ th{
             <div class="card">
 
                 <h3>
+                    Pending Withdrawal
+                </h3>
+
+                <div
+                    class="value"
+                    id="dashboardPendingWithdrawal"
+                >
+                    0
+                </div>
+
+                <p>
+                    ₹
+                    <span id="dashboardPendingWithdrawalRupees">
+                        0.00
+                    </span>
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    Total Withdrawn
+                </h3>
+
+                <div
+                    class="value"
+                    id="dashboardTotalWithdrawn"
+                >
+                    0
+                </div>
+
+                <p>
+                    ₹
+                    <span id="dashboardTotalWithdrawnRupees">
+                        0.00
+                    </span>
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
                     New Tasks
                 </h3>
 
@@ -671,7 +715,9 @@ th{
 
         </div>
 
+
         <br>
+
 
         <div class="card">
 
@@ -774,12 +820,10 @@ th{
             class="message"
         ></div>
 
+
         <div class="formBox">
 
-            <div
-                class="card"
-                style="margin-bottom:15px;"
-            >
+            <div class="card" style="margin-bottom:15px;">
 
                 <h3>
                     Available Coins
@@ -795,9 +839,7 @@ th{
                 <p>
                     Current Value:
 
-                    <strong
-                        id="withdrawAvailableRupees"
-                    >
+                    <strong id="withdrawAvailableRupees">
                         ₹0.00
                     </strong>
                 </p>
@@ -811,9 +853,7 @@ th{
                             Pending Withdrawal:
                         </strong>
 
-                        <span
-                            id="withdrawPendingCoins"
-                        >
+                        <span id="withdrawPendingCoins">
                             0
                         </span>
 
@@ -825,9 +865,32 @@ th{
 
                         Pending Value:
 
-                        <strong
-                            id="withdrawPendingRupees"
-                        >
+                        <strong id="withdrawPendingRupees">
+                            ₹0.00
+                        </strong>
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Total Withdrawn:
+                        </strong>
+
+                        <span id="withdrawTotalCoins">
+                            0
+                        </span>
+
+                        Coins
+
+                    </p>
+
+                    <p>
+
+                        Total Withdrawn Value:
+
+                        <strong id="withdrawTotalRupees">
                             ₹0.00
                         </strong>
 
@@ -1024,6 +1087,19 @@ th{
 
             </div>
 
+
+            <div class="profileRow">
+
+                <span class="profileLabel">
+                    Total Withdrawn
+                </span>
+
+                <span id="profileTotalWithdrawn">
+                    0 Coins
+                </span>
+
+            </div>
+
         </div>
 
     </section>
@@ -1036,28 +1112,20 @@ th{
 function toggleMemberMenu(){
 
     const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
+        document.getElementById("sidebar");
 
     const overlay =
-        document.getElementById(
-            "overlay"
-        );
+        document.getElementById("overlay");
 
     if(!sidebar){
         return;
     }
 
-    sidebar.classList.toggle(
-        "open"
-    );
+    sidebar.classList.toggle("open");
 
     if(overlay){
 
-        overlay.classList.toggle(
-            "show"
-        );
+        overlay.classList.toggle("show");
 
     }
 
@@ -1067,28 +1135,20 @@ function toggleMemberMenu(){
 function closeMemberMenu(){
 
     const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
+        document.getElementById("sidebar");
 
     const overlay =
-        document.getElementById(
-            "overlay"
-        );
+        document.getElementById("overlay");
 
     if(sidebar){
 
-        sidebar.classList.remove(
-            "open"
-        );
+        sidebar.classList.remove("open");
 
     }
 
     if(overlay){
 
-        overlay.classList.remove(
-            "show"
-        );
+        overlay.classList.remove("show");
 
     }
 
@@ -1135,12 +1195,24 @@ import {
 const firebaseConfig = {
 
     apiKey: "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",
-    authDomain: "task-reward-system-af46f.firebaseapp.com",
-    projectId: "task-reward-system-af46f",
-    storageBucket: "task-reward-system-af46f.firebasestorage.app",
-    messagingSenderId: "64322126165",
-    appId: "1:64322126165:web:7aae7a6e4792ab4f092fdc",
-    measurementId: "G-6P3R9F3ZQT"
+
+    authDomain:
+        "task-reward-system-af46f.firebaseapp.com",
+
+    projectId:
+        "task-reward-system-af46f",
+
+    storageBucket:
+        "task-reward-system-af46f.firebasestorage.app",
+
+    messagingSenderId:
+        "64322126165",
+
+    appId:
+        "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+
+    measurementId:
+        "G-6P3R9F3ZQT"
 
 };
 
@@ -1242,9 +1314,7 @@ function(){
 
 
 const youtubeScript =
-    document.createElement(
-        "script"
-    );
+    document.createElement("script");
 
 youtubeScript.src =
     "https://www.youtube.com/iframe_api";
@@ -1265,6 +1335,8 @@ let currentMemberData = null;
 let allTasks = [];
 
 let allCompletions = [];
+
+let allWithdrawals = [];
 
 let activeTaskId = null;
 
@@ -1318,6 +1390,68 @@ function escapeHtml(value){
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   WITHDRAWAL CALCULATIONS
+===================================================== */
+
+function getPendingWithdrawalCoins(){
+
+    return allWithdrawals.reduce(
+        (total,item) => {
+
+            if(
+                String(
+                    item.status || ""
+                ).toLowerCase()
+                ===
+                "pending"
+            ){
+
+                return total +
+                    Number(
+                        item.coins || 0
+                    );
+
+            }
+
+            return total;
+
+        },
+        0
+    );
+
+}
+
+
+function getTotalWithdrawnCoins(){
+
+    return allWithdrawals.reduce(
+        (total,item) => {
+
+            if(
+                String(
+                    item.status || ""
+                ).toLowerCase()
+                ===
+                "approved"
+            ){
+
+                return total +
+                    Number(
+                        item.coins || 0
+                    );
+
+            }
+
+            return total;
+
+        },
+        0
+    );
 
 }
 
@@ -1536,23 +1670,6 @@ if(auth){
                     userSnap.data();
 
 
-                /*
-                 * Old member documents may not have
-                 * pendingWithdrawalCoins.
-                 */
-                if(
-                    currentMemberData
-                    .pendingWithdrawalCoins ===
-                    undefined
-                ){
-
-                    currentMemberData
-                    .pendingWithdrawalCoins =
-                        0;
-
-                }
-
-
                 if(
                     currentMemberData.role !==
                     "member"
@@ -1596,9 +1713,9 @@ if(auth){
 
                 await loadTasks();
 
-                await loadCompletedTasks();
-
                 await loadWithdrawalHistory();
+
+                await loadCompletedTasks();
 
 
                 loadProfile();
@@ -1791,9 +1908,7 @@ async function loadAllCompletions(){
 
 
     const snapshot =
-        await getDocs(
-            q
-        );
+        await getDocs(q);
 
 
     snapshot.forEach(
@@ -1822,6 +1937,77 @@ async function loadAllCompletions(){
 
             const bTime =
                 b.completedAt?.seconds ||
+                0;
+
+
+            return bTime - aTime;
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   LOAD WITHDRAWALS
+===================================================== */
+
+async function loadAllWithdrawals(){
+
+    allWithdrawals = [];
+
+
+    if(!currentMember){
+
+        return;
+
+    }
+
+
+    const q =
+        query(
+            collection(
+                db,
+                "withdrawals"
+            ),
+            where(
+                "memberId",
+                "==",
+                currentMember.uid
+            )
+        );
+
+
+    const snapshot =
+        await getDocs(q);
+
+
+    snapshot.forEach(
+        docSnap => {
+
+            allWithdrawals.push({
+
+                id:
+                    docSnap.id,
+
+                ...docSnap.data()
+
+            });
+
+        }
+    );
+
+
+    allWithdrawals.sort(
+        (a,b) => {
+
+            const aTime =
+                a.requestedAt?.seconds ||
+                0;
+
+
+            const bTime =
+                b.requestedAt?.seconds ||
                 0;
 
 
@@ -2433,9 +2619,8 @@ function getYoutubeVideoId(url){
 
 
         return (
-            parsed.searchParams.get(
-                "v"
-            ) || ""
+            parsed.searchParams.get("v") ||
+            ""
         );
 
     }catch(error){
@@ -2812,6 +2997,17 @@ function updateTaskProgress(task){
         );
 
 
+    if(
+        !timerEl ||
+        !progressEl ||
+        !completeButton
+    ){
+
+        return;
+
+    }
+
+
     const percentage =
         activeRequiredTime > 0
 
@@ -3153,8 +3349,8 @@ async function loadCompletedTasks(){
 
 
                 if(
-                    status ===
-                    "Approved"
+                    status.toLowerCase() ===
+                    "approved"
                 ){
 
                     badgeClass =
@@ -3164,8 +3360,8 @@ async function loadCompletedTasks(){
 
 
                 if(
-                    status ===
-                    "Rejected"
+                    status.toLowerCase() ===
+                    "rejected"
                 ){
 
                     badgeClass =
@@ -3270,7 +3466,7 @@ async function loadCompletedTasks(){
 function calculateTotalEarning(){
 
     return allCompletions.reduce(
-        (total, item) => {
+        (total,item) => {
 
             const status =
                 String(
@@ -3326,6 +3522,14 @@ function refreshDashboard(){
         calculateTotalEarning();
 
 
+    const pendingCoins =
+        getPendingWithdrawalCoins();
+
+
+    const totalWithdrawn =
+        getTotalWithdrawnCoins();
+
+
     document.getElementById(
         "dashboardCoins"
     ).textContent =
@@ -3352,6 +3556,34 @@ function refreshDashboard(){
     ).textContent =
         (
             totalEarning / 100
+        ).toFixed(2);
+
+
+    document.getElementById(
+        "dashboardPendingWithdrawal"
+    ).textContent =
+        pendingCoins;
+
+
+    document.getElementById(
+        "dashboardPendingWithdrawalRupees"
+    ).textContent =
+        (
+            pendingCoins / 100
+        ).toFixed(2);
+
+
+    document.getElementById(
+        "dashboardTotalWithdrawn"
+    ).textContent =
+        totalWithdrawn;
+
+
+    document.getElementById(
+        "dashboardTotalWithdrawnRupees"
+    ).textContent =
+        (
+            totalWithdrawn / 100
         ).toFixed(2);
 
 
@@ -3400,10 +3632,11 @@ function refreshWithdrawPage(){
 
 
     const pendingCoins =
-        Number(
-            currentMemberData.pendingWithdrawalCoins ||
-            0
-        );
+        getPendingWithdrawalCoins();
+
+
+    const totalWithdrawn =
+        getTotalWithdrawnCoins();
 
 
     document.getElementById(
@@ -3433,6 +3666,21 @@ function refreshWithdrawPage(){
         "₹" +
         (
             pendingCoins / 100
+        ).toFixed(2);
+
+
+    document.getElementById(
+        "withdrawTotalCoins"
+    ).textContent =
+        totalWithdrawn;
+
+
+    document.getElementById(
+        "withdrawTotalRupees"
+    ).textContent =
+        "₹" +
+        (
+            totalWithdrawn / 100
         ).toFixed(2);
 
 
@@ -3488,11 +3736,6 @@ function calculateWithdrawal(){
         ).toFixed(2);
 
 
-    /*
-     * Visual validation only.
-     * Real validation happens inside Firestore transaction.
-     */
-
     if(
         coins > availableCoins
     ){
@@ -3526,6 +3769,10 @@ async function submitWithdrawal(){
 
     if(!currentMember){
 
+        alert(
+            "Please login again."
+        );
+
         return;
 
     }
@@ -3552,9 +3799,8 @@ async function submitWithdrawal(){
 
 
     if(
-        !coins ||
-        coins <= 0 ||
-        !Number.isInteger(coins)
+        !Number.isInteger(coins) ||
+        coins <= 0
     ){
 
         alert(
@@ -3593,6 +3839,10 @@ async function submitWithdrawal(){
             );
 
 
+        /*
+         * Create withdrawal document reference
+         * before transaction.
+         */
         const withdrawalRef =
             doc(
                 collection(
@@ -3607,7 +3857,9 @@ async function submitWithdrawal(){
             async transaction => {
 
                 /*
-                 * Read latest Firestore balance.
+                 * IMPORTANT:
+                 * Read the latest member balance
+                 * from Firestore.
                  */
                 const userSnap =
                     await transaction.get(
@@ -3661,20 +3913,16 @@ async function submitWithdrawal(){
                     );
 
 
-                const oldPendingCoins =
-                    Number(
-                        latestData.pendingWithdrawalCoins ||
-                        0
-                    );
-
-
                 /*
-                 * Latest balance check.
+                 * IMPORTANT:
+                 * Balance check happens using
+                 * latest Firestore value.
                  *
                  * This protects against:
                  * - double click
-                 * - two browser tabs
-                 * - stale page balance
+                 * - two tabs
+                 * - stale page
+                 * - rapid requests
                  */
                 if(
                     coins >
@@ -3693,31 +3941,31 @@ async function submitWithdrawal(){
                     coins;
 
 
-                const newPendingCoins =
-                    oldPendingCoins +
-                    coins;
-
-
                 /*
-                 * Reserve coins.
+                 * IMPORTANT:
+                 *
+                 * Only "coins" is updated here.
+                 *
+                 * Do NOT update
+                 * pendingWithdrawalCoins.
+                 *
+                 * Firestore Rules allow the member
+                 * to decrease only coins.
                  */
                 transaction.update(
                     userRef,
                     {
 
                         coins:
-                            newCoins,
-
-                        pendingWithdrawalCoins:
-                            newPendingCoins
+                            newCoins
 
                     }
                 );
 
 
                 /*
-                 * Create withdrawal request
-                 * in the SAME transaction.
+                 * Withdrawal document is created
+                 * inside the SAME transaction.
                  */
                 transaction.set(
                     withdrawalRef,
@@ -3762,30 +4010,41 @@ async function submitWithdrawal(){
 
 
         /*
-         * Update local data immediately.
+         * Transaction successful.
+         *
+         * Coins are already reserved/deducted
+         * in Firestore.
          */
-        const oldCoins =
+        currentMemberData.coins =
             Number(
                 currentMemberData.coins ||
                 0
+            ) - coins;
+
+
+        /*
+         * Reload latest member data.
+         */
+        const latestUserSnap =
+            await getDoc(
+                userRef
             );
 
 
-        const oldPending =
-            Number(
-                currentMemberData.pendingWithdrawalCoins ||
-                0
-            );
+        if(
+            latestUserSnap.exists()
+        ){
+
+            currentMemberData =
+                latestUserSnap.data();
+
+        }
 
 
-        currentMemberData.coins =
-            oldCoins -
-            coins;
-
-
-        currentMemberData.pendingWithdrawalCoins =
-            oldPending +
-            coins;
+        /*
+         * Reload withdrawals.
+         */
+        await loadAllWithdrawals();
 
 
         /*
@@ -3827,11 +4086,17 @@ async function submitWithdrawal(){
             +
             coins
             +
-            " coins are now reserved and waiting for owner approval.";
+            " coins are reserved and waiting for owner approval.";
 
 
         msg.className =
             "message show success";
+
+
+        console.log(
+            "Withdrawal created successfully:",
+            withdrawalRef.id
+        );
 
 
     }catch(error){
@@ -3888,66 +4153,11 @@ async function loadWithdrawalHistory(){
 
     try{
 
-        const q =
-            query(
-                collection(
-                    db,
-                    "withdrawals"
-                ),
-                where(
-                    "memberId",
-                    "==",
-                    currentMember.uid
-                )
-            );
-
-
-        const snapshot =
-            await getDocs(
-                q
-            );
-
-
-        const withdrawals = [];
-
-
-        snapshot.forEach(
-            docSnap => {
-
-                withdrawals.push({
-
-                    id:
-                        docSnap.id,
-
-                    ...docSnap.data()
-
-                });
-
-            }
-        );
-
-
-        withdrawals.sort(
-            (a,b) => {
-
-                const aTime =
-                    a.requestedAt?.seconds ||
-                    0;
-
-
-                const bTime =
-                    b.requestedAt?.seconds ||
-                    0;
-
-
-                return bTime - aTime;
-
-            }
-        );
+        await loadAllWithdrawals();
 
 
         if(
-            withdrawals.length === 0
+            allWithdrawals.length === 0
         ){
 
             container.innerHTML =
@@ -3959,6 +4169,10 @@ async function loadWithdrawalHistory(){
                 </div>
                 `;
 
+
+            refreshDashboard();
+
+            refreshWithdrawPage();
 
             return;
 
@@ -3995,7 +4209,7 @@ async function loadWithdrawalHistory(){
             `;
 
 
-        withdrawals.forEach(
+        allWithdrawals.forEach(
             item => {
 
                 let date =
@@ -4017,8 +4231,10 @@ async function loadWithdrawalHistory(){
 
 
                 const status =
-                    item.status ||
-                    "pending";
+                    String(
+                        item.status ||
+                        "pending"
+                    ).toLowerCase();
 
 
                 let badgeClass =
@@ -4068,6 +4284,7 @@ async function loadWithdrawalHistory(){
                         <td>
                             ₹${Number(
                                 item.amount ||
+                                item.rupees ||
                                 0
                             ).toFixed(2)}
                         </td>
@@ -4115,6 +4332,13 @@ async function loadWithdrawalHistory(){
             html;
 
 
+        refreshDashboard();
+
+        refreshWithdrawPage();
+
+        loadProfile();
+
+
     }catch(error){
 
         container.innerHTML =
@@ -4155,10 +4379,11 @@ function loadProfile(){
 
 
     const pendingCoins =
-        Number(
-            currentMemberData.pendingWithdrawalCoins ||
-            0
-        );
+        getPendingWithdrawalCoins();
+
+
+    const totalWithdrawn =
+        getTotalWithdrawnCoins();
 
 
     document.getElementById(
@@ -4223,6 +4448,20 @@ function loadProfile(){
         +
         (
             pendingCoins / 100
+        ).toFixed(2)
+        +
+        ")";
+
+
+    document.getElementById(
+        "profileTotalWithdrawn"
+    ).textContent =
+        totalWithdrawn
+        +
+        " Coins (₹"
+        +
+        (
+            totalWithdrawn / 100
         ).toFixed(2)
         +
         ")";
@@ -4312,6 +4551,8 @@ setInterval(
             await loadTasks();
 
             await loadCompletedTasks();
+
+            await loadWithdrawalHistory();
 
 
             refreshDashboard();
