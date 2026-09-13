@@ -1423,77 +1423,703 @@ function showPage(page){
 
 if(auth){
 
-    onAuthStateChanged(
-        auth,
-        async user => {
+    <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-            if(!user){
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-                window.location.href =
-                    "index.html";
-
-                return;
-
-            }
-
-
-            currentMember =
-                user;
-
-
-            try{
-
-                const loaded =
-                    await refreshMemberData();
-
-
-                if(!loaded){
-
-                    showAuthError(
-                        "Unable to load member profile."
-                    );
-
-                    return;
-
-                }
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    collection,
+    query,
+    where,
+    getDocs,
+    addDoc,
+    setDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-                hideAuthMessage();
+/* =========================================================
+   FIREBASE CONFIG
+   DO NOT CHANGE
+========================================================= */
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAH030c2ydOmijyUwmT60CC7vvnyXxyOdY",
+    authDomain: "task-reward-system-af46f.firebaseapp.com",
+    projectId: "task-reward-system-af46f",
+    storageBucket: "task-reward-system-af46f.firebasestorage.app",
+    messagingSenderId: "64322126165",
+    appId: "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+    measurementId: "G-6P3R9F3ZQT"
+};
 
 
-                await loadAllCompletions();
+/* =========================================================
+   FIREBASE INITIALIZE
+========================================================= */
 
-                await loadTasks();
+const app = initializeApp(firebaseConfig);
 
-                await loadCompletedTasks();
-
-                await loadWithdrawalHistory();
-
-
-                await refreshMemberData();
-
-                loadProfile();
-
-                refreshDashboard();
-
-                refreshWithdrawPage();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 
-            }catch(error){
+/* =========================================================
+   GLOBAL MEMBER DATA
+========================================================= */
 
-                console.error(
-                    error
-                );
+let currentMember = null;
+let currentMemberData = null;
+
+let allTasks = [];
+let allCompletions = [];
+
+let authReady = false;
 
 
-                showAuthError(
-                    error.message
-                );
+/* =========================================================
+   SHOW MESSAGE
+========================================================= */
 
-            }
+function showMemberMessage(message, type = "info") {
 
+    const welcome = document.getElementById("welcomeMessage");
+
+    if (welcome) {
+        welcome.textContent = message;
+    }
+
+    console.log(`[Member ${type}]`, message);
+}
+
+
+/* =========================================================
+   LOAD MEMBER DATA
+========================================================= */
+
+async function refreshMemberData() {
+
+    if (!currentMember) {
+        return false;
+    }
+
+    try {
+
+        const userRef = doc(db, "users", currentMember.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+
+            console.error("Member document not found:", currentMember.uid);
+
+            showMemberMessage(
+                "Member profile not found."
+            );
+
+            return false;
         }
+
+        const data = userSnap.data();
+
+        console.log("Member Firestore data:", data);
+
+        /*
+         IMPORTANT:
+         Do NOT logout just because Firestore read has
+         some temporary problem.
+        */
+
+        if (data.role !== "member") {
+
+            console.error(
+                "Invalid role:",
+                data.role
+            );
+
+            showMemberMessage(
+                "This account is not a member account."
+            );
+
+            return false;
+        }
+
+        if (data.status !== "active") {
+
+            console.error(
+                "Member status:",
+                data.status
+            );
+
+            showMemberMessage(
+                "Your member account is not active."
+            );
+
+            return false;
+        }
+
+
+        currentMemberData = {
+            ...data,
+            uid: currentMember.uid
+        };
+
+
+        /* Update UI */
+
+        updateMemberUI();
+
+        refreshDashboard();
+
+        refreshWithdrawPage();
+
+        loadProfile();
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Unable to load member profile:",
+            error
+        );
+
+        /*
+         IMPORTANT:
+         Do NOT signOut here.
+        */
+
+        showMemberMessage(
+            "Unable to load member data. Please try again."
+        );
+
+        return false;
+    }
+}
+
+
+/* =========================================================
+   UPDATE MEMBER UI
+========================================================= */
+
+function updateMemberUI() {
+
+    if (!currentMemberData) {
+        return;
+    }
+
+    const name =
+        currentMemberData.name ||
+        "Member";
+
+    const coins =
+        Number(currentMemberData.coins || 0);
+
+
+    const welcomeElements = [
+        document.getElementById("welcomeMessage"),
+        document.getElementById("dashboardWelcome"),
+        document.getElementById("profileName")
+    ];
+
+
+    welcomeElements.forEach(element => {
+
+        if (element) {
+
+            if (element.id === "welcomeMessage") {
+                element.textContent =
+                    `Welcome, ${name}`;
+            }
+
+            else {
+                element.textContent = name;
+            }
+        }
+    });
+
+
+    const coinElements = [
+        document.getElementById("totalCoins"),
+        document.getElementById("withdrawAvailableCoins"),
+        document.getElementById("profileCoins")
+    ];
+
+
+    coinElements.forEach(element => {
+
+        if (element) {
+            element.textContent = coins;
+        }
+    });
+
+
+    const rupees =
+        coins / 100;
+
+
+    const valueElement =
+        document.getElementById("currentValue");
+
+    if (valueElement) {
+
+        valueElement.textContent =
+            `₹${rupees.toFixed(2)}`;
+    }
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function refreshDashboard() {
+
+    if (!currentMemberData) {
+        return;
+    }
+
+    const coins =
+        Number(currentMemberData.coins || 0);
+
+    const value =
+        coins / 100;
+
+
+    const totalCoins =
+        document.getElementById("totalCoins");
+
+    if (totalCoins) {
+        totalCoins.textContent = coins;
+    }
+
+
+    const currentValue =
+        document.getElementById("currentValue");
+
+    if (currentValue) {
+
+        currentValue.textContent =
+            `₹${value.toFixed(2)}`;
+    }
+
+
+    const completedTasks =
+        document.getElementById("completedTasksCount");
+
+    if (completedTasks) {
+
+        completedTasks.textContent =
+            allCompletions.length;
+    }
+
+
+    const newTasks =
+        document.getElementById("newTasksCount");
+
+    if (newTasks) {
+
+        const completedIds =
+            new Set(
+                allCompletions
+                    .filter(c =>
+                        c.completionDate ===
+                        getTodayDate()
+                    )
+                    .map(c => c.taskId)
+            );
+
+        const available =
+            allTasks.filter(task =>
+                !completedIds.has(task.id)
+            );
+
+        newTasks.textContent =
+            available.length;
+    }
+}
+
+
+/* =========================================================
+   TODAY DATE
+========================================================= */
+
+function getTodayDate() {
+
+    const now = new Date();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        String(now.getMonth() + 1)
+            .padStart(2, "0");
+
+    const day =
+        String(now.getDate())
+            .padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+/* =========================================================
+   WITHDRAW PAGE
+========================================================= */
+
+function refreshWithdrawPage() {
+
+    if (!currentMemberData) {
+        return;
+    }
+
+    const coins =
+        Number(currentMemberData.coins || 0);
+
+
+    const available =
+        document.getElementById(
+            "withdrawAvailableCoins"
+        );
+
+    if (available) {
+        available.textContent = coins;
+    }
+
+
+    const input =
+        document.getElementById("withdrawCoins");
+
+    if (input) {
+
+        input.max =
+            coins;
+    }
+
+
+    calculateWithdrawal();
+}
+
+
+/* =========================================================
+   WITHDRAW CALCULATION
+========================================================= */
+
+function calculateWithdrawal() {
+
+    const coinsInput =
+        document.getElementById("withdrawCoins");
+
+    const rupeesOutput =
+        document.getElementById("withdrawRupees");
+
+    if (!coinsInput || !rupeesOutput) {
+        return;
+    }
+
+    const coins =
+        Number(coinsInput.value || 0);
+
+    const amount =
+        coins / 100;
+
+
+    rupeesOutput.value =
+        `₹${amount.toFixed(2)}`;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function loadProfile() {
+
+    if (!currentMemberData) {
+        return;
+    }
+
+
+    const name =
+        document.getElementById("profileName");
+
+    if (name) {
+        name.textContent =
+            currentMemberData.name || "-";
+    }
+
+
+    const email =
+        document.getElementById("profileEmail");
+
+    if (email) {
+        email.textContent =
+            currentMemberData.email || "-";
+    }
+
+
+    const mobile =
+        document.getElementById("profileMobile");
+
+    if (mobile) {
+        mobile.textContent =
+            currentMemberData.mobile || "-";
+    }
+
+
+    const coins =
+        document.getElementById("profileCoins");
+
+    if (coins) {
+
+        coins.textContent =
+            Number(
+                currentMemberData.coins || 0
+            );
+    }
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+onAuthStateChanged(auth, async (user) => {
+
+    console.log(
+        "Auth state changed:",
+        user ? user.uid : "NO USER"
     );
+
+
+    if (!user) {
+
+        authReady = false;
+
+        /*
+         Only redirect when Firebase itself says
+         there is no logged-in user.
+        */
+
+        window.location.href =
+            "index.html";
+
+        return;
+    }
+
+
+    currentMember = user;
+
+
+    /*
+     IMPORTANT:
+     Do not call signOut() here.
+    */
+
+    const success =
+        await refreshMemberData();
+
+
+    if (!success) {
+
+        /*
+         Keep the Firebase session alive.
+         Show error instead of automatic logout.
+        */
+
+        console.warn(
+            "Member data could not be loaded. User kept logged in."
+        );
+
+        return;
+    }
+
+
+    authReady = true;
+
+
+    /* Load application data */
+
+    try {
+
+        if (typeof loadAllCompletions === "function") {
+            await loadAllCompletions();
+        }
+
+        if (typeof loadTasks === "function") {
+            await loadTasks();
+        }
+
+        if (typeof loadCompletedTasks === "function") {
+            await loadCompletedTasks();
+        }
+
+        if (typeof loadWithdrawalHistory === "function") {
+            await loadWithdrawalHistory();
+        }
+
+        await refreshMemberData();
+
+    } catch (error) {
+
+        console.error(
+            "Member data loading error:",
+            error
+        );
+    }
+
+});
+
+
+/* =========================================================
+   AUTO REFRESH MEMBER BALANCE
+========================================================= */
+
+setInterval(async () => {
+
+    if (!currentMember) {
+        return;
+    }
+
+    console.log(
+        "Refreshing member account..."
+    );
+
+    await refreshMemberData();
+
+}, 30000);
+
+
+/* =========================================================
+   WITHDRAW INPUT
+========================================================= */
+
+document.addEventListener(
+    "input",
+    function(event) {
+
+        if (
+            event.target &&
+            event.target.id === "withdrawCoins"
+        ) {
+
+            calculateWithdrawal();
+        }
+    }
+);
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+window.toggleMemberMenu =
+function toggleMemberMenu() {
+
+    const sidebar =
+        document.getElementById("memberSidebar");
+
+    const overlay =
+        document.getElementById("memberOverlay");
+
+
+    if (!sidebar) {
+        return;
+    }
+
+
+    sidebar.classList.toggle("open");
+
+
+    if (overlay) {
+
+        overlay.classList.toggle(
+            "show",
+            sidebar.classList.contains("open")
+        );
+    }
+};
+
+
+window.closeMemberMenu =
+function closeMemberMenu() {
+
+    const sidebar =
+        document.getElementById("memberSidebar");
+
+    const overlay =
+        document.getElementById("memberOverlay");
+
+
+    if (sidebar) {
+        sidebar.classList.remove("open");
+    }
+
+    if (overlay) {
+        overlay.classList.remove("show");
+    }
+};
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+window.memberLogout =
+async function memberLogout() {
+
+    try {
+
+        await signOut(auth);
+
+        window.location.href =
+            "index.html";
+
+    } catch (error) {
+
+        console.error(
+            "Logout error:",
+            error
+        );
+    }
+};
+
+
+/* =========================================================
+   GLOBAL ERROR LOG
+========================================================= */
+
+window.addEventListener(
+    "unhandledrejection",
+    event => {
+
+        console.error(
+            "Unhandled Promise Error:",
+            event.reason
+        );
+    }
+);
+
+window.addEventListener(
+    "error",
+    event => {
+
+        console.error(
+            "JavaScript Error:",
+            event.error || event.message
+        );
+    }
+);
+
+</script>
 
 }
 
