@@ -1,14 +1,13 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Member Dashboard - Task Reward System</title>
 
 <style>
-
 *{
     box-sizing:border-box;
     font-family:Arial,sans-serif;
@@ -48,7 +47,6 @@ body{
     margin-right:12px;
     z-index:2100;
     position:relative;
-    touch-action:manipulation;
 }
 
 .menuBtn:active{
@@ -65,8 +63,8 @@ body{
 .sidebar{
     position:fixed;
     top:60px;
-    left:-280px;
-    width:280px;
+    left:-270px;
+    width:270px;
     height:calc(100vh - 60px);
     background:#1f2937;
     color:white;
@@ -77,7 +75,7 @@ body{
 }
 
 .sidebar.open{
-    left:0;
+    left:0 !important;
 }
 
 .sidebarHeader{
@@ -100,7 +98,6 @@ body{
     cursor:pointer;
     border-bottom:1px solid #374151;
     user-select:none;
-    touch-action:manipulation;
 }
 
 .menuItem:hover{
@@ -494,26 +491,24 @@ th{
         width:280px;
         left:-280px;
     }
-
 }
-
 </style>
-
 </head>
 
 <body>
 
-
-<!-- ================= HEADER ================= -->
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <div class="header">
 
+    <!-- IMPORTANT:
+         Inline onclick makes menu independent from Firebase JS -->
     <div
         class="menuBtn"
         id="menuBtn"
-        aria-label="Open menu"
-        role="button"
-        tabindex="0"
+        onclick="toggleMemberMenu()"
     >
         ☰
     </div>
@@ -525,7 +520,9 @@ th{
 </div>
 
 
-<!-- ================= SIDEBAR ================= -->
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
 <div class="sidebar" id="sidebar">
 
@@ -542,56 +539,89 @@ th{
     </div>
 
 
-    <div class="menuItem" data-page="dashboard">
+    <div
+        class="menuItem"
+        data-page="dashboard"
+    >
         🏠 Dashboard
     </div>
 
 
-    <div class="menuItem" data-page="newTasks">
+    <div
+        class="menuItem"
+        data-page="newTasks"
+    >
         ▶️ New Tasks
     </div>
 
 
-    <div class="menuItem" data-page="completedTasks">
+    <div
+        class="menuItem"
+        data-page="completedTasks"
+    >
         ✅ Completed Tasks
     </div>
 
 
-    <div class="menuItem" data-page="withdraw">
+    <div
+        class="menuItem"
+        data-page="withdraw"
+    >
         💰 Withdraw
     </div>
 
 
-    <div class="menuItem" data-page="withdrawalHistory">
+    <div
+        class="menuItem"
+        data-page="withdrawalHistory"
+    >
         📜 Withdrawal History
     </div>
 
 
-    <div class="menuItem" data-page="profile">
+    <div
+        class="menuItem"
+        data-page="profile"
+    >
         👤 Profile
     </div>
 
 
-    <div class="menuItem logout" id="logoutMenu">
+    <div
+        class="menuItem logout"
+        id="logoutMenu"
+    >
         🚪 Logout
     </div>
 
 </div>
 
 
-<div class="overlay" id="overlay"></div>
+<div
+    class="overlay"
+    id="overlay"
+    onclick="closeMemberMenu()"
+></div>
 
 
-<!-- ================= MAIN ================= -->
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <div class="main">
 
-    <div id="authMessage" class="message"></div>
+    <div
+        id="authMessage"
+        class="message"
+    ></div>
 
 
     <!-- ================= DASHBOARD ================= -->
 
-    <section class="page active" id="dashboardPage">
+    <section
+        class="page active"
+        id="dashboardPage"
+    >
 
         <h1 class="pageTitle">
             Dashboard
@@ -604,7 +634,10 @@ th{
 
                 <h3>Total Coins</h3>
 
-                <div class="value" id="dashboardCoins">
+                <div
+                    class="value"
+                    id="dashboardCoins"
+                >
                     0
                 </div>
 
@@ -615,7 +648,10 @@ th{
 
                 <h3>Current Value</h3>
 
-                <div class="value" id="dashboardRupees">
+                <div
+                    class="value"
+                    id="dashboardRupees"
+                >
                     ₹0.00
                 </div>
 
@@ -626,7 +662,10 @@ th{
 
                 <h3>New Tasks</h3>
 
-                <div class="value" id="dashboardNewTasks">
+                <div
+                    class="value"
+                    id="dashboardNewTasks"
+                >
                     0
                 </div>
 
@@ -637,7 +676,10 @@ th{
 
                 <h3>Completed Tasks</h3>
 
-                <div class="value" id="dashboardCompletedTasks">
+                <div
+                    class="value"
+                    id="dashboardCompletedTasks"
+                >
                     0
                 </div>
 
@@ -672,17 +714,29 @@ th{
 
     <!-- ================= NEW TASKS ================= -->
 
-    <section class="page" id="newTasksPage">
+    <section
+        class="page"
+        id="newTasksPage"
+    >
 
         <h1 class="pageTitle">
             New Tasks
         </h1>
 
-        <div id="newTasksMessage" class="message"></div>
+
+        <div
+            id="newTasksMessage"
+            class="message"
+        ></div>
+
 
         <div id="activeTaskNotice"></div>
 
-        <div id="tasksContainer" class="taskGrid">
+
+        <div
+            id="tasksContainer"
+            class="taskGrid"
+        >
 
             <div class="loading">
                 Loading tasks...
@@ -695,11 +749,15 @@ th{
 
     <!-- ================= COMPLETED ================= -->
 
-    <section class="page" id="completedTasksPage">
+    <section
+        class="page"
+        id="completedTasksPage"
+    >
 
         <h1 class="pageTitle">
             Completed Tasks
         </h1>
+
 
         <div id="completedTasksContainer">
 
@@ -714,14 +772,20 @@ th{
 
     <!-- ================= WITHDRAW ================= -->
 
-    <section class="page" id="withdrawPage">
+    <section
+        class="page"
+        id="withdrawPage"
+    >
 
         <h1 class="pageTitle">
             Withdraw Coins
         </h1>
 
 
-        <div id="withdrawMessage" class="message"></div>
+        <div
+            id="withdrawMessage"
+            class="message"
+        ></div>
 
 
         <div class="formBox">
@@ -746,7 +810,9 @@ th{
 
                     Current Value:
 
-                    <strong id="withdrawAvailableRupees">
+                    <strong
+                        id="withdrawAvailableRupees"
+                    >
                         ₹0.00
                     </strong>
 
@@ -836,7 +902,10 @@ th{
 
     <!-- ================= PROFILE ================= -->
 
-    <section class="page" id="profilePage">
+    <section
+        class="page"
+        id="profilePage"
+    >
 
         <h1 class="pageTitle">
             Profile
@@ -918,6 +987,8 @@ th{
 
 <!-- =====================================================
      MENU SCRIPT
+     THIS IS OUTSIDE FIREBASE MODULE
+     SO 3-LINE ALWAYS WORKS
 ===================================================== -->
 
 <script>
@@ -930,18 +1001,19 @@ function toggleMemberMenu(){
     const overlay =
         document.getElementById("overlay");
 
+
     if(!sidebar){
+
         return;
+
     }
+
 
     sidebar.classList.toggle("open");
 
     if(overlay){
 
-        overlay.classList.toggle(
-            "show",
-            sidebar.classList.contains("open")
-        );
+        overlay.classList.toggle("show");
 
     }
 
@@ -956,11 +1028,13 @@ function closeMemberMenu(){
     const overlay =
         document.getElementById("overlay");
 
+
     if(sidebar){
 
         sidebar.classList.remove("open");
 
     }
+
 
     if(overlay){
 
@@ -970,77 +1044,28 @@ function closeMemberMenu(){
 
 }
 
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        const menuBtn =
-            document.getElementById("menuBtn");
-
-        const overlay =
-            document.getElementById("overlay");
-
-
-        if(menuBtn){
-
-            menuBtn.addEventListener(
-                "click",
-                toggleMemberMenu
-            );
-
-
-            menuBtn.addEventListener(
-                "keydown",
-                function(event){
-
-                    if(
-                        event.key === "Enter" ||
-                        event.key === " "
-                    ){
-
-                        event.preventDefault();
-
-                        toggleMemberMenu();
-
-                    }
-
-                }
-            );
-
-        }
-
-
-        if(overlay){
-
-            overlay.addEventListener(
-                "click",
-                closeMemberMenu
-            );
-
-        }
-
-    }
-);
-
 </script>
 
 
 <!-- =====================================================
-     FIREBASE + APPLICATION
+     FIREBASE
 ===================================================== -->
 
 <script type="module">
 
 import {
     initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 
 import {
     getAuth,
     onAuthStateChanged,
-    signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    signOut,
+    setPersistence,
+    browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
 
 import {
     getFirestore,
@@ -1053,79 +1078,125 @@ import {
     addDoc,
     setDoc,
     serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
 /* =====================================================
-   FIREBASE CONFIG
-   DO NOT CHANGE
-===================================================== */
+   IMPORTANT
 
-const firebaseConfig = {
+   PASTE YOUR EXISTING WORKING firebaseConfig HERE.
+
+   DO NOT CHANGE YOUR EXISTING API KEY,
+   PROJECT ID, APP ID, SENDER ID ETC.
+
+   Example structure only:
+
+   const firebaseConfig = {
 
     apiKey: "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",
-
-    authDomain:
-        "task-reward-system-af46f.firebaseapp.com",
-
-    projectId:
-        "task-reward-system-af46f",
-
-    storageBucket:
-        "task-reward-system-af46f.firebasestorage.app",
-
-    messagingSenderId:
-        "64322126165",
-
-    appId:
-        "1:64322126165:web:7aae7a6e4792ab4f092fdc",
-
-    measurementId:
-        "G-6P3R9F3ZQT"
+    authDomain: "task-reward-system-af46f.firebaseapp.com",
+    projectId: "task-reward-system-af46f",
+    storageBucket: "task-reward-system-af46f.firebasestorage.app",
+    messagingSenderId: "64322126165",
+    appId: "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+    measurementId: "G-6P3R9F3ZQT"
 
 };
 
 
+let app;
+
+let auth;
+
+let db;
+
+
 /* =====================================================
-   FIREBASE
+   FIREBASE INITIALIZATION
 ===================================================== */
 
-const app =
-    initializeApp(
-        firebaseConfig
+try{
+
+    app =
+        initializeApp(
+            firebaseConfig
+        );
+
+
+    auth =
+        getAuth(app);
+
+
+    db =
+        getFirestore(app);
+
+
+    /* ================================================
+       AUTH PERSISTENCE
+       Keep the member login session in the browser.
+    ================================================ */
+
+    try{
+
+        await setPersistence(
+            auth,
+            browserLocalPersistence
+        );
+
+        console.log(
+            "Firebase Auth persistence enabled."
+        );
+
+    }catch(error){
+
+        console.error(
+            "Auth persistence error:",
+            error
+        );
+    }
+
+
+}catch(error){
+
+    console.error(
+        "Firebase initialization failed:",
+        error
     );
 
-const auth =
-    getAuth(app);
 
-const db =
-    getFirestore(app);
+    const message =
+        document.getElementById(
+            "authMessage"
+        );
+
+
+    if(message){
+
+        message.innerHTML =
+            `
+            <strong>Firebase Configuration Error</strong>
+            <br><br>
+            Firebase could not start.
+            <br><br>
+            Please paste the exact working
+            firebaseConfig from your previous member.html.
+            `;
+
+
+        message.className =
+            "message show error";
+
+    }
+
+}
 
 
 /* =====================================================
-   VARIABLES
+   YOUTUBE
 ===================================================== */
-
-let currentMember = null;
-let currentMemberData = null;
-
-let allTasks = [];
-let allCompletions = [];
-
-let activeTaskId = null;
-
-let activePlayer = null;
-let activeTimer = null;
-
-let activeElapsed = 0;
-let activeRequiredTime = 0;
 
 let youtubeAPIReady = false;
 
-
-/* =====================================================
-   YOUTUBE API
-===================================================== */
 
 window.onYouTubeIframeAPIReady =
 function(){
@@ -1142,12 +1213,37 @@ function(){
 const youtubeScript =
     document.createElement("script");
 
+
 youtubeScript.src =
     "https://www.youtube.com/iframe_api";
+
 
 document.head.appendChild(
     youtubeScript
 );
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let currentMember = null;
+
+let currentMemberData = null;
+
+let allTasks = [];
+
+let allCompletions = [];
+
+let activeTaskId = null;
+
+let activePlayer = null;
+
+let activeTimer = null;
+
+let activeElapsed = 0;
+
+let activeRequiredTime = 0;
 
 
 /* =====================================================
@@ -1159,11 +1255,12 @@ function getToday(){
     const now =
         new Date();
 
+
     return (
         now.getFullYear()
         + "-"
         + String(
-            now.getMonth() + 1
+            now.getMonth()+1
         ).padStart(2,"0")
         + "-"
         + String(
@@ -1185,6 +1282,7 @@ function escapeHtml(value){
 
     }
 
+
     return String(value)
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
@@ -1196,7 +1294,277 @@ function escapeHtml(value){
 
 
 /* =====================================================
-   AUTH MESSAGE
+   PAGE NAVIGATION
+===================================================== */
+
+document
+.querySelectorAll(
+    ".menuItem[data-page]"
+)
+.forEach(item => {
+
+    item.addEventListener(
+        "click",
+        function(){
+
+            showPage(
+                this.dataset.page
+            );
+
+        }
+    );
+
+});
+
+
+function showPage(page){
+
+    document
+    .querySelectorAll(".page")
+    .forEach(p => {
+
+        p.classList.remove(
+            "active"
+        );
+
+    });
+
+
+    const target =
+        document.getElementById(
+            page + "Page"
+        );
+
+
+    if(target){
+
+        target.classList.add(
+            "active"
+        );
+
+    }
+
+
+    closeMemberMenu();
+
+
+    if(page === "dashboard"){
+
+        refreshDashboard();
+
+    }
+
+
+    if(page === "newTasks"){
+
+        renderAvailableTasks();
+
+    }
+
+
+    if(page === "completedTasks"){
+
+        loadCompletedTasks();
+
+    }
+
+
+    if(page === "withdraw"){
+
+        refreshWithdrawPage();
+
+    }
+
+
+    if(page === "withdrawalHistory"){
+
+        loadWithdrawalHistory();
+
+    }
+
+
+    if(page === "profile"){
+
+        loadProfile();
+
+    }
+
+}
+
+
+/* =====================================================
+   AUTH
+===================================================== */
+
+let firstAuthCheck = true;
+let authRedirectTimer = null;
+
+if(auth){
+
+    onAuthStateChanged(
+        auth,
+        async user => {
+
+            console.log(
+                "Member auth state:",
+                user ? user.uid : "NO USER"
+            );
+
+            if(!user){
+
+                /*
+                 * Firebase may briefly return null while restoring
+                 * the saved browser session. Wait before redirecting.
+                 */
+                if(firstAuthCheck){
+
+                    authRedirectTimer =
+                        setTimeout(() => {
+
+                            if(!auth.currentUser){
+
+                                console.log(
+                                    "No authenticated user after session restore."
+                                );
+
+                                window.location.replace(
+                                    "index.html"
+                                );
+                            }
+
+                        }, 3000);
+
+                    return;
+                }
+
+                currentMember = null;
+                currentMemberData = null;
+
+                window.location.replace(
+                    "index.html"
+                );
+
+                return;
+            }
+
+            firstAuthCheck = false;
+
+            if(authRedirectTimer){
+                clearTimeout(authRedirectTimer);
+                authRedirectTimer = null;
+            }
+
+            currentMember =
+                user;
+
+
+            try{
+
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    );
+
+
+                const userSnap =
+                    await getDoc(
+                        userRef
+                    );
+
+
+                if(!userSnap.exists()){
+
+                    showAuthError(
+                        "Member profile not found in Firestore."
+                    );
+
+                    return;
+
+                }
+
+
+                currentMemberData =
+                    userSnap.data();
+
+
+                if(
+                    currentMemberData.role !==
+                    "member"
+                ){
+
+                    showAuthError(
+                        "This account is not registered as a member."
+                    );
+
+                    return;
+
+                }
+
+
+                if(
+                    currentMemberData.status !==
+                    "active"
+                ){
+
+                    showAuthError(
+                        "Your member account is not active. Current status: "
+                        +
+                        (
+                            currentMemberData.status ||
+                            "missing"
+                        )
+                    );
+
+                    return;
+
+                }
+
+
+                hideAuthMessage();
+
+
+                updateMemberUI();
+
+
+                await loadAllCompletions();
+
+                await loadTasks();
+
+                await loadCompletedTasks();
+
+                await loadWithdrawalHistory();
+
+
+                loadProfile();
+
+                refreshDashboard();
+
+                refreshWithdrawPage();
+
+
+            }catch(error){
+
+                console.error(
+                    error
+                );
+
+
+                showAuthError(
+                    error.message
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   AUTH ERROR
 ===================================================== */
 
 function showAuthError(message){
@@ -1206,19 +1574,58 @@ function showAuthError(message){
             "authMessage"
         );
 
-    if(!el){
-        return;
-    }
 
     el.innerHTML =
         `
-        <strong>Member Login Issue</strong>
+        <strong>
+            Member Login Issue
+        </strong>
+
         <br><br>
+
         ${escapeHtml(message)}
+
+        <br><br>
+
+        Check Firestore users collection:
+
+        <br>
+
+        <b>role = member</b>
+
+        <br>
+
+        <b>status = active</b>
+
+        <br><br>
+
+        <button
+            class="secondaryBtn"
+            id="errorLogoutBtn"
+        >
+            Logout
+        </button>
         `;
+
 
     el.className =
         "message show error";
+
+
+    const btn =
+        document.getElementById(
+            "errorLogoutBtn"
+        );
+
+
+    if(btn){
+
+        btn.addEventListener(
+            "click",
+            logoutUser
+        );
+
+    }
 
 }
 
@@ -1230,12 +1637,10 @@ function hideAuthMessage(){
             "authMessage"
         );
 
-    if(!el){
-        return;
-    }
 
     el.className =
         "message";
+
 
     el.innerHTML = "";
 
@@ -1243,152 +1648,10 @@ function hideAuthMessage(){
 
 
 /* =====================================================
-   REFRESH MEMBER DATA
-===================================================== */
-
-async function refreshMemberData(){
-
-    if(
-        !currentMember ||
-        !db
-    ){
-
-        return false;
-
-    }
-
-
-    try{
-
-        const userRef =
-            doc(
-                db,
-                "users",
-                currentMember.uid
-            );
-
-
-        const userSnap =
-            await getDoc(
-                userRef
-            );
-
-
-        if(
-            !userSnap.exists()
-        ){
-
-            showAuthError(
-                "Member profile was not found in Firestore."
-            );
-
-            return false;
-
-        }
-
-
-        const data =
-            userSnap.data();
-
-
-        console.log(
-            "Member Firestore data:",
-            data
-        );
-
-
-        if(
-            data.role !== "member"
-        ){
-
-            showAuthError(
-                "This account is not registered as a member."
-            );
-
-            return false;
-
-        }
-
-
-        if(
-            data.status !== "active"
-        ){
-
-            showAuthError(
-                "This member account is not active."
-            );
-
-            return false;
-
-        }
-
-
-        currentMemberData = {
-
-            ...data,
-
-            uid:
-                currentMember.uid
-
-        };
-
-
-        hideAuthMessage();
-
-        updateMemberUI();
-
-        refreshDashboard();
-
-        refreshWithdrawPage();
-
-        loadProfile();
-
-
-        return true;
-
-
-    }catch(error){
-
-        console.error(
-            "Member data refresh error:",
-            error
-        );
-
-
-        /*
-         IMPORTANT:
-         DO NOT SIGN OUT HERE.
-        */
-
-        showAuthError(
-            "Unable to load member data: "
-            +
-            error.message
-        );
-
-
-        return false;
-
-    }
-
-}
-
-
-/* =====================================================
-   UPDATE MEMBER UI
+   MEMBER UI
 ===================================================== */
 
 function updateMemberUI(){
-
-    if(
-        !currentMemberData ||
-        !currentMember
-    ){
-
-        return;
-
-    }
-
 
     const name =
         currentMemberData.name ||
@@ -1402,52 +1665,28 @@ function updateMemberUI(){
         "-";
 
 
-    const sideName =
-        document.getElementById(
-            "sideMemberName"
-        );
+    document.getElementById(
+        "sideMemberName"
+    ).textContent =
+        name;
 
 
-    const sideEmail =
-        document.getElementById(
-            "sideMemberEmail"
-        );
+    document.getElementById(
+        "sideMemberEmail"
+    ).textContent =
+        email;
 
 
-    const welcome =
-        document.getElementById(
-            "dashboardWelcome"
-        );
-
-
-    if(sideName){
-
-        sideName.textContent =
-            name;
-
-    }
-
-
-    if(sideEmail){
-
-        sideEmail.textContent =
-            email;
-
-    }
-
-
-    if(welcome){
-
-        welcome.textContent =
-            "Welcome, " + name;
-
-    }
+    document.getElementById(
+        "dashboardWelcome"
+    ).textContent =
+        "Welcome, " + name;
 
 }
 
 
 /* =====================================================
-   LOAD ALL COMPLETIONS
+   LOAD COMPLETIONS
 ===================================================== */
 
 async function loadAllCompletions(){
@@ -1455,77 +1694,60 @@ async function loadAllCompletions(){
     allCompletions = [];
 
 
-    if(
-        !currentMember ||
-        !db
-    ){
+    if(!currentMember){
 
         return;
 
     }
 
 
-    try{
-
-        const q =
-            query(
-                collection(
-                    db,
-                    "taskCompletions"
-                ),
-                where(
-                    "memberId",
-                    "==",
-                    currentMember.uid
-                )
-            );
-
-
-        const snapshot =
-            await getDocs(q);
-
-
-        snapshot.forEach(
-            docSnap => {
-
-                allCompletions.push({
-
-                    id:
-                        docSnap.id,
-
-                    ...docSnap.data()
-
-                });
-
-            }
+    const q =
+        query(
+            collection(
+                db,
+                "taskCompletions"
+            ),
+            where(
+                "memberId",
+                "==",
+                currentMember.uid
+            )
         );
 
 
-        allCompletions.sort(
-            (a,b) => {
-
-                const aTime =
-                    a.completedAt?.seconds || 0;
-
-                const bTime =
-                    b.completedAt?.seconds || 0;
-
-                return bTime - aTime;
-
-            }
-        );
+    const snapshot =
+        await getDocs(q);
 
 
-    }catch(error){
+    snapshot.forEach(
+        docSnap => {
 
-        console.error(
-            "Completion loading error:",
-            error
-        );
+            allCompletions.push({
 
-        throw error;
+                id:
+                    docSnap.id,
 
-    }
+                ...docSnap.data()
+
+            });
+
+        }
+    );
+
+
+    allCompletions.sort(
+        (a,b) => {
+
+            const aTime =
+                a.completedAt?.seconds || 0;
+
+            const bTime =
+                b.completedAt?.seconds || 0;
+
+            return bTime - aTime;
+
+        }
+    );
 
 }
 
@@ -1543,10 +1765,29 @@ function hasCompletedToday(taskId){
     return allCompletions.some(
         completion => {
 
-            return (
-                completion.taskId === taskId &&
-                completion.completionDate === today
-            );
+            if(
+                completion.taskId !==
+                taskId
+            ){
+
+                return false;
+
+            }
+
+
+            if(
+                completion.completionDate
+            ){
+
+                return (
+                    completion.completionDate ===
+                    today
+                );
+
+            }
+
+
+            return false;
 
         }
     );
@@ -1635,29 +1876,24 @@ async function loadTasks(){
     }catch(error){
 
         console.error(
-            "Task loading error:",
             error
         );
 
 
-        if(container){
+        container.innerHTML =
+            `
+            <div class="empty">
 
-            container.innerHTML =
-                `
-                <div class="empty">
+                Unable to load tasks.
 
-                    Unable to load tasks.
+                <br><br>
 
-                    <br><br>
+                ${escapeHtml(
+                    error.message
+                )}
 
-                    ${escapeHtml(
-                        error.message
-                    )}
-
-                </div>
-                `;
-
-        }
+            </div>
+            `;
 
     }
 
@@ -1682,13 +1918,6 @@ function renderAvailableTasks(){
         );
 
 
-    if(!container){
-
-        return;
-
-    }
-
-
     const available =
         allTasks.filter(
             task =>
@@ -1702,12 +1931,7 @@ function renderAvailableTasks(){
         available.length === 0
     ){
 
-        if(notice){
-
-            notice.innerHTML = "";
-
-        }
-
+        notice.innerHTML = "";
 
         container.innerHTML =
             `
@@ -1723,12 +1947,31 @@ function renderAvailableTasks(){
             `;
 
 
+        document.getElementById(
+            "dashboardNewTasks"
+        ).textContent =
+            "0";
+
+
         return;
 
     }
 
 
-    if(notice){
+    if(activeTaskId){
+
+        notice.innerHTML =
+            `
+            <div class="activeTaskNotice">
+
+                ▶️ You are currently doing one task.
+
+                Complete this task before starting another task.
+
+            </div>
+            `;
+
+    }else{
 
         notice.innerHTML =
             `
@@ -1749,12 +1992,14 @@ function renderAvailableTasks(){
         task => {
 
             const isActive =
-                activeTaskId === task.id;
+                activeTaskId ===
+                task.id;
 
 
             const isLocked =
                 activeTaskId &&
-                activeTaskId !== task.id;
+                activeTaskId !==
+                task.id;
 
 
             const card =
@@ -1838,7 +2083,10 @@ function renderAvailableTasks(){
 
                         <div
                             id="player_${task.id}"
-                            style="width:100%;height:100%;"
+                            style="
+                                width:100%;
+                                height:100%;
+                            "
                         ></div>
 
                     </div>
@@ -1975,6 +2223,12 @@ function renderAvailableTasks(){
         }
     );
 
+
+    document.getElementById(
+        "dashboardNewTasks"
+    ).textContent =
+        available.length;
+
 }
 
 
@@ -1987,7 +2241,8 @@ function startTask(taskId){
     if(activeTaskId){
 
         if(
-            activeTaskId !== taskId
+            activeTaskId !==
+            taskId
         ){
 
             alert(
@@ -2004,9 +2259,12 @@ function startTask(taskId){
     activeTaskId =
         taskId;
 
+
     activeElapsed = 0;
 
+
     activeRequiredTime = 0;
+
 
     renderAvailableTasks();
 
@@ -2045,7 +2303,7 @@ function stopActiveTask(){
 
 
 /* =====================================================
-   GET YOUTUBE VIDEO ID
+   YOUTUBE ID
 ===================================================== */
 
 function getYoutubeVideoId(url){
@@ -2103,10 +2361,10 @@ function getYoutubeVideoId(url){
 
 
         return (
-            parsed.searchParams.get("v")
-            || ""
+            parsed.searchParams.get(
+                "v"
+            ) || ""
         );
-
 
     }catch(error){
 
@@ -2166,12 +2424,8 @@ function setupYouTubeTask(task){
 
     if(!videoId){
 
-        if(timerEl){
-
-            timerEl.textContent =
-                "Invalid YouTube URL.";
-
-        }
+        timerEl.textContent =
+            "Invalid YouTube URL.";
 
         return;
 
@@ -2179,6 +2433,7 @@ function setupYouTubeTask(task){
 
 
     activeElapsed = 0;
+
 
     activeRequiredTime =
         Number(
@@ -2226,21 +2481,13 @@ function setupYouTubeTask(task){
                         onReady:
                         function(){
 
-                            if(overlayEl){
-
-                                overlayEl.classList.add(
-                                    "hidden"
-                                );
-
-                            }
+                            overlayEl.classList.add(
+                                "hidden"
+                            );
 
 
-                            if(timerEl){
-
-                                timerEl.textContent =
-                                    "▶️ Press Play to start watch timer.";
-
-                            }
+                            timerEl.textContent =
+                                "▶️ Press Play to start watch timer.";
 
                         },
 
@@ -2266,59 +2513,51 @@ function setupYouTubeTask(task){
     createPlayer();
 
 
-    if(completeButton){
+    completeButton.addEventListener(
+        "click",
+        async function(){
 
-        completeButton.addEventListener(
-            "click",
-            async function(){
+            if(
+                activeElapsed <
+                activeRequiredTime
+            ){
 
-                if(
-                    activeElapsed <
-                    activeRequiredTime
-                ){
-
-                    return;
-
-                }
-
-
-                completeButton.disabled =
-                    true;
-
-
-                await completeTask(
-                    task,
-                    completeButton
-                );
+                return;
 
             }
-        );
-
-    }
 
 
-    if(cancelButton){
+            completeButton.disabled =
+                true;
 
-        cancelButton.addEventListener(
-            "click",
-            function(){
 
-                if(
-                    confirm(
-                        "Exit this task? Your watch time will not be submitted."
-                    )
-                ){
+            await completeTask(
+                task,
+                completeButton
+            );
 
-                    stopActiveTask();
+        }
+    );
 
-                    renderAvailableTasks();
 
-                }
+    cancelButton.addEventListener(
+        "click",
+        function(){
+
+            if(
+                confirm(
+                    "Exit this task? Your watch time will not be submitted."
+                )
+            ){
+
+                stopActiveTask();
+
+                renderAvailableTasks();
 
             }
-        );
 
-    }
+        }
+    );
 
 }
 
@@ -2344,12 +2583,8 @@ function handleYoutubeState(
         YT.PlayerState.PLAYING
     ){
 
-        if(timerEl){
-
-            timerEl.textContent =
-                `▶️ Watching: ${activeElapsed} / ${activeRequiredTime} seconds`;
-
-        }
+        timerEl.textContent =
+            `▶️ Watching: ${activeElapsed} / ${activeRequiredTime} seconds`;
 
 
         startWatchTimer(
@@ -2367,12 +2602,8 @@ function handleYoutubeState(
         stopWatchTimer();
 
 
-        if(timerEl){
-
-            timerEl.textContent =
-                `⏸️ Paused: ${activeElapsed} / ${activeRequiredTime} seconds`;
-
-        }
+        timerEl.textContent =
+            `⏸️ Paused: ${activeElapsed} / ${activeRequiredTime} seconds`;
 
     }
 
@@ -2385,12 +2616,8 @@ function handleYoutubeState(
         stopWatchTimer();
 
 
-        if(timerEl){
-
-            timerEl.textContent =
-                `Video ended. Watch time: ${activeElapsed} / ${activeRequiredTime} seconds`;
-
-        }
+        timerEl.textContent =
+            `Video ended. Watch time: ${activeElapsed} / ${activeRequiredTime} seconds`;
 
     }
 
@@ -2400,12 +2627,8 @@ function handleYoutubeState(
         YT.PlayerState.BUFFERING
     ){
 
-        if(timerEl){
-
-            timerEl.textContent =
-                "⏳ Buffering...";
-
-        }
+        timerEl.textContent =
+            "⏳ Buffering...";
 
     }
 
@@ -2518,19 +2741,11 @@ function updateTaskProgress(task){
         );
 
 
-    if(
-        !progressEl ||
-        !completeButton
-    ){
-
-        return;
-
-    }
-
-
     const percentage =
         activeRequiredTime > 0
+
         ?
+
         Math.min(
             100,
             (
@@ -2538,7 +2753,9 @@ function updateTaskProgress(task){
                 activeRequiredTime
             ) * 100
         )
+
         :
+
         0;
 
 
@@ -2554,12 +2771,8 @@ function updateTaskProgress(task){
         stopWatchTimer();
 
 
-        if(timerEl){
-
-            timerEl.textContent =
-                "✅ Required watch time completed.";
-
-        }
+        timerEl.textContent =
+            "✅ Required watch time completed.";
 
 
         progressEl.style.width =
@@ -2585,12 +2798,8 @@ function updateTaskProgress(task){
         YT.PlayerState.PLAYING
     ){
 
-        if(timerEl){
-
-            timerEl.textContent =
-                `▶️ Watching: ${activeElapsed} / ${activeRequiredTime} seconds`;
-
-        }
+        timerEl.textContent =
+            `▶️ Watching: ${activeElapsed} / ${activeRequiredTime} seconds`;
 
     }
 
@@ -2633,7 +2842,9 @@ async function completeTask(
 
         stopActiveTask();
 
+
         await loadTasks();
+
 
         return;
 
@@ -2673,9 +2884,11 @@ async function completeTask(
 
             stopActiveTask();
 
+
             await loadAllCompletions();
 
             await loadTasks();
+
 
             return;
 
@@ -2751,7 +2964,6 @@ async function completeTask(
     }catch(error){
 
         console.error(
-            "Task completion error:",
             error
         );
 
@@ -2763,12 +2975,8 @@ async function completeTask(
         );
 
 
-        if(button){
-
-            button.disabled =
-                false;
-
-        }
+        button.disabled =
+            false;
 
     }
 
@@ -2787,10 +2995,7 @@ async function loadCompletedTasks(){
         );
 
 
-    if(
-        !currentMember ||
-        !container
-    ){
+    if(!currentMember){
 
         return;
 
@@ -2799,7 +3004,13 @@ async function loadCompletedTasks(){
 
     try{
 
-        await loadAllCompletions();
+        if(
+            allCompletions.length === 0
+        ){
+
+            await loadAllCompletions();
+
+        }
 
 
         if(
@@ -2814,18 +3025,10 @@ async function loadCompletedTasks(){
                 `;
 
 
-            const completedCount =
-                document.getElementById(
-                    "dashboardCompletedTasks"
-                );
-
-
-            if(completedCount){
-
-                completedCount.textContent =
-                    "0";
-
-            }
+            document.getElementById(
+                "dashboardCompletedTasks"
+            ).textContent =
+                "0";
 
 
             return;
@@ -2895,8 +3098,8 @@ async function loadCompletedTasks(){
 
 
                 if(
-                    status.toLowerCase() ===
-                    "approved"
+                    status ===
+                    "Approved"
                 ){
 
                     badgeClass =
@@ -2906,8 +3109,8 @@ async function loadCompletedTasks(){
 
 
                 if(
-                    status.toLowerCase() ===
-                    "rejected"
+                    status ===
+                    "Rejected"
                 ){
 
                     badgeClass =
@@ -2977,27 +3180,13 @@ async function loadCompletedTasks(){
             html;
 
 
-        const completedCount =
-            document.getElementById(
-                "dashboardCompletedTasks"
-            );
-
-
-        if(completedCount){
-
-            completedCount.textContent =
-                allCompletions.length;
-
-        }
+        document.getElementById(
+            "dashboardCompletedTasks"
+        ).textContent =
+            allCompletions.length;
 
 
     }catch(error){
-
-        console.error(
-            "Completed tasks error:",
-            error
-        );
-
 
         container.innerHTML =
             `
@@ -3034,51 +3223,24 @@ function refreshDashboard(){
 
     const coins =
         Number(
-            currentMemberData.coins || 0
+            currentMemberData.coins ||
+            0
         );
 
 
-    const dashboardCoins =
-        document.getElementById(
-            "dashboardCoins"
-        );
+    document.getElementById(
+        "dashboardCoins"
+    ).textContent =
+        coins;
 
 
-    const dashboardRupees =
-        document.getElementById(
-            "dashboardRupees"
-        );
-
-
-    const dashboardNewTasks =
-        document.getElementById(
-            "dashboardNewTasks"
-        );
-
-
-    const dashboardCompletedTasks =
-        document.getElementById(
-            "dashboardCompletedTasks"
-        );
-
-
-    if(dashboardCoins){
-
-        dashboardCoins.textContent =
-            coins;
-
-    }
-
-
-    if(dashboardRupees){
-
-        dashboardRupees.textContent =
-            "₹" +
-            (
-                coins / 100
-            ).toFixed(2);
-
-    }
+    document.getElementById(
+        "dashboardRupees"
+    ).textContent =
+        "₹" +
+        (
+            coins / 100
+        ).toFixed(2);
 
 
     const newTasks =
@@ -3091,20 +3253,16 @@ function refreshDashboard(){
         );
 
 
-    if(dashboardNewTasks){
-
-        dashboardNewTasks.textContent =
-            newTasks.length;
-
-    }
+    document.getElementById(
+        "dashboardNewTasks"
+    ).textContent =
+        newTasks.length;
 
 
-    if(dashboardCompletedTasks){
-
-        dashboardCompletedTasks.textContent =
-            allCompletions.length;
-
-    }
+    document.getElementById(
+        "dashboardCompletedTasks"
+    ).textContent =
+        allCompletions.length;
 
 }
 
@@ -3124,53 +3282,24 @@ function refreshWithdrawPage(){
 
     const coins =
         Number(
-            currentMemberData.coins || 0
+            currentMemberData.coins ||
+            0
         );
 
 
-    const availableCoins =
-        document.getElementById(
-            "withdrawAvailableCoins"
-        );
+    document.getElementById(
+        "withdrawAvailableCoins"
+    ).textContent =
+        coins;
 
 
-    const availableRupees =
-        document.getElementById(
-            "withdrawAvailableRupees"
-        );
-
-
-    if(availableCoins){
-
-        availableCoins.textContent =
-            coins;
-
-    }
-
-
-    if(availableRupees){
-
-        availableRupees.textContent =
-            "₹" +
-            (
-                coins / 100
-            ).toFixed(2);
-
-    }
-
-
-    const input =
-        document.getElementById(
-            "withdrawCoins"
-        );
-
-
-    if(input){
-
-        input.max =
-            coins;
-
-    }
+    document.getElementById(
+        "withdrawAvailableRupees"
+    ).textContent =
+        "₹" +
+        (
+            coins / 100
+        ).toFixed(2);
 
 
     calculateWithdrawal();
@@ -3178,41 +3307,28 @@ function refreshWithdrawPage(){
 }
 
 
-/* =====================================================
-   WITHDRAW CALCULATION
-===================================================== */
+document.getElementById(
+    "withdrawCoins"
+).addEventListener(
+    "input",
+    calculateWithdrawal
+);
+
 
 function calculateWithdrawal(){
 
-    const input =
-        document.getElementById(
-            "withdrawCoins"
-        );
-
-
-    const output =
-        document.getElementById(
-            "withdrawRupees"
-        );
-
-
-    if(
-        !input ||
-        !output
-    ){
-
-        return;
-
-    }
-
-
     const coins =
         Number(
-            input.value || 0
+            document.getElementById(
+                "withdrawCoins"
+            ).value ||
+            0
         );
 
 
-    output.textContent =
+    document.getElementById(
+        "withdrawRupees"
+    ).textContent =
         "₹" +
         (
             coins / 100
@@ -3221,92 +3337,25 @@ function calculateWithdrawal(){
 }
 
 
-const withdrawCoinsInput =
-    document.getElementById(
-        "withdrawCoins"
-    );
-
-
-if(withdrawCoinsInput){
-
-    withdrawCoinsInput.addEventListener(
-        "input",
-        calculateWithdrawal
-    );
-
-}
-
-
 /* =====================================================
    WITHDRAW SUBMIT
 ===================================================== */
 
-const withdrawButton =
-    document.getElementById(
-        "withdrawButton"
-    );
-
-
-if(withdrawButton){
-
-    withdrawButton.addEventListener(
-        "click",
-        submitWithdrawal
-    );
-
-}
+document.getElementById(
+    "withdrawButton"
+).addEventListener(
+    "click",
+    submitWithdrawal
+);
 
 
 async function submitWithdrawal(){
 
-    if(
-        !currentMember ||
-        !db
-    ){
-
-        alert(
-            "Member is not logged in."
-        );
+    if(!currentMember){
 
         return;
 
     }
-
-
-    /*
-       Get latest balance.
-       IMPORTANT:
-       Approval will deduct coins on owner side.
-    */
-
-    const refreshed =
-        await refreshMemberData();
-
-
-    if(
-        !refreshed ||
-        !currentMemberData
-    ){
-
-        alert(
-            "Unable to load current member balance."
-        );
-
-        return;
-
-    }
-
-
-    const coinsInput =
-        document.getElementById(
-            "withdrawCoins"
-        );
-
-
-    const upiInput =
-        document.getElementById(
-            "withdrawUpi"
-        );
 
 
     const button =
@@ -3317,17 +3366,22 @@ async function submitWithdrawal(){
 
     const coins =
         Number(
-            coinsInput.value
+            document.getElementById(
+                "withdrawCoins"
+            ).value
         );
 
 
     const upi =
-        upiInput.value.trim();
+        document.getElementById(
+            "withdrawUpi"
+        ).value.trim();
 
 
     const availableCoins =
         Number(
-            currentMemberData.coins || 0
+            currentMemberData.coins ||
+            0
         );
 
 
@@ -3359,8 +3413,7 @@ async function submitWithdrawal(){
 
 
     if(
-        upi.length < 3 ||
-        !upi.includes("@")
+        upi.length < 3
     ){
 
         alert(
@@ -3430,32 +3483,33 @@ async function submitWithdrawal(){
             );
 
 
-        if(msg){
-
-            msg.textContent =
-                "Withdrawal request submitted successfully. Waiting for owner approval.";
-
-            msg.className =
-                "message show success";
-
-        }
+        msg.textContent =
+            "Withdrawal request submitted successfully. Waiting for owner approval.";
 
 
-        coinsInput.value = "";
+        msg.className =
+            "message show success";
 
-        upiInput.value = "";
+
+        document.getElementById(
+            "withdrawCoins"
+        ).value = "";
+
+
+        document.getElementById(
+            "withdrawUpi"
+        ).value = "";
+
 
         calculateWithdrawal();
 
-        await loadWithdrawalHistory();
 
-        await refreshMemberData();
+        await loadWithdrawalHistory();
 
 
     }catch(error){
 
         console.error(
-            "Withdrawal error:",
             error
         );
 
@@ -3466,17 +3520,14 @@ async function submitWithdrawal(){
             );
 
 
-        if(msg){
+        msg.textContent =
+            "Unable to submit withdrawal: "
+            +
+            error.message;
 
-            msg.textContent =
-                "Unable to submit withdrawal: "
-                +
-                error.message;
 
-            msg.className =
-                "message show error";
-
-        }
+        msg.className =
+            "message show error";
 
     }
 
@@ -3499,11 +3550,7 @@ async function loadWithdrawalHistory(){
         );
 
 
-    if(
-        !currentMember ||
-        !db ||
-        !container
-    ){
+    if(!currentMember){
 
         return;
 
@@ -3617,8 +3664,7 @@ async function loadWithdrawalHistory(){
         withdrawals.forEach(
             item => {
 
-                let date =
-                    "-";
+                let date = "-";
 
 
                 if(
@@ -3645,7 +3691,7 @@ async function loadWithdrawalHistory(){
 
 
                 if(
-                    status.toLowerCase() ===
+                    status ===
                     "approved"
                 ){
 
@@ -3656,7 +3702,7 @@ async function loadWithdrawalHistory(){
 
 
                 if(
-                    status.toLowerCase() ===
+                    status ===
                     "rejected"
                 ){
 
@@ -3679,19 +3725,22 @@ async function loadWithdrawalHistory(){
 
                         <td>
                             ${Number(
-                                item.coins || 0
+                                item.coins ||
+                                0
                             )}
                         </td>
 
                         <td>
                             ₹${Number(
-                                item.amount || 0
+                                item.amount ||
+                                0
                             ).toFixed(2)}
                         </td>
 
                         <td>
                             ${escapeHtml(
-                                item.upiId || "-"
+                                item.upiId ||
+                                "-"
                             )}
                         </td>
 
@@ -3733,12 +3782,6 @@ async function loadWithdrawalHistory(){
 
     }catch(error){
 
-        console.error(
-            "Withdrawal history error:",
-            error
-        );
-
-
         container.innerHTML =
             `
             <div class="empty">
@@ -3765,201 +3808,50 @@ async function loadWithdrawalHistory(){
 
 function loadProfile(){
 
-    if(
-        !currentMemberData ||
-        !currentMember
-    ){
+    if(!currentMemberData){
 
         return;
 
     }
 
 
-    const name =
-        document.getElementById(
-            "profileName"
+    document.getElementById(
+        "profileName"
+    ).textContent =
+        currentMemberData.name ||
+        currentMember.displayName ||
+        "-";
+
+
+    document.getElementById(
+        "profileEmail"
+    ).textContent =
+        currentMemberData.email ||
+        currentMember.email ||
+        "-";
+
+
+    document.getElementById(
+        "profileRole"
+    ).textContent =
+        currentMemberData.role ||
+        "-";
+
+
+    document.getElementById(
+        "profileStatus"
+    ).textContent =
+        currentMemberData.status ||
+        "-";
+
+
+    document.getElementById(
+        "profileCoins"
+    ).textContent =
+        Number(
+            currentMemberData.coins ||
+            0
         );
-
-
-    const email =
-        document.getElementById(
-            "profileEmail"
-        );
-
-
-    const role =
-        document.getElementById(
-            "profileRole"
-        );
-
-
-    const status =
-        document.getElementById(
-            "profileStatus"
-        );
-
-
-    const coins =
-        document.getElementById(
-            "profileCoins"
-        );
-
-
-    if(name){
-
-        name.textContent =
-            currentMemberData.name ||
-            currentMember.displayName ||
-            "-";
-
-    }
-
-
-    if(email){
-
-        email.textContent =
-            currentMemberData.email ||
-            currentMember.email ||
-            "-";
-
-    }
-
-
-    if(role){
-
-        role.textContent =
-            currentMemberData.role ||
-            "-";
-
-    }
-
-
-    if(status){
-
-        status.textContent =
-            currentMemberData.status ||
-            "-";
-
-    }
-
-
-    if(coins){
-
-        coins.textContent =
-            Number(
-                currentMemberData.coins || 0
-            );
-
-    }
-
-}
-
-
-/* =====================================================
-   PAGE NAVIGATION
-===================================================== */
-
-document
-.querySelectorAll(
-    ".menuItem[data-page]"
-)
-.forEach(
-    item => {
-
-        item.addEventListener(
-            "click",
-            function(){
-
-                showPage(
-                    this.dataset.page
-                );
-
-            }
-        );
-
-    }
-);
-
-
-function showPage(page){
-
-    document
-    .querySelectorAll(".page")
-    .forEach(
-        p => {
-
-            p.classList.remove(
-                "active"
-            );
-
-        }
-    );
-
-
-    const target =
-        document.getElementById(
-            page + "Page"
-        );
-
-
-    if(target){
-
-        target.classList.add(
-            "active"
-        );
-
-    }
-
-
-    closeMemberMenu();
-
-
-    if(page === "dashboard"){
-
-        refreshMemberData();
-
-        refreshDashboard();
-
-    }
-
-
-    if(page === "newTasks"){
-
-        renderAvailableTasks();
-
-    }
-
-
-    if(page === "completedTasks"){
-
-        loadCompletedTasks();
-
-    }
-
-
-    if(page === "withdraw"){
-
-        refreshMemberData();
-
-        refreshWithdrawPage();
-
-    }
-
-
-    if(page === "withdrawalHistory"){
-
-        loadWithdrawalHistory();
-
-    }
-
-
-    if(page === "profile"){
-
-        refreshMemberData();
-
-        loadProfile();
-
-    }
 
 }
 
@@ -3968,20 +3860,12 @@ function showPage(page){
    LOGOUT
 ===================================================== */
 
-const logoutMenu =
-    document.getElementById(
-        "logoutMenu"
-    );
-
-
-if(logoutMenu){
-
-    logoutMenu.addEventListener(
-        "click",
-        logoutUser
-    );
-
-}
+document.getElementById(
+    "logoutMenu"
+).addEventListener(
+    "click",
+    logoutUser
+);
 
 
 async function logoutUser(){
@@ -3990,9 +3874,15 @@ async function logoutUser(){
 
         stopActiveTask();
 
-        await signOut(
-            auth
-        );
+
+        if(auth){
+
+            await signOut(
+                auth
+            );
+
+        }
+
 
         window.location.href =
             "index.html";
@@ -4001,7 +3891,6 @@ async function logoutUser(){
     }catch(error){
 
         console.error(
-            "Logout error:",
             error
         );
 
@@ -4015,143 +3904,6 @@ async function logoutUser(){
     }
 
 }
-
-
-/* =====================================================
-   AUTH STATE
-   IMPORTANT FIX
-===================================================== */
-
-onAuthStateChanged(
-    auth,
-    async function(user){
-
-        console.log(
-            "Auth state:",
-            user
-                ? user.uid
-                : "NO USER"
-        );
-
-
-        /*
-         Only redirect when Firebase Auth
-         really has NO logged-in user.
-        */
-
-        if(!user){
-
-            currentMember =
-                null;
-
-            currentMemberData =
-                null;
-
-            window.location.href =
-                "index.html";
-
-            return;
-
-        }
-
-
-        currentMember =
-            user;
-
-
-        /*
-         IMPORTANT:
-         We DO NOT call signOut()
-         if Firestore profile loading fails.
-        */
-
-        const success =
-            await refreshMemberData();
-
-
-        if(!success){
-
-            console.warn(
-                "Member profile could not be loaded. User remains logged in."
-            );
-
-            return;
-
-        }
-
-
-        try{
-
-            await loadAllCompletions();
-
-            await loadTasks();
-
-            await loadCompletedTasks();
-
-            await loadWithdrawalHistory();
-
-            await refreshMemberData();
-
-            refreshDashboard();
-
-            refreshWithdrawPage();
-
-            loadProfile();
-
-
-        }catch(error){
-
-            console.error(
-                "Initial member data loading error:",
-                error
-            );
-
-            showAuthError(
-                "Some member data could not be loaded: "
-                +
-                error.message
-            );
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   AUTOMATIC MEMBER DATA REFRESH
-   EVERY 30 SECONDS
-===================================================== */
-
-setInterval(
-    async function(){
-
-        if(
-            currentMember &&
-            db
-        ){
-
-            const success =
-                await refreshMemberData();
-
-
-            if(success){
-
-                await loadAllCompletions();
-
-                await loadTasks();
-
-                refreshDashboard();
-
-                refreshWithdrawPage();
-
-            }
-
-        }
-
-    },
-    30000
-);
 
 
 /* =====================================================
@@ -4187,9 +3939,6 @@ setInterval(
 
             await loadCompletedTasks();
 
-            await refreshMemberData();
-
-            await loadWithdrawalHistory();
 
             refreshDashboard();
 
@@ -4210,39 +3959,8 @@ showPage(
     "dashboard"
 );
 
-
-/* =====================================================
-   GLOBAL ERROR HANDLING
-===================================================== */
-
-window.addEventListener(
-    "unhandledrejection",
-    function(event){
-
-        console.error(
-            "Unhandled Promise Error:",
-            event.reason
-        );
-
-    }
-);
-
-
-window.addEventListener(
-    "error",
-    function(event){
-
-        console.error(
-            "JavaScript Error:",
-            event.error ||
-            event.message
-        );
-
-    }
-);
-
 </script>
-
 
 </body>
 </html>
+```
