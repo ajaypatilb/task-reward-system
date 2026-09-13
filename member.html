@@ -3752,7 +3752,6 @@ function calculateWithdrawal(){
 
 }
 
-
 /* =====================================================
    WITHDRAW SUBMIT
 ===================================================== */
@@ -3798,6 +3797,10 @@ async function submitWithdrawal(){
         ).value.trim();
 
 
+    /* =================================================
+       VALIDATION
+    ================================================= */
+
     if(
         !Number.isInteger(coins) ||
         coins <= 0
@@ -3829,6 +3832,10 @@ async function submitWithdrawal(){
         true;
 
 
+    let withdrawalCreated =
+        false;
+
+
     try{
 
         const userRef =
@@ -3840,8 +3847,8 @@ async function submitWithdrawal(){
 
 
         /*
-         * Create withdrawal document reference
-         * before transaction.
+         * Generate withdrawal document ID
+         * before starting transaction.
          */
         const withdrawalRef =
             doc(
@@ -3852,13 +3859,17 @@ async function submitWithdrawal(){
             );
 
 
+        /* =================================================
+           ATOMIC TRANSACTION
+        ================================================= */
+
         await runTransaction(
             db,
             async transaction => {
 
                 /*
                  * IMPORTANT:
-                 * Read the latest member balance
+                 * Always read the latest balance
                  * from Firestore.
                  */
                 const userSnap =
@@ -3882,6 +3893,9 @@ async function submitWithdrawal(){
                     userSnap.data();
 
 
+                /*
+                 * Check member role.
+                 */
                 if(
                     latestData.role !==
                     "member"
@@ -3894,6 +3908,9 @@ async function submitWithdrawal(){
                 }
 
 
+                /*
+                 * Check member status.
+                 */
                 if(
                     latestData.status !==
                     "active"
@@ -3906,6 +3923,9 @@ async function submitWithdrawal(){
                 }
 
 
+                /*
+                 * Latest Firestore balance.
+                 */
                 const latestCoins =
                     Number(
                         latestData.coins ||
@@ -3915,14 +3935,8 @@ async function submitWithdrawal(){
 
                 /*
                  * IMPORTANT:
-                 * Balance check happens using
-                 * latest Firestore value.
-                 *
-                 * This protects against:
-                 * - double click
-                 * - two tabs
-                 * - stale page
-                 * - rapid requests
+                 * Check balance using latest
+                 * Firestore value.
                  */
                 if(
                     coins >
@@ -3944,13 +3958,10 @@ async function submitWithdrawal(){
                 /*
                  * IMPORTANT:
                  *
-                 * Only "coins" is updated here.
+                 * Only coins is changed.
                  *
-                 * Do NOT update
-                 * pendingWithdrawalCoins.
-                 *
-                 * Firestore Rules allow the member
-                 * to decrease only coins.
+                 * DO NOT update:
+                 * pendingWithdrawalCoins
                  */
                 transaction.update(
                     userRef,
@@ -3964,8 +3975,8 @@ async function submitWithdrawal(){
 
 
                 /*
-                 * Withdrawal document is created
-                 * inside the SAME transaction.
+                 * Create withdrawal request
+                 * inside SAME transaction.
                  */
                 transaction.set(
                     withdrawalRef,
@@ -4010,46 +4021,72 @@ async function submitWithdrawal(){
 
 
         /*
-         * Transaction successful.
-         *
-         * Coins are already reserved/deducted
-         * in Firestore.
+         * If we reached here,
+         * the transaction was successful.
          */
-        currentMemberData.coins =
-            Number(
-                currentMemberData.coins ||
-                0
-            ) - coins;
+        withdrawalCreated =
+            true;
 
 
-        /*
-         * Reload latest member data.
-         */
-        const latestUserSnap =
-            await getDoc(
-                userRef
+        console.log(
+            "Withdrawal created successfully:",
+            withdrawalRef.id
+        );
+
+
+        /* =================================================
+           RELOAD MEMBER DATA
+        ================================================= */
+
+        try{
+
+            const latestUserSnap =
+                await getDoc(
+                    userRef
+                );
+
+
+            if(
+                latestUserSnap.exists()
+            ){
+
+                currentMemberData =
+                    latestUserSnap.data();
+
+            }
+
+        }catch(refreshError){
+
+            console.error(
+                "Member refresh error:",
+                refreshError
             );
-
-
-        if(
-            latestUserSnap.exists()
-        ){
-
-            currentMemberData =
-                latestUserSnap.data();
 
         }
 
 
-        /*
-         * Reload withdrawals.
-         */
-        await loadAllWithdrawals();
+        /* =================================================
+           RELOAD WITHDRAWALS
+        ================================================= */
+
+        try{
+
+            await loadAllWithdrawals();
+
+        }catch(withdrawalLoadError){
+
+            console.error(
+                "Withdrawal reload error:",
+                withdrawalLoadError
+            );
+
+        }
 
 
-        /*
-         * Clear form.
-         */
+        /* =================================================
+           CLEAR FORM
+        ================================================= */
+
         document.getElementById(
             "withdrawCoins"
         ).value = "";
@@ -4063,6 +4100,10 @@ async function submitWithdrawal(){
         calculateWithdrawal();
 
 
+        /* =================================================
+           UPDATE UI
+        ================================================= */
+
         updateMemberUI();
 
         refreshDashboard();
@@ -4072,8 +4113,23 @@ async function submitWithdrawal(){
         loadProfile();
 
 
-        await loadWithdrawalHistory();
+        try{
 
+            await loadWithdrawalHistory();
+
+        }catch(historyError){
+
+            console.error(
+                "Withdrawal history refresh error:",
+                historyError
+            );
+
+        }
+
+
+        /* =================================================
+           SUCCESS MESSAGE
+        ================================================= */
 
         const msg =
             document.getElementById(
@@ -4093,12 +4149,6 @@ async function submitWithdrawal(){
             "message show success";
 
 
-        console.log(
-            "Withdrawal created successfully:",
-            withdrawalRef.id
-        );
-
-
     }catch(error){
 
         console.error(
@@ -4113,14 +4163,35 @@ async function submitWithdrawal(){
             );
 
 
-        msg.textContent =
-            "Unable to submit withdrawal: "
-            +
-            error.message;
+        /*
+         * If transaction itself succeeded,
+         * don't show failure message.
+         */
+        if(
+            withdrawalCreated
+        ){
 
+            msg.textContent =
+                "Withdrawal request submitted successfully. "
+                +
+                coins
+                +
+                " coins are reserved and waiting for owner approval.";
 
-        msg.className =
-            "message show error";
+            msg.className =
+                "message show success";
+
+        }else{
+
+            msg.textContent =
+                "Unable to submit withdrawal: "
+                +
+                error.message;
+
+            msg.className =
+                "message show error";
+
+        }
 
     }finally{
 
@@ -4129,10 +4200,9 @@ async function submitWithdrawal(){
 
     }
 
-}
-
-
-/* =====================================================
+    }
+    
+    /* =====================================================
    WITHDRAWAL HISTORY
 ===================================================== */
 
