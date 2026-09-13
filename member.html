@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,8 +17,6 @@ body{
     background:#f4f6f9;
     color:#222;
 }
-
-/* ================= HEADER ================= */
 
 .header{
     height:60px;
@@ -57,8 +54,6 @@ body{
     font-size:19px;
     font-weight:bold;
 }
-
-/* ================= SIDEBAR ================= */
 
 .sidebar{
     position:fixed;
@@ -112,8 +107,6 @@ body{
     color:#fca5a5;
 }
 
-/* ================= OVERLAY ================= */
-
 .overlay{
     display:none;
     position:fixed;
@@ -128,8 +121,6 @@ body{
 .overlay.show{
     display:block;
 }
-
-/* ================= MAIN ================= */
 
 .main{
     padding:80px 15px 30px;
@@ -149,8 +140,6 @@ body{
     margin:0 0 18px;
     font-size:25px;
 }
-
-/* ================= CARDS ================= */
 
 .cards{
     display:grid;
@@ -175,8 +164,6 @@ body{
     font-size:25px;
     font-weight:bold;
 }
-
-/* ================= TASK ================= */
 
 .taskGrid{
     display:grid;
@@ -204,8 +191,6 @@ body{
     margin:8px 0;
 }
 
-/* ================= NOTICE ================= */
-
 .activeTaskNotice{
     background:#dbeafe;
     color:#1e40af;
@@ -214,8 +199,6 @@ body{
     margin-bottom:15px;
     font-weight:bold;
 }
-
-/* ================= VIDEO ================= */
 
 .videoBox{
     width:100%;
@@ -273,8 +256,6 @@ body{
     transition:.3s;
 }
 
-/* ================= BUTTON ================= */
-
 button{
     border:0;
     border-radius:7px;
@@ -308,8 +289,6 @@ button:disabled{
     cursor:not-allowed;
 }
 
-/* ================= TABLE ================= */
-
 .tableWrap{
     background:white;
     border-radius:12px;
@@ -333,8 +312,6 @@ th{
     background:#f8fafc;
 }
 
-/* ================= BADGES ================= */
-
 .badge{
     display:inline-block;
     padding:5px 9px;
@@ -357,8 +334,6 @@ th{
     background:#fee2e2;
     color:#991b1b;
 }
-
-/* ================= FORM ================= */
 
 .formBox{
     background:white;
@@ -397,8 +372,6 @@ th{
     font-size:22px;
 }
 
-/* ================= MESSAGE ================= */
-
 .message{
     padding:13px;
     border-radius:8px;
@@ -425,8 +398,6 @@ th{
     color:#1e40af;
 }
 
-/* ================= PROFILE ================= */
-
 .profileRow{
     display:flex;
     justify-content:space-between;
@@ -440,8 +411,6 @@ th{
     color:#555;
 }
 
-/* ================= EMPTY ================= */
-
 .empty{
     background:white;
     padding:30px;
@@ -450,15 +419,11 @@ th{
     color:#666;
 }
 
-/* ================= LOADING ================= */
-
 .loading{
     text-align:center;
     padding:30px;
     color:#666;
 }
-
-/* ================= MOBILE ================= */
 
 @media(max-width:600px){
 
@@ -497,14 +462,8 @@ th{
 
 <body>
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <div class="header">
 
-    <!-- IMPORTANT:
-         Inline onclick makes menu independent from Firebase JS -->
     <div
         class="menuBtn"
         id="menuBtn"
@@ -518,11 +477,6 @@ th{
     </div>
 
 </div>
-
-
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
 
 <div class="sidebar" id="sidebar">
 
@@ -538,14 +492,12 @@ th{
 
     </div>
 
-
     <div
         class="menuItem"
         data-page="dashboard"
     >
         🏠 Dashboard
     </div>
-
 
     <div
         class="menuItem"
@@ -554,14 +506,12 @@ th{
         ▶️ New Tasks
     </div>
 
-
     <div
         class="menuItem"
         data-page="completedTasks"
     >
         ✅ Completed Tasks
     </div>
-
 
     <div
         class="menuItem"
@@ -570,7 +520,6 @@ th{
         💰 Withdraw
     </div>
 
-
     <div
         class="menuItem"
         data-page="withdrawalHistory"
@@ -578,14 +527,12 @@ th{
         📜 Withdrawal History
     </div>
 
-
     <div
         class="menuItem"
         data-page="profile"
     >
         👤 Profile
     </div>
-
 
     <div
         class="menuItem logout"
@@ -596,17 +543,11 @@ th{
 
 </div>
 
-
 <div
     class="overlay"
     id="overlay"
     onclick="closeMemberMenu()"
 ></div>
-
-
-<!-- =====================================================
-     MAIN
-===================================================== -->
 
 <div class="main">
 
@@ -615,8 +556,7 @@ th{
         class="message"
     ></div>
 
-
-    <!-- ================= DASHBOARD ================= -->
+    <!-- DASHBOARD -->
 
     <section
         class="page active"
@@ -626,7 +566,6 @@ th{
         <h1 class="pageTitle">
             Dashboard
         </h1>
-
 
         <div class="cards">
 
@@ -643,7 +582,6 @@ th{
 
             </div>
 
-
             <div class="card">
 
                 <h3>Current Value</h3>
@@ -657,7 +595,6 @@ th{
 
             </div>
 
-
             <div class="card">
 
                 <h3>New Tasks</h3>
@@ -670,7 +607,6 @@ th{
                 </div>
 
             </div>
-
 
             <div class="card">
 
@@ -687,9 +623,7 @@ th{
 
         </div>
 
-
         <br>
-
 
         <div class="card">
 
@@ -711,8 +645,7 @@ th{
 
     </section>
 
-
-    <!-- ================= NEW TASKS ================= -->
+    <!-- NEW TASKS -->
 
     <section
         class="page"
@@ -723,15 +656,12 @@ th{
             New Tasks
         </h1>
 
-
         <div
             id="newTasksMessage"
             class="message"
         ></div>
 
-
         <div id="activeTaskNotice"></div>
-
 
         <div
             id="tasksContainer"
@@ -746,8 +676,7 @@ th{
 
     </section>
 
-
-    <!-- ================= COMPLETED ================= -->
+    <!-- COMPLETED -->
 
     <section
         class="page"
@@ -757,7 +686,6 @@ th{
         <h1 class="pageTitle">
             Completed Tasks
         </h1>
-
 
         <div id="completedTasksContainer">
 
@@ -769,8 +697,7 @@ th{
 
     </section>
 
-
-    <!-- ================= WITHDRAW ================= -->
+    <!-- WITHDRAW -->
 
     <section
         class="page"
@@ -781,12 +708,10 @@ th{
             Withdraw Coins
         </h1>
 
-
         <div
             id="withdrawMessage"
             class="message"
         ></div>
-
 
         <div class="formBox">
 
@@ -820,7 +745,6 @@ th{
 
             </div>
 
-
             <div class="formGroup">
 
                 <label>
@@ -836,7 +760,6 @@ th{
 
             </div>
 
-
             <div class="amountBox">
 
                 Withdrawal Amount:
@@ -848,7 +771,6 @@ th{
                 </strong>
 
             </div>
-
 
             <div class="formGroup">
 
@@ -864,7 +786,6 @@ th{
 
             </div>
 
-
             <button
                 class="primaryBtn"
                 id="withdrawButton"
@@ -876,8 +797,7 @@ th{
 
     </section>
 
-
-    <!-- ================= WITHDRAWAL HISTORY ================= -->
+    <!-- WITHDRAWAL HISTORY -->
 
     <section
         class="page"
@@ -887,7 +807,6 @@ th{
         <h1 class="pageTitle">
             Withdrawal History
         </h1>
-
 
         <div id="withdrawalHistoryContainer">
 
@@ -899,8 +818,7 @@ th{
 
     </section>
 
-
-    <!-- ================= PROFILE ================= -->
+    <!-- PROFILE -->
 
     <section
         class="page"
@@ -910,7 +828,6 @@ th{
         <h1 class="pageTitle">
             Profile
         </h1>
-
 
         <div class="formBox">
 
@@ -926,7 +843,6 @@ th{
 
             </div>
 
-
             <div class="profileRow">
 
                 <span class="profileLabel">
@@ -938,7 +854,6 @@ th{
                 </span>
 
             </div>
-
 
             <div class="profileRow">
 
@@ -952,7 +867,6 @@ th{
 
             </div>
 
-
             <div class="profileRow">
 
                 <span class="profileLabel">
@@ -964,7 +878,6 @@ th{
                 </span>
 
             </div>
-
 
             <div class="profileRow">
 
@@ -984,13 +897,6 @@ th{
 
 </div>
 
-
-<!-- =====================================================
-     MENU SCRIPT
-     THIS IS OUTSIDE FIREBASE MODULE
-     SO 3-LINE ALWAYS WORKS
-===================================================== -->
-
 <script>
 
 function toggleMemberMenu(){
@@ -1001,24 +907,17 @@ function toggleMemberMenu(){
     const overlay =
         document.getElementById("overlay");
 
-
     if(!sidebar){
-
         return;
-
     }
-
 
     sidebar.classList.toggle("open");
 
     if(overlay){
-
         overlay.classList.toggle("show");
-
     }
 
 }
-
 
 function closeMemberMenu(){
 
@@ -1028,35 +927,23 @@ function closeMemberMenu(){
     const overlay =
         document.getElementById("overlay");
 
-
     if(sidebar){
-
         sidebar.classList.remove("open");
-
     }
 
-
     if(overlay){
-
         overlay.classList.remove("show");
-
     }
 
 }
 
 </script>
 
-
-<!-- =====================================================
-     FIREBASE
-===================================================== -->
-
 <script type="module">
 
 import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
 
 import {
     getAuth,
@@ -1065,7 +952,6 @@ import {
     setPersistence,
     browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
 
 import {
     getFirestore,
@@ -1106,10 +992,6 @@ let auth;
 let db;
 
 
-/* =====================================================
-   FIREBASE INITIALIZATION
-===================================================== */
-
 try{
 
     app =
@@ -1140,6 +1022,7 @@ try{
             "Auth persistence error:",
             error
         );
+
     }
 
 }catch(error){
@@ -1179,7 +1062,6 @@ try{
 
 let youtubeAPIReady = false;
 
-
 window.onYouTubeIframeAPIReady =
 function(){
 
@@ -1191,14 +1073,11 @@ function(){
 
 };
 
-
 const youtubeScript =
     document.createElement("script");
 
-
 youtubeScript.src =
     "https://www.youtube.com/iframe_api";
-
 
 document.head.appendChild(
     youtubeScript
@@ -1237,7 +1116,6 @@ function getToday(){
     const now =
         new Date();
 
-
     return (
         now.getFullYear()
         + "-"
@@ -1263,7 +1141,6 @@ function escapeHtml(value){
         return "";
 
     }
-
 
     return String(value)
         .replace(/&/g,"&amp;")
@@ -1311,12 +1188,10 @@ function showPage(page){
 
     });
 
-
     const target =
         document.getElementById(
             page + "Page"
         );
-
 
     if(target){
 
@@ -1326,49 +1201,30 @@ function showPage(page){
 
     }
 
-
     closeMemberMenu();
 
-
     if(page === "dashboard"){
-
         refreshDashboard();
-
     }
-
 
     if(page === "newTasks"){
-
         renderAvailableTasks();
-
     }
-
 
     if(page === "completedTasks"){
-
         loadCompletedTasks();
-
     }
-
 
     if(page === "withdraw"){
-
         refreshWithdrawPage();
-
     }
-
 
     if(page === "withdrawalHistory"){
-
         loadWithdrawalHistory();
-
     }
 
-
     if(page === "profile"){
-
         loadProfile();
-
     }
 
 }
@@ -1394,10 +1250,6 @@ if(auth){
 
             if(!user){
 
-                /*
-                 * Firebase may briefly return null while restoring
-                 * the saved browser session. Wait before redirecting.
-                 */
                 if(firstAuthCheck){
 
                     authRedirectTimer =
@@ -1412,6 +1264,7 @@ if(auth){
                                 window.location.replace(
                                     "index.html"
                                 );
+
                             }
 
                         }, 3000);
@@ -1427,18 +1280,23 @@ if(auth){
                 );
 
                 return;
+
             }
 
             firstAuthCheck = false;
 
             if(authRedirectTimer){
-                clearTimeout(authRedirectTimer);
+
+                clearTimeout(
+                    authRedirectTimer
+                );
+
                 authRedirectTimer = null;
+
             }
 
             currentMember =
                 user;
-
 
             try{
 
@@ -1449,12 +1307,10 @@ if(auth){
                         user.uid
                     );
 
-
                 const userSnap =
                     await getDoc(
                         userRef
                     );
-
 
                 if(!userSnap.exists()){
 
@@ -1466,10 +1322,8 @@ if(auth){
 
                 }
 
-
                 currentMemberData =
                     userSnap.data();
-
 
                 if(
                     currentMemberData.role !==
@@ -1483,7 +1337,6 @@ if(auth){
                     return;
 
                 }
-
 
                 if(
                     currentMemberData.status !==
@@ -1503,12 +1356,9 @@ if(auth){
 
                 }
 
-
                 hideAuthMessage();
 
-
                 updateMemberUI();
-
 
                 await loadAllCompletions();
 
@@ -1518,20 +1368,17 @@ if(auth){
 
                 await loadWithdrawalHistory();
 
-
                 loadProfile();
 
                 refreshDashboard();
 
                 refreshWithdrawPage();
 
-
             }catch(error){
 
                 console.error(
                     error
                 );
-
 
                 showAuthError(
                     error.message
@@ -1555,7 +1402,6 @@ function showAuthError(message){
         document.getElementById(
             "authMessage"
         );
-
 
     el.innerHTML =
         `
@@ -1589,16 +1435,13 @@ function showAuthError(message){
         </button>
         `;
 
-
     el.className =
         "message show error";
-
 
     const btn =
         document.getElementById(
             "errorLogoutBtn"
         );
-
 
     if(btn){
 
@@ -1619,10 +1462,8 @@ function hideAuthMessage(){
             "authMessage"
         );
 
-
     el.className =
         "message";
-
 
     el.innerHTML = "";
 
@@ -1640,24 +1481,20 @@ function updateMemberUI(){
         currentMember.displayName ||
         "Member";
 
-
     const email =
         currentMemberData.email ||
         currentMember.email ||
         "-";
-
 
     document.getElementById(
         "sideMemberName"
     ).textContent =
         name;
 
-
     document.getElementById(
         "sideMemberEmail"
     ).textContent =
         email;
-
 
     document.getElementById(
         "dashboardWelcome"
@@ -1675,13 +1512,9 @@ async function loadAllCompletions(){
 
     allCompletions = [];
 
-
     if(!currentMember){
-
         return;
-
     }
-
 
     const q =
         query(
@@ -1696,10 +1529,8 @@ async function loadAllCompletions(){
             )
         );
 
-
     const snapshot =
         await getDocs(q);
-
 
     snapshot.forEach(
         docSnap => {
@@ -1715,7 +1546,6 @@ async function loadAllCompletions(){
 
         }
     );
-
 
     allCompletions.sort(
         (a,b) => {
@@ -1743,7 +1573,6 @@ function hasCompletedToday(taskId){
     const today =
         getToday();
 
-
     return allCompletions.some(
         completion => {
 
@@ -1756,7 +1585,6 @@ function hasCompletedToday(taskId){
 
             }
 
-
             if(
                 completion.completionDate
             ){
@@ -1767,7 +1595,6 @@ function hasCompletedToday(taskId){
                 );
 
             }
-
 
             return false;
 
@@ -1784,17 +1611,13 @@ function hasCompletedToday(taskId){
 async function loadTasks(){
 
     if(!db){
-
         return;
-
     }
-
 
     const container =
         document.getElementById(
             "tasksContainer"
         );
-
 
     try{
 
@@ -1806,9 +1629,7 @@ async function loadTasks(){
                 )
             );
 
-
         allTasks = [];
-
 
         snapshot.forEach(
             docSnap => {
@@ -1821,7 +1642,6 @@ async function loadTasks(){
                     ...docSnap.data()
 
                 };
-
 
                 if(
                     task.status ===
@@ -1837,7 +1657,6 @@ async function loadTasks(){
             }
         );
 
-
         if(
             activeTaskId &&
             hasCompletedToday(
@@ -1849,18 +1668,15 @@ async function loadTasks(){
 
         }
 
-
         renderAvailableTasks();
 
         refreshDashboard();
-
 
     }catch(error){
 
         console.error(
             error
         );
-
 
         container.innerHTML =
             `
@@ -1893,12 +1709,10 @@ function renderAvailableTasks(){
             "tasksContainer"
         );
 
-
     const notice =
         document.getElementById(
             "activeTaskNotice"
         );
-
 
     const available =
         allTasks.filter(
@@ -1907,7 +1721,6 @@ function renderAvailableTasks(){
                     task.id
                 )
         );
-
 
     if(
         available.length === 0
@@ -1928,17 +1741,14 @@ function renderAvailableTasks(){
             </div>
             `;
 
-
         document.getElementById(
             "dashboardNewTasks"
         ).textContent =
             "0";
 
-
         return;
 
     }
-
 
     if(activeTaskId){
 
@@ -1966,9 +1776,7 @@ function renderAvailableTasks(){
 
     }
 
-
     container.innerHTML = "";
-
 
     available.forEach(
         task => {
@@ -1977,18 +1785,15 @@ function renderAvailableTasks(){
                 activeTaskId ===
                 task.id;
 
-
             const isLocked =
                 activeTaskId &&
                 activeTaskId !==
                 task.id;
 
-
             const card =
                 document.createElement(
                     "div"
                 );
-
 
             card.className =
                 "taskCard"
@@ -2005,7 +1810,6 @@ function renderAvailableTasks(){
                     : ""
                 );
 
-
             card.innerHTML =
                 `
 
@@ -2014,7 +1818,6 @@ function renderAvailableTasks(){
                         task.title
                     )}
                 </h3>
-
 
                 <div class="taskInfo">
 
@@ -2029,7 +1832,6 @@ function renderAvailableTasks(){
 
                 </div>
 
-
                 <div class="taskInfo">
 
                     ⏱ Required Watch Time:
@@ -2042,7 +1844,6 @@ function renderAvailableTasks(){
                     </strong>
 
                 </div>
-
 
                 ${
                     isActive
@@ -2062,7 +1863,6 @@ function renderAvailableTasks(){
                             Loading YouTube...
                         </div>
 
-
                         <div
                             id="player_${task.id}"
                             style="
@@ -2073,14 +1873,12 @@ function renderAvailableTasks(){
 
                     </div>
 
-
                     <div
                         class="timer"
                         id="timer_${task.id}"
                     >
                         Press Play and watch the video.
                     </div>
-
 
                     <div class="progressOuter">
 
@@ -2091,7 +1889,6 @@ function renderAvailableTasks(){
 
                     </div>
 
-
                     <button
                         class="successBtn"
                         id="complete_${task.id}"
@@ -2099,7 +1896,6 @@ function renderAvailableTasks(){
                     >
                         Complete Task
                     </button>
-
 
                     <button
                         class="secondaryBtn"
@@ -2129,7 +1925,6 @@ function renderAvailableTasks(){
                         </div>
 
                     </div>
-
 
                     <button
                         class="${
@@ -2164,11 +1959,9 @@ function renderAvailableTasks(){
 
                 `;
 
-
             container.appendChild(
                 card
             );
-
 
             if(isActive){
 
@@ -2183,7 +1976,6 @@ function renderAvailableTasks(){
                         "start_" +
                         task.id
                     );
-
 
                 if(btn){
 
@@ -2204,7 +1996,6 @@ function renderAvailableTasks(){
 
         }
     );
-
 
     document.getElementById(
         "dashboardNewTasks"
@@ -2237,16 +2028,12 @@ function startTask(taskId){
 
     }
 
-
     activeTaskId =
         taskId;
 
-
     activeElapsed = 0;
 
-
     activeRequiredTime = 0;
-
 
     renderAvailableTasks();
 
@@ -2261,7 +2048,6 @@ function stopActiveTask(){
 
     stopWatchTimer();
 
-
     if(activePlayer){
 
         try{
@@ -2271,7 +2057,6 @@ function stopActiveTask(){
         }catch(e){}
 
     }
-
 
     activePlayer = null;
 
@@ -2291,17 +2076,13 @@ function stopActiveTask(){
 function getYoutubeVideoId(url){
 
     if(!url){
-
         return "";
-
     }
-
 
     try{
 
         const parsed =
             new URL(url);
-
 
         if(
             parsed.hostname.includes(
@@ -2315,7 +2096,6 @@ function getYoutubeVideoId(url){
 
         }
 
-
         if(
             parsed.pathname.includes(
                 "/embed/"
@@ -2328,7 +2108,6 @@ function getYoutubeVideoId(url){
 
         }
 
-
         if(
             parsed.pathname.includes(
                 "/shorts/"
@@ -2340,7 +2119,6 @@ function getYoutubeVideoId(url){
                 .split("/")[0];
 
         }
-
 
         return (
             parsed.searchParams.get(
@@ -2368,13 +2146,11 @@ function setupYouTubeTask(task){
             task.youtubeUrl
         );
 
-
     const timerEl =
         document.getElementById(
             "timer_" +
             task.id
         );
-
 
     const progressEl =
         document.getElementById(
@@ -2382,13 +2158,11 @@ function setupYouTubeTask(task){
             task.id
         );
 
-
     const completeButton =
         document.getElementById(
             "complete_" +
             task.id
         );
-
 
     const cancelButton =
         document.getElementById(
@@ -2396,13 +2170,11 @@ function setupYouTubeTask(task){
             task.id
         );
 
-
     const overlayEl =
         document.getElementById(
             "overlay_" +
             task.id
         );
-
 
     if(!videoId){
 
@@ -2413,15 +2185,12 @@ function setupYouTubeTask(task){
 
     }
 
-
     activeElapsed = 0;
-
 
     activeRequiredTime =
         Number(
             task.watchTime || 0
         );
-
 
     function createPlayer(){
 
@@ -2435,7 +2204,6 @@ function setupYouTubeTask(task){
             return;
 
         }
-
 
         activePlayer =
             new YT.Player(
@@ -2467,12 +2235,10 @@ function setupYouTubeTask(task){
                                 "hidden"
                             );
 
-
                             timerEl.textContent =
                                 "▶️ Press Play to start watch timer.";
 
                         },
-
 
                         onStateChange:
                         function(event){
@@ -2491,9 +2257,7 @@ function setupYouTubeTask(task){
 
     }
 
-
     createPlayer();
-
 
     completeButton.addEventListener(
         "click",
@@ -2508,10 +2272,8 @@ function setupYouTubeTask(task){
 
             }
 
-
             completeButton.disabled =
                 true;
-
 
             await completeTask(
                 task,
@@ -2520,7 +2282,6 @@ function setupYouTubeTask(task){
 
         }
     );
-
 
     cancelButton.addEventListener(
         "click",
@@ -2559,7 +2320,6 @@ function handleYoutubeState(
             task.id
         );
 
-
     if(
         event.data ===
         YT.PlayerState.PLAYING
@@ -2568,13 +2328,11 @@ function handleYoutubeState(
         timerEl.textContent =
             `▶️ Watching: ${activeElapsed} / ${activeRequiredTime} seconds`;
 
-
         startWatchTimer(
             task
         );
 
     }
-
 
     if(
         event.data ===
@@ -2583,12 +2341,10 @@ function handleYoutubeState(
 
         stopWatchTimer();
 
-
         timerEl.textContent =
             `⏸️ Paused: ${activeElapsed} / ${activeRequiredTime} seconds`;
 
     }
-
 
     if(
         event.data ===
@@ -2597,12 +2353,10 @@ function handleYoutubeState(
 
         stopWatchTimer();
 
-
         timerEl.textContent =
             `Video ended. Watch time: ${activeElapsed} / ${activeRequiredTime} seconds`;
 
     }
-
 
     if(
         event.data ===
@@ -2613,7 +2367,6 @@ function handleYoutubeState(
             "⏳ Buffering...";
 
     }
-
 
     updateTaskProgress(
         task
@@ -2629,11 +2382,8 @@ function handleYoutubeState(
 function startWatchTimer(task){
 
     if(activeTimer){
-
         return;
-
     }
-
 
     activeTimer =
         setInterval(
@@ -2648,10 +2398,8 @@ function startWatchTimer(task){
 
                 }
 
-
                 const state =
                     activePlayer.getPlayerState();
-
 
                 if(
                     state !==
@@ -2662,9 +2410,7 @@ function startWatchTimer(task){
 
                 }
 
-
                 activeElapsed++;
-
 
                 updateTaskProgress(
                     task
@@ -2708,20 +2454,17 @@ function updateTaskProgress(task){
             task.id
         );
 
-
     const progressEl =
         document.getElementById(
             "progress_" +
             task.id
         );
 
-
     const completeButton =
         document.getElementById(
             "complete_" +
             task.id
         );
-
 
     const percentage =
         activeRequiredTime > 0
@@ -2740,10 +2483,8 @@ function updateTaskProgress(task){
 
         0;
 
-
     progressEl.style.width =
         percentage + "%";
-
 
     if(
         activeElapsed >=
@@ -2752,14 +2493,11 @@ function updateTaskProgress(task){
 
         stopWatchTimer();
 
-
         timerEl.textContent =
             "✅ Required watch time completed.";
 
-
         progressEl.style.width =
             "100%";
-
 
         completeButton.disabled =
             false;
@@ -2767,11 +2505,9 @@ function updateTaskProgress(task){
         completeButton.className =
             "successBtn";
 
-
         return;
 
     }
-
 
     if(
         activePlayer &&
@@ -2789,7 +2525,7 @@ function updateTaskProgress(task){
 
 
 /* =====================================================
-   COMPLETE TASK
+   COMPLETE TASK - UPDATED FIX
 ===================================================== */
 
 async function completeTask(
@@ -2803,45 +2539,49 @@ async function completeTask(
 
     }
 
-
     const today =
         getToday();
 
-
-    await loadAllCompletions();
-
-
-    if(
-        hasCompletedToday(
-            task.id
-        )
-    ){
-
-        alert(
-            "You have already completed this task today."
-        );
-
-
-        stopActiveTask();
-
-
-        await loadTasks();
-
-
-        return;
-
-    }
-
-
-    const completionId =
-        currentMember.uid
-        + "_"
-        + task.id
-        + "_"
-        + today;
-
-
     try{
+
+        /*
+         * First reload existing completions.
+         * This is enough to prevent duplicate submission.
+         *
+         * IMPORTANT:
+         * We do NOT use getDoc(completionRef) here.
+         *
+         * A new document does not have resource.data yet,
+         * therefore the member read rule cannot authorize
+         * getDoc() on that new document.
+         */
+
+        await loadAllCompletions();
+
+        if(
+            hasCompletedToday(
+                task.id
+            )
+        ){
+
+            alert(
+                "You have already completed this task today."
+            );
+
+            stopActiveTask();
+
+            await loadTasks();
+
+            return;
+
+        }
+
+        const completionId =
+            currentMember.uid
+            + "_"
+            + task.id
+            + "_"
+            + today;
 
         const completionRef =
             doc(
@@ -2850,32 +2590,11 @@ async function completeTask(
                 completionId
             );
 
-
-        const existing =
-            await getDoc(
-                completionRef
-            );
-
-
-        if(existing.exists()){
-
-            alert(
-                "This task has already been submitted today."
-            );
-
-
-            stopActiveTask();
-
-
-            await loadAllCompletions();
-
-            await loadTasks();
-
-
-            return;
-
-        }
-
+        /*
+         * Direct setDoc().
+         *
+         * No getDoc() before this.
+         */
 
         await setDoc(
             completionRef,
@@ -2925,14 +2644,16 @@ async function completeTask(
             }
         );
 
+        console.log(
+            "Task completion saved successfully:",
+            completionId
+        );
 
         stopActiveTask();
-
 
         alert(
             "Task completed successfully.\n\nWaiting for owner approval."
         );
-
 
         await loadAllCompletions();
 
@@ -2942,20 +2663,18 @@ async function completeTask(
 
         refreshDashboard();
 
-
     }catch(error){
 
         console.error(
+            "Task completion error:",
             error
         );
-
 
         alert(
             "Unable to save task completion.\n\n"
             +
             error.message
         );
-
 
         button.disabled =
             false;
@@ -2976,13 +2695,9 @@ async function loadCompletedTasks(){
             "completedTasksContainer"
         );
 
-
     if(!currentMember){
-
         return;
-
     }
-
 
     try{
 
@@ -2993,7 +2708,6 @@ async function loadCompletedTasks(){
             await loadAllCompletions();
 
         }
-
 
         if(
             allCompletions.length === 0
@@ -3006,17 +2720,14 @@ async function loadCompletedTasks(){
                 </div>
                 `;
 
-
             document.getElementById(
                 "dashboardCompletedTasks"
             ).textContent =
                 "0";
 
-
             return;
 
         }
-
 
         let html =
             `
@@ -3045,14 +2756,12 @@ async function loadCompletedTasks(){
 
             `;
 
-
         allCompletions.forEach(
             item => {
 
                 let date =
                     item.completionDate ||
                     "-";
-
 
                 if(
                     !item.completionDate &&
@@ -3068,16 +2777,13 @@ async function loadCompletedTasks(){
 
                 }
 
-
                 const status =
                     item.rewardStatus ||
                     item.status ||
                     "Pending Verification";
 
-
                 let badgeClass =
                     "pending";
-
 
                 if(
                     status ===
@@ -3089,7 +2795,6 @@ async function loadCompletedTasks(){
 
                 }
 
-
                 if(
                     status ===
                     "Rejected"
@@ -3099,7 +2804,6 @@ async function loadCompletedTasks(){
                         "rejected";
 
                 }
-
 
                 html +=
                     `
@@ -3145,7 +2849,6 @@ async function loadCompletedTasks(){
             }
         );
 
-
         html +=
             `
 
@@ -3157,16 +2860,13 @@ async function loadCompletedTasks(){
 
             `;
 
-
         container.innerHTML =
             html;
-
 
         document.getElementById(
             "dashboardCompletedTasks"
         ).textContent =
             allCompletions.length;
-
 
     }catch(error){
 
@@ -3197,11 +2897,8 @@ async function loadCompletedTasks(){
 function refreshDashboard(){
 
     if(!currentMemberData){
-
         return;
-
     }
-
 
     const coins =
         Number(
@@ -3209,12 +2906,10 @@ function refreshDashboard(){
             0
         );
 
-
     document.getElementById(
         "dashboardCoins"
     ).textContent =
         coins;
-
 
     document.getElementById(
         "dashboardRupees"
@@ -3223,7 +2918,6 @@ function refreshDashboard(){
         (
             coins / 100
         ).toFixed(2);
-
 
     const newTasks =
         allTasks.filter(
@@ -3234,12 +2928,10 @@ function refreshDashboard(){
                 )
         );
 
-
     document.getElementById(
         "dashboardNewTasks"
     ).textContent =
         newTasks.length;
-
 
     document.getElementById(
         "dashboardCompletedTasks"
@@ -3256,11 +2948,8 @@ function refreshDashboard(){
 function refreshWithdrawPage(){
 
     if(!currentMemberData){
-
         return;
-
     }
-
 
     const coins =
         Number(
@@ -3268,12 +2957,10 @@ function refreshWithdrawPage(){
             0
         );
 
-
     document.getElementById(
         "withdrawAvailableCoins"
     ).textContent =
         coins;
-
 
     document.getElementById(
         "withdrawAvailableRupees"
@@ -3282,7 +2969,6 @@ function refreshWithdrawPage(){
         (
             coins / 100
         ).toFixed(2);
-
 
     calculateWithdrawal();
 
@@ -3306,7 +2992,6 @@ function calculateWithdrawal(){
             ).value ||
             0
         );
-
 
     document.getElementById(
         "withdrawRupees"
@@ -3334,17 +3019,13 @@ document.getElementById(
 async function submitWithdrawal(){
 
     if(!currentMember){
-
         return;
-
     }
-
 
     const button =
         document.getElementById(
             "withdrawButton"
         );
-
 
     const coins =
         Number(
@@ -3353,19 +3034,16 @@ async function submitWithdrawal(){
             ).value
         );
 
-
     const upi =
         document.getElementById(
             "withdrawUpi"
         ).value.trim();
-
 
     const availableCoins =
         Number(
             currentMemberData.coins ||
             0
         );
-
 
     if(
         !coins ||
@@ -3380,7 +3058,6 @@ async function submitWithdrawal(){
 
     }
 
-
     if(
         coins > availableCoins
     ){
@@ -3392,7 +3069,6 @@ async function submitWithdrawal(){
         return;
 
     }
-
 
     if(
         upi.length < 3
@@ -3406,14 +3082,11 @@ async function submitWithdrawal(){
 
     }
 
-
     const amount =
         coins / 100;
 
-
     button.disabled =
         true;
-
 
     try{
 
@@ -3458,36 +3131,28 @@ async function submitWithdrawal(){
             }
         );
 
-
         const msg =
             document.getElementById(
                 "withdrawMessage"
             );
 
-
         msg.textContent =
             "Withdrawal request submitted successfully. Waiting for owner approval.";
 
-
         msg.className =
             "message show success";
-
 
         document.getElementById(
             "withdrawCoins"
         ).value = "";
 
-
         document.getElementById(
             "withdrawUpi"
         ).value = "";
 
-
         calculateWithdrawal();
 
-
         await loadWithdrawalHistory();
-
 
     }catch(error){
 
@@ -3495,24 +3160,20 @@ async function submitWithdrawal(){
             error
         );
 
-
         const msg =
             document.getElementById(
                 "withdrawMessage"
             );
-
 
         msg.textContent =
             "Unable to submit withdrawal: "
             +
             error.message;
 
-
         msg.className =
             "message show error";
 
     }
-
 
     button.disabled =
         false;
@@ -3531,13 +3192,9 @@ async function loadWithdrawalHistory(){
             "withdrawalHistoryContainer"
         );
 
-
     if(!currentMember){
-
         return;
-
     }
-
 
     try{
 
@@ -3554,13 +3211,10 @@ async function loadWithdrawalHistory(){
                 )
             );
 
-
         const snapshot =
             await getDocs(q);
 
-
         const withdrawals = [];
-
 
         snapshot.forEach(
             docSnap => {
@@ -3576,7 +3230,6 @@ async function loadWithdrawalHistory(){
 
             }
         );
-
 
         withdrawals.sort(
             (a,b) => {
@@ -3594,7 +3247,6 @@ async function loadWithdrawalHistory(){
             }
         );
 
-
         if(
             withdrawals.length === 0
         ){
@@ -3611,7 +3263,6 @@ async function loadWithdrawalHistory(){
             return;
 
         }
-
 
         let html =
             `
@@ -3642,12 +3293,10 @@ async function loadWithdrawalHistory(){
 
             `;
 
-
         withdrawals.forEach(
             item => {
 
                 let date = "-";
-
 
                 if(
                     item.requestedAt?.toDate
@@ -3662,15 +3311,12 @@ async function loadWithdrawalHistory(){
 
                 }
 
-
                 const status =
                     item.status ||
                     "pending";
 
-
                 let badgeClass =
                     "pending";
-
 
                 if(
                     status ===
@@ -3682,7 +3328,6 @@ async function loadWithdrawalHistory(){
 
                 }
 
-
                 if(
                     status ===
                     "rejected"
@@ -3692,7 +3337,6 @@ async function loadWithdrawalHistory(){
                         "rejected";
 
                 }
-
 
                 html +=
                     `
@@ -3745,7 +3389,6 @@ async function loadWithdrawalHistory(){
             }
         );
 
-
         html +=
             `
 
@@ -3757,10 +3400,8 @@ async function loadWithdrawalHistory(){
 
             `;
 
-
         container.innerHTML =
             html;
-
 
     }catch(error){
 
@@ -3791,11 +3432,8 @@ async function loadWithdrawalHistory(){
 function loadProfile(){
 
     if(!currentMemberData){
-
         return;
-
     }
-
 
     document.getElementById(
         "profileName"
@@ -3804,7 +3442,6 @@ function loadProfile(){
         currentMember.displayName ||
         "-";
 
-
     document.getElementById(
         "profileEmail"
     ).textContent =
@@ -3812,20 +3449,17 @@ function loadProfile(){
         currentMember.email ||
         "-";
 
-
     document.getElementById(
         "profileRole"
     ).textContent =
         currentMemberData.role ||
         "-";
 
-
     document.getElementById(
         "profileStatus"
     ).textContent =
         currentMemberData.status ||
         "-";
-
 
     document.getElementById(
         "profileCoins"
@@ -3856,7 +3490,6 @@ async function logoutUser(){
 
         stopActiveTask();
 
-
         if(auth){
 
             await signOut(
@@ -3865,17 +3498,14 @@ async function logoutUser(){
 
         }
 
-
         window.location.href =
             "index.html";
-
 
     }catch(error){
 
         console.error(
             error
         );
-
 
         alert(
             "Logout failed: "
@@ -3895,13 +3525,11 @@ async function logoutUser(){
 let lastKnownDate =
     getToday();
 
-
 setInterval(
     async function(){
 
         const currentDate =
             getToday();
-
 
         if(
             currentDate !==
@@ -3911,16 +3539,13 @@ setInterval(
             lastKnownDate =
                 currentDate;
 
-
             stopActiveTask();
-
 
             await loadAllCompletions();
 
             await loadTasks();
 
             await loadCompletedTasks();
-
 
             refreshDashboard();
 
@@ -3945,4 +3570,3 @@ showPage(
 
 </body>
 </html>
-```
