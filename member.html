@@ -2,14 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Member Dashboard - Task Reward System</title>
 
 <style>
-
 *{
     box-sizing:border-box;
     font-family:Arial,sans-serif;
@@ -21,9 +19,7 @@ body{
     color:#222;
 }
 
-/* =========================================================
-   HEADER
-   ========================================================= */
+/* ================= HEADER ================= */
 
 .header{
     height:60px;
@@ -47,10 +43,14 @@ body{
     justify-content:center;
     font-size:30px;
     cursor:pointer;
-    margin-right:12px;
     user-select:none;
-    position:relative;
+    margin-right:12px;
     z-index:2100;
+    position:relative;
+}
+
+.menuBtn:active{
+    transform:scale(.95);
 }
 
 .headerTitle{
@@ -58,9 +58,7 @@ body{
     font-weight:bold;
 }
 
-/* =========================================================
-   SIDEBAR
-   ========================================================= */
+/* ================= SIDEBAR ================= */
 
 .sidebar{
     position:fixed;
@@ -71,13 +69,13 @@ body{
     background:#1f2937;
     color:white;
     transition:left .25s ease;
-    z-index:1900;
+    z-index:1999;
     overflow-y:auto;
-    box-shadow:4px 0 12px rgba(0,0,0,.25);
+    box-shadow:3px 0 10px rgba(0,0,0,.2);
 }
 
 .sidebar.open{
-    left:0;
+    left:0 !important;
 }
 
 .sidebarHeader{
@@ -96,7 +94,7 @@ body{
 }
 
 .menuItem{
-    padding:15px 20px;
+    padding:16px 20px;
     cursor:pointer;
     border-bottom:1px solid #374151;
     user-select:none;
@@ -106,29 +104,32 @@ body{
     background:#374151;
 }
 
+.menuItem:active{
+    background:#4b5563;
+}
+
 .menuItem.logout{
     color:#fca5a5;
 }
 
-/* =========================================================
-   OVERLAY
-   ========================================================= */
+/* ================= OVERLAY ================= */
 
 .overlay{
     display:none;
     position:fixed;
-    inset:60px 0 0 0;
+    top:60px;
+    left:0;
+    right:0;
+    bottom:0;
     background:rgba(0,0,0,.45);
-    z-index:1800;
+    z-index:1998;
 }
 
 .overlay.show{
     display:block;
 }
 
-/* =========================================================
-   MAIN
-   ========================================================= */
+/* ================= MAIN ================= */
 
 .main{
     padding:80px 15px 30px;
@@ -149,9 +150,7 @@ body{
     font-size:25px;
 }
 
-/* =========================================================
-   CARDS
-   ========================================================= */
+/* ================= CARDS ================= */
 
 .cards{
     display:grid;
@@ -177,9 +176,7 @@ body{
     font-weight:bold;
 }
 
-/* =========================================================
-   TASK
-   ========================================================= */
+/* ================= TASK ================= */
 
 .taskGrid{
     display:grid;
@@ -205,8 +202,9 @@ body{
 
 .taskInfo{
     margin:8px 0;
-    color:#444;
 }
+
+/* ================= NOTICE ================= */
 
 .activeTaskNotice{
     background:#dbeafe;
@@ -217,9 +215,7 @@ body{
     font-weight:bold;
 }
 
-/* =========================================================
-   VIDEO
-   ========================================================= */
+/* ================= VIDEO ================= */
 
 .videoBox{
     width:100%;
@@ -248,17 +244,12 @@ body{
     font-size:16px;
     font-weight:bold;
     pointer-events:none;
-    text-align:center;
-    padding:15px;
+    z-index:2;
 }
 
 .videoOverlay.hidden{
     display:none;
 }
-
-/* =========================================================
-   TIMER
-   ========================================================= */
 
 .timer{
     font-size:18px;
@@ -282,9 +273,7 @@ body{
     transition:.3s;
 }
 
-/* =========================================================
-   BUTTON
-   ========================================================= */
+/* ================= BUTTON ================= */
 
 button{
     border:0;
@@ -319,9 +308,7 @@ button:disabled{
     cursor:not-allowed;
 }
 
-/* =========================================================
-   TABLE
-   ========================================================= */
+/* ================= TABLE ================= */
 
 .tableWrap{
     background:white;
@@ -346,9 +333,7 @@ th{
     background:#f8fafc;
 }
 
-/* =========================================================
-   BADGES
-   ========================================================= */
+/* ================= BADGES ================= */
 
 .badge{
     display:inline-block;
@@ -373,9 +358,7 @@ th{
     color:#991b1b;
 }
 
-/* =========================================================
-   FORM
-   ========================================================= */
+/* ================= FORM ================= */
 
 .formBox{
     background:white;
@@ -414,9 +397,7 @@ th{
     font-size:22px;
 }
 
-/* =========================================================
-   MESSAGE
-   ========================================================= */
+/* ================= MESSAGE ================= */
 
 .message{
     padding:13px;
@@ -444,9 +425,7 @@ th{
     color:#1e40af;
 }
 
-/* =========================================================
-   PROFILE
-   ========================================================= */
+/* ================= PROFILE ================= */
 
 .profileRow{
     display:flex;
@@ -461,9 +440,7 @@ th{
     color:#555;
 }
 
-/* =========================================================
-   EMPTY / LOADING
-   ========================================================= */
+/* ================= EMPTY ================= */
 
 .empty{
     background:white;
@@ -473,15 +450,15 @@ th{
     color:#666;
 }
 
+/* ================= LOADING ================= */
+
 .loading{
     text-align:center;
     padding:30px;
     color:#666;
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
+/* ================= MOBILE ================= */
 
 @media(max-width:600px){
 
@@ -514,24 +491,24 @@ th{
         width:280px;
         left:-280px;
     }
-
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- =========================================================
+<!-- =====================================================
      HEADER
-     ========================================================= -->
+===================================================== -->
 
 <div class="header">
 
+    <!-- IMPORTANT:
+         Inline onclick makes menu independent from Firebase JS -->
     <div
         class="menuBtn"
         id="menuBtn"
-        onclick="toggleMenu()"
+        onclick="toggleMemberMenu()"
     >
         ☰
     </div>
@@ -543,9 +520,9 @@ th{
 </div>
 
 
-<!-- =========================================================
+<!-- =====================================================
      SIDEBAR
-     ========================================================= -->
+===================================================== -->
 
 <div class="sidebar" id="sidebar">
 
@@ -623,13 +600,13 @@ th{
 <div
     class="overlay"
     id="overlay"
-    onclick="closeMenu()"
+    onclick="closeMemberMenu()"
 ></div>
 
 
-<!-- =========================================================
+<!-- =====================================================
      MAIN
-     ========================================================= -->
+===================================================== -->
 
 <div class="main">
 
@@ -639,9 +616,7 @@ th{
     ></div>
 
 
-    <!-- =====================================================
-         DASHBOARD
-         ===================================================== -->
+    <!-- ================= DASHBOARD ================= -->
 
     <section
         class="page active"
@@ -657,9 +632,7 @@ th{
 
             <div class="card">
 
-                <h3>
-                    Total Coins
-                </h3>
+                <h3>Total Coins</h3>
 
                 <div
                     class="value"
@@ -673,9 +646,7 @@ th{
 
             <div class="card">
 
-                <h3>
-                    Current Value
-                </h3>
+                <h3>Current Value</h3>
 
                 <div
                     class="value"
@@ -689,9 +660,7 @@ th{
 
             <div class="card">
 
-                <h3>
-                    New Tasks
-                </h3>
+                <h3>New Tasks</h3>
 
                 <div
                     class="value"
@@ -705,9 +674,7 @@ th{
 
             <div class="card">
 
-                <h3>
-                    Completed Tasks
-                </h3>
+                <h3>Completed Tasks</h3>
 
                 <div
                     class="value"
@@ -726,9 +693,7 @@ th{
 
         <div class="card">
 
-            <h3>
-                Welcome
-            </h3>
+            <h3>Welcome</h3>
 
             <h2 id="dashboardWelcome">
                 Loading...
@@ -739,9 +704,7 @@ th{
             </p>
 
             <p>
-                <strong>
-                    100 Coins = ₹1
-                </strong>
+                <strong>100 Coins = ₹1</strong>
             </p>
 
         </div>
@@ -749,9 +712,7 @@ th{
     </section>
 
 
-    <!-- =====================================================
-         NEW TASKS
-         ===================================================== -->
+    <!-- ================= NEW TASKS ================= -->
 
     <section
         class="page"
@@ -786,9 +747,7 @@ th{
     </section>
 
 
-    <!-- =====================================================
-         COMPLETED TASKS
-         ===================================================== -->
+    <!-- ================= COMPLETED ================= -->
 
     <section
         class="page"
@@ -811,9 +770,7 @@ th{
     </section>
 
 
-    <!-- =====================================================
-         WITHDRAW
-         ===================================================== -->
+    <!-- ================= WITHDRAW ================= -->
 
     <section
         class="page"
@@ -874,7 +831,6 @@ th{
                     type="number"
                     id="withdrawCoins"
                     min="1"
-                    step="1"
                     placeholder="Enter coins"
                 >
 
@@ -887,9 +843,7 @@ th{
 
                 <br>
 
-                <strong
-                    id="withdrawRupees"
-                >
+                <strong id="withdrawRupees">
                     ₹0.00
                 </strong>
 
@@ -923,9 +877,7 @@ th{
     </section>
 
 
-    <!-- =====================================================
-         WITHDRAWAL HISTORY
-         ===================================================== -->
+    <!-- ================= WITHDRAWAL HISTORY ================= -->
 
     <section
         class="page"
@@ -948,9 +900,7 @@ th{
     </section>
 
 
-    <!-- =====================================================
-         PROFILE
-         ===================================================== -->
+    <!-- ================= PROFILE ================= -->
 
     <section
         class="page"
@@ -1035,9 +985,71 @@ th{
 </div>
 
 
-<!-- =========================================================
-     FIREBASE + JAVASCRIPT
-     ========================================================= -->
+<!-- =====================================================
+     MENU SCRIPT
+     THIS IS OUTSIDE FIREBASE MODULE
+     SO 3-LINE ALWAYS WORKS
+===================================================== -->
+
+<script>
+
+function toggleMemberMenu(){
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const overlay =
+        document.getElementById("overlay");
+
+
+    if(!sidebar){
+
+        return;
+
+    }
+
+
+    sidebar.classList.toggle("open");
+
+    if(overlay){
+
+        overlay.classList.toggle("show");
+
+    }
+
+}
+
+
+function closeMemberMenu(){
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const overlay =
+        document.getElementById("overlay");
+
+
+    if(sidebar){
+
+        sidebar.classList.remove("open");
+
+    }
+
+
+    if(overlay){
+
+        overlay.classList.remove("show");
+
+    }
+
+}
+
+</script>
+
+
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
 
 <script type="module">
 
@@ -1045,11 +1057,13 @@ import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
+
 import {
     getAuth,
     onAuthStateChanged,
     signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 import {
     getFirestore,
@@ -1065,55 +1079,98 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-/* =========================================================
-   FIREBASE CONFIG
-   =========================================================
+/* =====================================================
+   IMPORTANT
 
-   IMPORTANT:
+   PASTE YOUR EXISTING WORKING firebaseConfig HERE.
 
-   Paste your CURRENT WORKING firebaseConfig here.
+   DO NOT CHANGE YOUR EXISTING API KEY,
+   PROJECT ID, APP ID, SENDER ID ETC.
 
-   Do NOT change:
-   - apiKey
-   - authDomain
-   - projectId
-   - storageBucket
-   - messagingSenderId
-   - appId
+   Example structure only:
 
-   ========================================================= */
+   const firebaseConfig = {
+       apiKey: "YOUR_EXISTING_KEY",
+       authDomain: "task-reward-system-af46f.firebaseapp.com",
+       projectId: "task-reward-system-af46f",
+       storageBucket: "...",
+       messagingSenderId: "...",
+       appId: "..."
+   };
+===================================================== */
 
 const firebaseConfig = {
 
-    /*
-       PASTE YOUR EXISTING WORKING CONFIG HERE.
-
-       Example structure:
-
-       apiKey: "YOUR_EXISTING_API_KEY",
-       authDomain: "task-reward-system-af46f.firebaseapp.com",
-       projectId: "task-reward-system-af46f",
-       storageBucket: "task-reward-system-af46f.firebasestorage.app",
-       messagingSenderId: "YOUR_EXISTING_SENDER_ID",
-       appId: "YOUR_EXISTING_APP_ID"
-    */
+    /* PASTE EXISTING WORKING CONFIG HERE */
 
 };
 
 
-const app =
-    initializeApp(firebaseConfig);
+let app;
 
-const auth =
-    getAuth(app);
+let auth;
 
-const db =
-    getFirestore(app);
+let db;
 
 
-/* =========================================================
-   YOUTUBE API
-   ========================================================= */
+/* =====================================================
+   FIREBASE INITIALIZATION
+===================================================== */
+
+try{
+
+    app =
+        initializeApp(
+            firebaseConfig
+        );
+
+
+    auth =
+        getAuth(app);
+
+
+    db =
+        getFirestore(app);
+
+
+}catch(error){
+
+    console.error(
+        "Firebase initialization failed:",
+        error
+    );
+
+
+    const message =
+        document.getElementById(
+            "authMessage"
+        );
+
+
+    if(message){
+
+        message.innerHTML =
+            `
+            <strong>Firebase Configuration Error</strong>
+            <br><br>
+            Firebase could not start.
+            <br><br>
+            Please paste the exact working
+            firebaseConfig from your previous member.html.
+            `;
+
+
+        message.className =
+            "message show error";
+
+    }
+
+}
+
+
+/* =====================================================
+   YOUTUBE
+===================================================== */
 
 let youtubeAPIReady = false;
 
@@ -1124,7 +1181,7 @@ function(){
     youtubeAPIReady = true;
 
     console.log(
-        "YouTube IFrame API Ready"
+        "YouTube API Ready"
     );
 
 };
@@ -1143,9 +1200,9 @@ document.head.appendChild(
 );
 
 
-/* =========================================================
+/* =====================================================
    VARIABLES
-   ========================================================= */
+===================================================== */
 
 let currentMember = null;
 
@@ -1165,83 +1222,10 @@ let activeElapsed = 0;
 
 let activeRequiredTime = 0;
 
-let lastKnownDate =
-    getToday();
 
-
-/* =========================================================
-   MENU
-   ========================================================= */
-
-window.toggleMenu =
-function(){
-
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
-
-    const overlay =
-        document.getElementById(
-            "overlay"
-        );
-
-
-    if(!sidebar || !overlay){
-
-        return;
-
-    }
-
-
-    sidebar.classList.toggle(
-        "open"
-    );
-
-    overlay.classList.toggle(
-        "show"
-    );
-
-};
-
-
-window.closeMenu =
-function(){
-
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
-
-    const overlay =
-        document.getElementById(
-            "overlay"
-        );
-
-
-    if(sidebar){
-
-        sidebar.classList.remove(
-            "open"
-        );
-
-    }
-
-
-    if(overlay){
-
-        overlay.classList.remove(
-            "show"
-        );
-
-    }
-
-};
-
-
-/* =========================================================
-   TODAY
-   ========================================================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function getToday(){
 
@@ -1249,42 +1233,20 @@ function getToday(){
         new Date();
 
 
-    const year =
-        now.getFullYear();
-
-
-    const month =
-        String(
-            now.getMonth() + 1
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    const day =
-        String(
-            now.getDate()
-        ).padStart(
-            2,
-            "0"
-        );
-
-
     return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
+        now.getFullYear()
+        + "-"
+        + String(
+            now.getMonth()+1
+        ).padStart(2,"0")
+        + "-"
+        + String(
+            now.getDate()
+        ).padStart(2,"0")
     );
 
 }
 
-
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
 
 function escapeHtml(value){
 
@@ -1299,131 +1261,50 @@ function escapeHtml(value){
 
 
     return String(value)
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
 
-/* =========================================================
-   MESSAGE
-   ========================================================= */
-
-function showMessage(
-    elementId,
-    text,
-    type="info"
-){
-
-    const element =
-        document.getElementById(
-            elementId
-        );
-
-
-    if(!element){
-
-        return;
-
-    }
-
-
-    element.textContent =
-        text;
-
-
-    element.className =
-        "message show " +
-        type;
-
-}
-
-
-function hideMessage(elementId){
-
-    const element =
-        document.getElementById(
-            elementId
-        );
-
-
-    if(!element){
-
-        return;
-
-    }
-
-
-    element.className =
-        "message";
-
-
-    element.textContent =
-        "";
-
-}
-
-
-/* =========================================================
+/* =====================================================
    PAGE NAVIGATION
-   ========================================================= */
+===================================================== */
 
-document.querySelectorAll(
+document
+.querySelectorAll(
     ".menuItem[data-page]"
-).forEach(
-    item => {
+)
+.forEach(item => {
 
-        item.addEventListener(
-            "click",
-            function(){
+    item.addEventListener(
+        "click",
+        function(){
 
-                showPage(
-                    this.dataset.page
-                );
-
-            }
-        );
-
-    }
-);
-
-
-function showPage(page){
-
-    document.querySelectorAll(
-        ".page"
-    ).forEach(
-        pageElement => {
-
-            pageElement.classList.remove(
-                "active"
+            showPage(
+                this.dataset.page
             );
 
         }
     );
+
+});
+
+
+function showPage(page){
+
+    document
+    .querySelectorAll(".page")
+    .forEach(p => {
+
+        p.classList.remove(
+            "active"
+        );
+
+    });
 
 
     const target =
@@ -1441,7 +1322,7 @@ function showPage(page){
     }
 
 
-    closeMenu();
+    closeMemberMenu();
 
 
     if(page === "dashboard"){
@@ -1488,149 +1369,148 @@ function showPage(page){
 }
 
 
-/* =========================================================
+/* =====================================================
    AUTH
-   ========================================================= */
+===================================================== */
 
-onAuthStateChanged(
-    auth,
-    async user => {
+if(auth){
 
-        if(!user){
+    onAuthStateChanged(
+        auth,
+        async user => {
 
-            window.location.href =
-                "index.html";
+            if(!user){
 
-            return;
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            currentMember =
+                user;
+
+
+            try{
+
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    );
+
+
+                const userSnap =
+                    await getDoc(
+                        userRef
+                    );
+
+
+                if(!userSnap.exists()){
+
+                    showAuthError(
+                        "Member profile not found in Firestore."
+                    );
+
+                    return;
+
+                }
+
+
+                currentMemberData =
+                    userSnap.data();
+
+
+                if(
+                    currentMemberData.role !==
+                    "member"
+                ){
+
+                    showAuthError(
+                        "This account is not registered as a member."
+                    );
+
+                    return;
+
+                }
+
+
+                if(
+                    currentMemberData.status !==
+                    "active"
+                ){
+
+                    showAuthError(
+                        "Your member account is not active. Current status: "
+                        +
+                        (
+                            currentMemberData.status ||
+                            "missing"
+                        )
+                    );
+
+                    return;
+
+                }
+
+
+                hideAuthMessage();
+
+
+                updateMemberUI();
+
+
+                await loadAllCompletions();
+
+                await loadTasks();
+
+                await loadCompletedTasks();
+
+                await loadWithdrawalHistory();
+
+
+                loadProfile();
+
+                refreshDashboard();
+
+                refreshWithdrawPage();
+
+
+            }catch(error){
+
+                console.error(
+                    error
+                );
+
+
+                showAuthError(
+                    error.message
+                );
+
+            }
 
         }
+    );
+
+}
 
 
-        currentMember =
-            user;
-
-
-        try{
-
-            const userRef =
-                doc(
-                    db,
-                    "users",
-                    user.uid
-                );
-
-
-            const userSnap =
-                await getDoc(
-                    userRef
-                );
-
-
-            if(!userSnap.exists()){
-
-                showAuthError(
-                    "Member profile not found in Firestore."
-                );
-
-                return;
-
-            }
-
-
-            currentMemberData =
-                userSnap.data();
-
-
-            if(
-                currentMemberData.role !==
-                "member"
-            ){
-
-                showAuthError(
-                    "This account is not registered as a member."
-                );
-
-                return;
-
-            }
-
-
-            if(
-                currentMemberData.status !==
-                "active"
-            ){
-
-                showAuthError(
-                    "Your member account is not active. Current status: " +
-                    (
-                        currentMemberData.status ||
-                        "missing"
-                    )
-                );
-
-                return;
-
-            }
-
-
-            hideAuthMessage();
-
-
-            updateMemberUI();
-
-
-            await loadAllCompletions();
-
-
-            await loadTasks();
-
-
-            await loadCompletedTasks();
-
-
-            await loadWithdrawalHistory();
-
-
-            loadProfile();
-
-
-            refreshDashboard();
-
-
-            refreshWithdrawPage();
-
-
-        }catch(error){
-
-            console.error(
-                "Member authentication error:",
-                error
-            );
-
-
-            showAuthError(
-                error.message
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
+/* =====================================================
    AUTH ERROR
-   ========================================================= */
+===================================================== */
 
 function showAuthError(message){
 
-    const element =
+    const el =
         document.getElementById(
             "authMessage"
         );
 
 
-    element.innerHTML =
+    el.innerHTML =
         `
         <strong>
             Member Login Issue
@@ -1646,15 +1526,11 @@ function showAuthError(message){
 
         <br>
 
-        <b>
-            role = member
-        </b>
+        <b>role = member</b>
 
         <br>
 
-        <b>
-            status = active
-        </b>
+        <b>status = active</b>
 
         <br><br>
 
@@ -1667,19 +1543,19 @@ function showAuthError(message){
         `;
 
 
-    element.className =
+    el.className =
         "message show error";
 
 
-    const logoutButton =
+    const btn =
         document.getElementById(
             "errorLogoutBtn"
         );
 
 
-    if(logoutButton){
+    if(btn){
 
-        logoutButton.addEventListener(
+        btn.addEventListener(
             "click",
             logoutUser
         );
@@ -1691,37 +1567,26 @@ function showAuthError(message){
 
 function hideAuthMessage(){
 
-    const element =
+    const el =
         document.getElementById(
             "authMessage"
         );
 
 
-    element.className =
+    el.className =
         "message";
 
 
-    element.innerHTML =
-        "";
+    el.innerHTML = "";
 
 }
 
 
-/* =========================================================
+/* =====================================================
    MEMBER UI
-   ========================================================= */
+===================================================== */
 
 function updateMemberUI(){
-
-    if(
-        !currentMember ||
-        !currentMemberData
-    ){
-
-        return;
-
-    }
-
 
     const name =
         currentMemberData.name ||
@@ -1755,9 +1620,9 @@ function updateMemberUI(){
 }
 
 
-/* =========================================================
+/* =====================================================
    LOAD COMPLETIONS
-   ========================================================= */
+===================================================== */
 
 async function loadAllCompletions(){
 
@@ -1809,14 +1674,10 @@ async function loadAllCompletions(){
         (a,b) => {
 
             const aTime =
-                a.completedAt?.seconds ||
-                0;
-
+                a.completedAt?.seconds || 0;
 
             const bTime =
-                b.completedAt?.seconds ||
-                0;
-
+                b.completedAt?.seconds || 0;
 
             return bTime - aTime;
 
@@ -1826,9 +1687,9 @@ async function loadAllCompletions(){
 }
 
 
-/* =========================================================
+/* =====================================================
    DAILY CHECK
-   ========================================================= */
+===================================================== */
 
 function hasCompletedToday(taskId){
 
@@ -1848,11 +1709,6 @@ function hasCompletedToday(taskId){
 
             }
 
-
-            /*
-              New records:
-              completionDate = YYYY-MM-DD
-            */
 
             if(
                 completion.completionDate
@@ -1874,147 +1730,23 @@ function hasCompletedToday(taskId){
 }
 
 
-/* =========================================================
-   ACTIVE TASK
-   ========================================================= */
+/* =====================================================
+   LOAD TASKS
+===================================================== */
 
-function getActiveTask(){
+async function loadTasks(){
 
-    if(!activeTaskId){
-
-        return null;
-
-    }
-
-
-    return allTasks.find(
-        task =>
-            task.id ===
-            activeTaskId
-    ) || null;
-
-}
-
-
-/* =========================================================
-   START TASK
-   ========================================================= */
-
-function startTask(taskId){
-
-    if(hasCompletedToday(taskId)){
-
-        alert(
-            "You have already completed this task today."
-        );
+    if(!db){
 
         return;
 
     }
 
-
-    if(activeTaskId){
-
-        if(
-            activeTaskId !==
-            taskId
-        ){
-
-            alert(
-                "Please complete the current task first."
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    activeTaskId =
-        taskId;
-
-
-    activeElapsed =
-        0;
-
-
-    activeRequiredTime =
-        0;
-
-
-    renderAvailableTasks();
-
-}
-
-
-/* =========================================================
-   STOP ACTIVE TASK
-   ========================================================= */
-
-function stopActiveTask(){
-
-    stopWatchTimer();
-
-
-    if(activePlayer){
-
-        try{
-
-            activePlayer.stopVideo();
-
-        }catch(error){
-
-            console.log(error);
-
-        }
-
-    }
-
-
-    activePlayer =
-        null;
-
-
-    activeTaskId =
-        null;
-
-
-    activeElapsed =
-        0;
-
-
-    activeRequiredTime =
-        0;
-
-}
-
-
-/* =========================================================
-   LOAD TASKS
-   ========================================================= */
-
-async function loadTasks(){
 
     const container =
         document.getElementById(
             "tasksContainer"
         );
-
-
-    if(!container){
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        `
-        <div class="loading">
-            Loading tasks...
-        </div>
-        `;
 
 
     try{
@@ -2073,14 +1805,12 @@ async function loadTasks(){
 
         renderAvailableTasks();
 
-
         refreshDashboard();
 
 
     }catch(error){
 
         console.error(
-            "Task loading error:",
             error
         );
 
@@ -2105,9 +1835,9 @@ async function loadTasks(){
 }
 
 
-/* =========================================================
+/* =====================================================
    RENDER TASKS
-   ========================================================= */
+===================================================== */
 
 function renderAvailableTasks(){
 
@@ -2123,13 +1853,6 @@ function renderAvailableTasks(){
         );
 
 
-    if(!container){
-
-        return;
-
-    }
-
-
     const available =
         allTasks.filter(
             task =>
@@ -2140,17 +1863,10 @@ function renderAvailableTasks(){
 
 
     if(
-        available.length ===
-        0
+        available.length === 0
     ){
 
-        if(notice){
-
-            notice.innerHTML =
-                "";
-
-        }
-
+        notice.innerHTML = "";
 
         container.innerHTML =
             `
@@ -2160,8 +1876,7 @@ function renderAvailableTasks(){
 
                 <br><br>
 
-                Completed tasks will become
-                available again tomorrow.
+                Completed tasks will become available again tomorrow.
 
             </div>
             `;
@@ -2186,10 +1901,7 @@ function renderAvailableTasks(){
 
                 ▶️ You are currently doing one task.
 
-                <br>
-
-                Complete this task before
-                starting another task.
+                Complete this task before starting another task.
 
             </div>
             `;
@@ -2208,8 +1920,7 @@ function renderAvailableTasks(){
     }
 
 
-    container.innerHTML =
-        "";
+    container.innerHTML = "";
 
 
     available.forEach(
@@ -2233,12 +1944,14 @@ function renderAvailableTasks(){
 
 
             card.className =
-                "taskCard" +
+                "taskCard"
+                +
                 (
                     isActive
                     ? " activeTask"
                     : ""
-                ) +
+                )
+                +
                 (
                     isLocked
                     ? " locked"
@@ -2255,6 +1968,7 @@ function renderAvailableTasks(){
                     )}
                 </h3>
 
+
                 <div class="taskInfo">
 
                     🪙 Reward:
@@ -2267,6 +1981,7 @@ function renderAvailableTasks(){
                     </strong>
 
                 </div>
+
 
                 <div class="taskInfo">
 
@@ -2281,13 +1996,13 @@ function renderAvailableTasks(){
 
                 </div>
 
+
                 ${
                     isActive
 
                     ?
 
                     `
-
                     <div
                         class="videoBox"
                         id="video_${task.id}"
@@ -2299,6 +2014,7 @@ function renderAvailableTasks(){
                         >
                             Loading YouTube...
                         </div>
+
 
                         <div
                             id="player_${task.id}"
@@ -2315,7 +2031,7 @@ function renderAvailableTasks(){
                         class="timer"
                         id="timer_${task.id}"
                     >
-                        Preparing video...
+                        Press Play and watch the video.
                     </div>
 
 
@@ -2345,7 +2061,6 @@ function renderAvailableTasks(){
                     >
                         Exit Task
                     </button>
-
                     `
 
                     :
@@ -2354,9 +2069,7 @@ function renderAvailableTasks(){
 
                     <div class="videoBox">
 
-                        <div
-                            class="videoOverlay"
-                        >
+                        <div class="videoOverlay">
 
                             ${
                                 isLocked
@@ -2418,23 +2131,25 @@ function renderAvailableTasks(){
 
             }else{
 
-                const startButton =
+                const btn =
                     document.getElementById(
                         "start_" +
                         task.id
                     );
 
 
-                if(startButton){
+                if(btn){
 
-                    startButton.onclick =
-                    function(){
+                    btn.addEventListener(
+                        "click",
+                        function(){
 
-                        startTask(
-                            task.id
-                        );
+                            startTask(
+                                task.id
+                            );
 
-                    };
+                        }
+                    );
 
                 }
 
@@ -2452,9 +2167,79 @@ function renderAvailableTasks(){
 }
 
 
-/* =========================================================
-   YOUTUBE VIDEO ID
-   ========================================================= */
+/* =====================================================
+   START TASK
+===================================================== */
+
+function startTask(taskId){
+
+    if(activeTaskId){
+
+        if(
+            activeTaskId !==
+            taskId
+        ){
+
+            alert(
+                "Please complete the current task first."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    activeTaskId =
+        taskId;
+
+
+    activeElapsed = 0;
+
+
+    activeRequiredTime = 0;
+
+
+    renderAvailableTasks();
+
+}
+
+
+/* =====================================================
+   STOP TASK
+===================================================== */
+
+function stopActiveTask(){
+
+    stopWatchTimer();
+
+
+    if(activePlayer){
+
+        try{
+
+            activePlayer.stopVideo();
+
+        }catch(e){}
+
+    }
+
+
+    activePlayer = null;
+
+    activeTaskId = null;
+
+    activeElapsed = 0;
+
+    activeRequiredTime = 0;
+
+}
+
+
+/* =====================================================
+   YOUTUBE ID
+===================================================== */
 
 function getYoutubeVideoId(url){
 
@@ -2478,13 +2263,8 @@ function getYoutubeVideoId(url){
         ){
 
             return parsed.pathname
-                .replace(
-                    "/",
-                    ""
-                )
-                .split(
-                    "/"
-                )[0];
+                .replace("/","")
+                .split("/")[0];
 
         }
 
@@ -2496,12 +2276,8 @@ function getYoutubeVideoId(url){
         ){
 
             return parsed.pathname
-                .split(
-                    "/embed/"
-                )[1]
-                .split(
-                    "/"
-                )[0];
+                .split("/embed/")[1]
+                .split("/")[0];
 
         }
 
@@ -2513,12 +2289,8 @@ function getYoutubeVideoId(url){
         ){
 
             return parsed.pathname
-                .split(
-                    "/shorts/"
-                )[1]
-                .split(
-                    "/"
-                )[0];
+                .split("/shorts/")[1]
+                .split("/")[0];
 
         }
 
@@ -2529,14 +2301,7 @@ function getYoutubeVideoId(url){
             ) || ""
         );
 
-
     }catch(error){
-
-        console.error(
-            "YouTube URL error:",
-            error
-        );
-
 
         return "";
 
@@ -2545,9 +2310,9 @@ function getYoutubeVideoId(url){
 }
 
 
-/* =========================================================
-   SETUP YOUTUBE TASK
-   ========================================================= */
+/* =====================================================
+   YOUTUBE TASK
+===================================================== */
 
 function setupYouTubeTask(task){
 
@@ -2602,8 +2367,7 @@ function setupYouTubeTask(task){
     }
 
 
-    activeElapsed =
-        0;
+    activeElapsed = 0;
 
 
     activeRequiredTime =
@@ -2614,10 +2378,7 @@ function setupYouTubeTask(task){
 
     function createPlayer(){
 
-        if(
-            !window.YT ||
-            !window.YT.Player
-        ){
+        if(!window.YT){
 
             setTimeout(
                 createPlayer,
@@ -2655,15 +2416,9 @@ function setupYouTubeTask(task){
                         onReady:
                         function(){
 
-                            if(
-                                overlayEl
-                            ){
-
-                                overlayEl.classList.add(
-                                    "hidden"
-                                );
-
-                            }
+                            overlayEl.classList.add(
+                                "hidden"
+                            );
 
 
                             timerEl.textContent =
@@ -2680,20 +2435,6 @@ function setupYouTubeTask(task){
                                 task
                             );
 
-                        },
-
-                        onError:
-                        function(event){
-
-                            console.error(
-                                "YouTube player error:",
-                                event.data
-                            );
-
-
-                            timerEl.textContent =
-                                "Unable to load YouTube video.";
-
                         }
 
                     }
@@ -2707,59 +2448,58 @@ function setupYouTubeTask(task){
     createPlayer();
 
 
-    completeButton.onclick =
-    async function(){
+    completeButton.addEventListener(
+        "click",
+        async function(){
 
-        if(
-            activeElapsed <
-            activeRequiredTime
-        ){
+            if(
+                activeElapsed <
+                activeRequiredTime
+            ){
 
-            return;
+                return;
 
-        }
-
-
-        completeButton.disabled =
-            true;
+            }
 
 
-        await completeTask(
-            task,
-            completeButton
-        );
-
-    };
+            completeButton.disabled =
+                true;
 
 
-    cancelButton.onclick =
-    function(){
-
-        const confirmExit =
-            confirm(
-                "Exit this task? Your watch time will not be submitted."
+            await completeTask(
+                task,
+                completeButton
             );
 
-
-        if(
-            confirmExit
-        ){
-
-            stopActiveTask();
+        }
+    );
 
 
-            renderAvailableTasks();
+    cancelButton.addEventListener(
+        "click",
+        function(){
+
+            if(
+                confirm(
+                    "Exit this task? Your watch time will not be submitted."
+                )
+            ){
+
+                stopActiveTask();
+
+                renderAvailableTasks();
+
+            }
 
         }
-
-    };
+    );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    YOUTUBE STATE
-   ========================================================= */
+===================================================== */
 
 function handleYoutubeState(
     event,
@@ -2769,20 +2509,6 @@ function handleYoutubeState(
     const timerEl =
         document.getElementById(
             "timer_" +
-            task.id
-        );
-
-
-    const progressEl =
-        document.getElementById(
-            "progress_" +
-            task.id
-        );
-
-
-    const completeButton =
-        document.getElementById(
-            "complete_" +
             task.id
         );
 
@@ -2836,9 +2562,6 @@ function handleYoutubeState(
         YT.PlayerState.BUFFERING
     ){
 
-        stopWatchTimer();
-
-
         timerEl.textContent =
             "⏳ Buffering...";
 
@@ -2846,80 +2569,15 @@ function handleYoutubeState(
 
 
     updateTaskProgress(
-        task,
-        timerEl,
-        progressEl,
-        completeButton
+        task
     );
 
 }
 
 
-/* =========================================================
-   TASK PROGRESS
-   ========================================================= */
-
-function updateTaskProgress(
-    task,
-    timerEl,
-    progressEl,
-    completeButton
-){
-
-    const percentage =
-        activeRequiredTime > 0
-
-        ?
-
-        Math.min(
-            100,
-            (
-                activeElapsed /
-                activeRequiredTime
-            ) * 100
-        )
-
-        :
-
-        0;
-
-
-    progressEl.style.width =
-        percentage +
-        "%";
-
-
-    if(
-        activeElapsed >=
-        activeRequiredTime
-    ){
-
-        stopWatchTimer();
-
-
-        timerEl.textContent =
-            "✅ Required watch time completed.";
-
-
-        progressEl.style.width =
-            "100%";
-
-
-        completeButton.disabled =
-            false;
-
-
-        completeButton.className =
-            "successBtn";
-
-    }
-
-}
-
-
-/* =========================================================
-   START WATCH TIMER
-   ========================================================= */
+/* =====================================================
+   TIMER
+===================================================== */
 
 function startWatchTimer(task){
 
@@ -2944,25 +2602,9 @@ function startWatchTimer(task){
                 }
 
 
-                let state;
+                const state =
+                    activePlayer.getPlayerState();
 
-
-                try{
-
-                    state =
-                        activePlayer.getPlayerState();
-
-                }catch(error){
-
-                    return;
-
-                }
-
-
-                /*
-                  Timer ONLY counts while
-                  YouTube state = PLAYING
-                */
 
                 if(
                     state !==
@@ -2977,70 +2619,9 @@ function startWatchTimer(task){
                 activeElapsed++;
 
 
-                const timerEl =
-                    document.getElementById(
-                        "timer_" +
-                        task.id
-                    );
-
-
-                const progressEl =
-                    document.getElementById(
-                        "progress_" +
-                        task.id
-                    );
-
-
-                const completeButton =
-                    document.getElementById(
-                        "complete_" +
-                        task.id
-                    );
-
-
-                timerEl.textContent =
-                    `▶️ Watching: ${activeElapsed} / ${activeRequiredTime} seconds`;
-
-
-                const percentage =
-                    Math.min(
-                        100,
-                        (
-                            activeElapsed /
-                            activeRequiredTime
-                        ) * 100
-                    );
-
-
-                progressEl.style.width =
-                    percentage +
-                    "%";
-
-
-                if(
-                    activeElapsed >=
-                    activeRequiredTime
-                ){
-
-                    stopWatchTimer();
-
-
-                    timerEl.textContent =
-                        "✅ Required watch time completed.";
-
-
-                    progressEl.style.width =
-                        "100%";
-
-
-                    completeButton.disabled =
-                        false;
-
-
-                    completeButton.className =
-                        "successBtn";
-
-                }
+                updateTaskProgress(
+                    task
+                );
 
             },
             1000
@@ -3049,9 +2630,9 @@ function startWatchTimer(task){
 }
 
 
-/* =========================================================
-   STOP WATCH TIMER
-   ========================================================= */
+/* =====================================================
+   STOP TIMER
+===================================================== */
 
 function stopWatchTimer(){
 
@@ -3061,18 +2642,108 @@ function stopWatchTimer(){
             activeTimer
         );
 
-
-        activeTimer =
-            null;
+        activeTimer = null;
 
     }
 
 }
 
 
-/* =========================================================
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+function updateTaskProgress(task){
+
+    const timerEl =
+        document.getElementById(
+            "timer_" +
+            task.id
+        );
+
+
+    const progressEl =
+        document.getElementById(
+            "progress_" +
+            task.id
+        );
+
+
+    const completeButton =
+        document.getElementById(
+            "complete_" +
+            task.id
+        );
+
+
+    const percentage =
+        activeRequiredTime > 0
+
+        ?
+
+        Math.min(
+            100,
+            (
+                activeElapsed /
+                activeRequiredTime
+            ) * 100
+        )
+
+        :
+
+        0;
+
+
+    progressEl.style.width =
+        percentage + "%";
+
+
+    if(
+        activeElapsed >=
+        activeRequiredTime
+    ){
+
+        stopWatchTimer();
+
+
+        timerEl.textContent =
+            "✅ Required watch time completed.";
+
+
+        progressEl.style.width =
+            "100%";
+
+
+        completeButton.disabled =
+            false;
+
+        completeButton.className =
+            "successBtn";
+
+
+        return;
+
+    }
+
+
+    if(
+        activePlayer &&
+        activePlayer.getPlayerState &&
+        activePlayer.getPlayerState() ===
+        YT.PlayerState.PLAYING
+    ){
+
+        timerEl.textContent =
+            `▶️ Watching: ${activeElapsed} / ${activeRequiredTime} seconds`;
+
+    }
+
+}
+
+
+/* =====================================================
    COMPLETE TASK
-   ========================================================= */
+===================================================== */
 
 async function completeTask(
     task,
@@ -3089,10 +2760,6 @@ async function completeTask(
     const today =
         getToday();
 
-
-    /*
-      Refresh completion data before submitting.
-    */
 
     await loadAllCompletions();
 
@@ -3119,20 +2786,12 @@ async function completeTask(
     }
 
 
-    /*
-      Deterministic daily ID.
-
-      Example:
-
-      memberUID_task1_2026-09-13
-    */
-
     const completionId =
-        currentMember.uid +
-        "_" +
-        task.id +
-        "_" +
-        today;
+        currentMember.uid
+        + "_"
+        + task.id
+        + "_"
+        + today;
 
 
     try{
@@ -3162,7 +2821,6 @@ async function completeTask(
 
 
             await loadAllCompletions();
-
 
             await loadTasks();
 
@@ -3231,12 +2889,9 @@ async function completeTask(
 
         await loadAllCompletions();
 
-
         await loadTasks();
 
-
         await loadCompletedTasks();
-
 
         refreshDashboard();
 
@@ -3244,13 +2899,13 @@ async function completeTask(
     }catch(error){
 
         console.error(
-            "Task completion error:",
             error
         );
 
 
         alert(
-            "Unable to save task completion.\n\n" +
+            "Unable to save task completion.\n\n"
+            +
             error.message
         );
 
@@ -3263,9 +2918,9 @@ async function completeTask(
 }
 
 
-/* =========================================================
+/* =====================================================
    COMPLETED TASKS
-   ========================================================= */
+===================================================== */
 
 async function loadCompletedTasks(){
 
@@ -3273,13 +2928,6 @@ async function loadCompletedTasks(){
         document.getElementById(
             "completedTasksContainer"
         );
-
-
-    if(!container){
-
-        return;
-
-    }
 
 
     if(!currentMember){
@@ -3292,8 +2940,7 @@ async function loadCompletedTasks(){
     try{
 
         if(
-            allCompletions.length ===
-            0
+            allCompletions.length === 0
         ){
 
             await loadAllCompletions();
@@ -3301,21 +2948,14 @@ async function loadCompletedTasks(){
         }
 
 
-        const completed =
-            allCompletions;
-
-
         if(
-            completed.length ===
-            0
+            allCompletions.length === 0
         ){
 
             container.innerHTML =
                 `
                 <div class="empty">
-
                     No completed tasks yet.
-
                 </div>
                 `;
 
@@ -3338,61 +2978,46 @@ async function loadCompletedTasks(){
 
             <table>
 
-                <thead>
+            <thead>
 
-                    <tr>
+            <tr>
 
-                        <th>
-                            Task
-                        </th>
+                <th>Task</th>
 
-                        <th>
-                            Date
-                        </th>
+                <th>Date</th>
 
-                        <th>
-                            Coins
-                        </th>
+                <th>Coins</th>
 
-                        <th>
-                            Status
-                        </th>
+                <th>Status</th>
 
-                    </tr>
+            </tr>
 
-                </thead>
+            </thead>
 
-                <tbody>
+            <tbody>
 
             `;
 
 
-        completed.forEach(
+        allCompletions.forEach(
             item => {
 
                 let date =
-                    item.completionDate;
+                    item.completionDate ||
+                    "-";
 
 
-                if(!date){
+                if(
+                    !item.completionDate &&
+                    item.completedAt?.toDate
+                ){
 
-                    if(
-                        item.completedAt?.toDate
-                    ){
-
-                        date =
-                            item.completedAt
-                            .toDate()
-                            .toLocaleDateString(
-                                "en-IN"
-                            );
-
-                    }else{
-
-                        date =
-                            "-";
-
-                    }
+                    date =
+                        item.completedAt
+                        .toDate()
+                        .toLocaleDateString(
+                            "en-IN"
+                        );
 
                 }
 
@@ -3477,7 +3102,7 @@ async function loadCompletedTasks(){
         html +=
             `
 
-                </tbody>
+            </tbody>
 
             </table>
 
@@ -3493,16 +3118,10 @@ async function loadCompletedTasks(){
         document.getElementById(
             "dashboardCompletedTasks"
         ).textContent =
-            completed.length;
+            allCompletions.length;
 
 
     }catch(error){
-
-        console.error(
-            "Completed task error:",
-            error
-        );
-
 
         container.innerHTML =
             `
@@ -3524,9 +3143,9 @@ async function loadCompletedTasks(){
 }
 
 
-/* =========================================================
+/* =====================================================
    DASHBOARD
-   ========================================================= */
+===================================================== */
 
 function refreshDashboard(){
 
@@ -3562,8 +3181,7 @@ function refreshDashboard(){
     const newTasks =
         allTasks.filter(
             task =>
-                task.status ===
-                "active" &&
+                task.status === "active" &&
                 !hasCompletedToday(
                     task.id
                 )
@@ -3584,9 +3202,9 @@ function refreshDashboard(){
 }
 
 
-/* =========================================================
+/* =====================================================
    WITHDRAW PAGE
-   ========================================================= */
+===================================================== */
 
 function refreshWithdrawPage(){
 
@@ -3624,10 +3242,6 @@ function refreshWithdrawPage(){
 }
 
 
-/* =========================================================
-   WITHDRAW CALCULATION
-   ========================================================= */
-
 document.getElementById(
     "withdrawCoins"
 ).addEventListener(
@@ -3638,15 +3252,11 @@ document.getElementById(
 
 function calculateWithdrawal(){
 
-    const input =
-        document.getElementById(
-            "withdrawCoins"
-        );
-
-
     const coins =
         Number(
-            input.value ||
+            document.getElementById(
+                "withdrawCoins"
+            ).value ||
             0
         );
 
@@ -3662,9 +3272,9 @@ function calculateWithdrawal(){
 }
 
 
-/* =========================================================
-   SUBMIT WITHDRAWAL
-   ========================================================= */
+/* =====================================================
+   WITHDRAW SUBMIT
+===================================================== */
 
 document.getElementById(
     "withdrawButton"
@@ -3711,14 +3321,12 @@ async function submitWithdrawal(){
 
 
     if(
-        !Number.isInteger(coins) ||
+        !coins ||
         coins <= 0
     ){
 
-        showMessage(
-            "withdrawMessage",
-            "Enter valid whole-number withdrawal coins.",
-            "error"
+        alert(
+            "Enter valid withdrawal coins."
         );
 
         return;
@@ -3727,14 +3335,11 @@ async function submitWithdrawal(){
 
 
     if(
-        coins >
-        availableCoins
+        coins > availableCoins
     ){
 
-        showMessage(
-            "withdrawMessage",
-            "You do not have enough coins.",
-            "error"
+        alert(
+            "You do not have enough coins."
         );
 
         return;
@@ -3746,10 +3351,8 @@ async function submitWithdrawal(){
         upi.length < 3
     ){
 
-        showMessage(
-            "withdrawMessage",
-            "Enter a valid UPI ID.",
-            "error"
+        alert(
+            "Enter a valid UPI ID."
         );
 
         return;
@@ -3809,23 +3412,28 @@ async function submitWithdrawal(){
         );
 
 
-        showMessage(
-            "withdrawMessage",
-            "Withdrawal request submitted successfully. Waiting for owner approval.",
-            "success"
-        );
+        const msg =
+            document.getElementById(
+                "withdrawMessage"
+            );
+
+
+        msg.textContent =
+            "Withdrawal request submitted successfully. Waiting for owner approval.";
+
+
+        msg.className =
+            "message show success";
 
 
         document.getElementById(
             "withdrawCoins"
-        ).value =
-            "";
+        ).value = "";
 
 
         document.getElementById(
             "withdrawUpi"
-        ).value =
-            "";
+        ).value = "";
 
 
         calculateWithdrawal();
@@ -3837,17 +3445,24 @@ async function submitWithdrawal(){
     }catch(error){
 
         console.error(
-            "Withdrawal error:",
             error
         );
 
 
-        showMessage(
-            "withdrawMessage",
-            "Unable to submit withdrawal: " +
-            error.message,
-            "error"
-        );
+        const msg =
+            document.getElementById(
+                "withdrawMessage"
+            );
+
+
+        msg.textContent =
+            "Unable to submit withdrawal: "
+            +
+            error.message;
+
+
+        msg.className =
+            "message show error";
 
     }
 
@@ -3858,9 +3473,9 @@ async function submitWithdrawal(){
 }
 
 
-/* =========================================================
+/* =====================================================
    WITHDRAWAL HISTORY
-   ========================================================= */
+===================================================== */
 
 async function loadWithdrawalHistory(){
 
@@ -3868,13 +3483,6 @@ async function loadWithdrawalHistory(){
         document.getElementById(
             "withdrawalHistoryContainer"
         );
-
-
-    if(!container){
-
-        return;
-
-    }
 
 
     if(!currentMember){
@@ -3904,8 +3512,7 @@ async function loadWithdrawalHistory(){
             await getDocs(q);
 
 
-        const withdrawals =
-            [];
+        const withdrawals = [];
 
 
         snapshot.forEach(
@@ -3931,11 +3538,9 @@ async function loadWithdrawalHistory(){
                     a.requestedAt?.seconds ||
                     0;
 
-
                 const bTime =
                     b.requestedAt?.seconds ||
                     0;
-
 
                 return bTime - aTime;
 
@@ -3944,8 +3549,7 @@ async function loadWithdrawalHistory(){
 
 
         if(
-            withdrawals.length ===
-            0
+            withdrawals.length === 0
         ){
 
             container.innerHTML =
@@ -3956,7 +3560,6 @@ async function loadWithdrawalHistory(){
 
                 </div>
                 `;
-
 
             return;
 
@@ -3970,35 +3573,25 @@ async function loadWithdrawalHistory(){
 
             <table>
 
-                <thead>
+            <thead>
 
-                    <tr>
+            <tr>
 
-                        <th>
-                            Date
-                        </th>
+                <th>Date</th>
 
-                        <th>
-                            Coins
-                        </th>
+                <th>Coins</th>
 
-                        <th>
-                            Amount
-                        </th>
+                <th>Amount</th>
 
-                        <th>
-                            UPI
-                        </th>
+                <th>UPI</th>
 
-                        <th>
-                            Status
-                        </th>
+                <th>Status</th>
 
-                    </tr>
+            </tr>
 
-                </thead>
+            </thead>
 
-                <tbody>
+            <tbody>
 
             `;
 
@@ -4006,8 +3599,7 @@ async function loadWithdrawalHistory(){
         withdrawals.forEach(
             item => {
 
-                let date =
-                    "-";
+                let date = "-";
 
 
                 if(
@@ -4110,7 +3702,7 @@ async function loadWithdrawalHistory(){
         html +=
             `
 
-                </tbody>
+            </tbody>
 
             </table>
 
@@ -4124,12 +3716,6 @@ async function loadWithdrawalHistory(){
 
 
     }catch(error){
-
-        console.error(
-            "Withdrawal history error:",
-            error
-        );
-
 
         container.innerHTML =
             `
@@ -4151,16 +3737,13 @@ async function loadWithdrawalHistory(){
 }
 
 
-/* =========================================================
+/* =====================================================
    PROFILE
-   ========================================================= */
+===================================================== */
 
 function loadProfile(){
 
-    if(
-        !currentMemberData ||
-        !currentMember
-    ){
+    if(!currentMemberData){
 
         return;
 
@@ -4208,9 +3791,9 @@ function loadProfile(){
 }
 
 
-/* =========================================================
+/* =====================================================
    LOGOUT
-   ========================================================= */
+===================================================== */
 
 document.getElementById(
     "logoutMenu"
@@ -4227,9 +3810,13 @@ async function logoutUser(){
         stopActiveTask();
 
 
-        await signOut(
-            auth
-        );
+        if(auth){
+
+            await signOut(
+                auth
+            );
+
+        }
 
 
         window.location.href =
@@ -4239,13 +3826,13 @@ async function logoutUser(){
     }catch(error){
 
         console.error(
-            "Logout error:",
             error
         );
 
 
         alert(
-            "Logout failed: " +
+            "Logout failed: "
+            +
             error.message
         );
 
@@ -4254,37 +3841,13 @@ async function logoutUser(){
 }
 
 
-/* =========================================================
-   PAGE VISIBILITY
-   ========================================================= */
+/* =====================================================
+   NEW DAY REFRESH
+===================================================== */
 
-document.addEventListener(
-    "visibilitychange",
-    function(){
+let lastKnownDate =
+    getToday();
 
-        /*
-          YouTube player state is still checked
-          before counting each second.
-
-          If user switches tab and YouTube pauses,
-          timer will stop.
-        */
-
-        if(
-            document.hidden
-        ){
-
-            return;
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   NEW DAY AUTO REFRESH
-   ========================================================= */
 
 setInterval(
     async function(){
@@ -4307,15 +3870,12 @@ setInterval(
 
             await loadAllCompletions();
 
-
             await loadTasks();
-
 
             await loadCompletedTasks();
 
 
             refreshDashboard();
-
 
             refreshWithdrawPage();
 
@@ -4326,9 +3886,9 @@ setInterval(
 );
 
 
-/* =========================================================
+/* =====================================================
    INITIAL PAGE
-   ========================================================= */
+===================================================== */
 
 showPage(
     "dashboard"
