@@ -1,12 +1,15 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Member Dashboard - Task Reward System</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     font-family:Arial,sans-serif;
@@ -18,7 +21,10 @@ body{
     color:#222;
 }
 
-/* HEADER */
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .header{
     height:60px;
     background:#111827;
@@ -30,14 +36,21 @@ body{
     top:0;
     left:0;
     right:0;
-    z-index:1000;
+    z-index:2000;
 }
 
 .menuBtn{
-    font-size:27px;
+    width:44px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
     cursor:pointer;
-    margin-right:16px;
+    margin-right:12px;
     user-select:none;
+    position:relative;
+    z-index:2100;
 }
 
 .headerTitle{
@@ -45,18 +58,22 @@ body{
     font-weight:bold;
 }
 
-/* SIDEBAR */
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
 .sidebar{
     position:fixed;
     top:60px;
-    left:-260px;
-    width:260px;
+    left:-270px;
+    width:270px;
     height:calc(100vh - 60px);
     background:#1f2937;
     color:white;
-    transition:.25s;
-    z-index:999;
+    transition:left .25s ease;
+    z-index:1900;
     overflow-y:auto;
+    box-shadow:4px 0 12px rgba(0,0,0,.25);
 }
 
 .sidebar.open{
@@ -75,12 +92,14 @@ body{
 
 .sidebarHeader small{
     color:#d1d5db;
+    word-break:break-word;
 }
 
 .menuItem{
     padding:15px 20px;
     cursor:pointer;
     border-bottom:1px solid #374151;
+    user-select:none;
 }
 
 .menuItem:hover{
@@ -91,20 +110,26 @@ body{
     color:#fca5a5;
 }
 
-/* OVERLAY */
+/* =========================================================
+   OVERLAY
+   ========================================================= */
+
 .overlay{
     display:none;
     position:fixed;
     inset:60px 0 0 0;
     background:rgba(0,0,0,.45);
-    z-index:998;
+    z-index:1800;
 }
 
 .overlay.show{
     display:block;
 }
 
-/* MAIN */
+/* =========================================================
+   MAIN
+   ========================================================= */
+
 .main{
     padding:80px 15px 30px;
     max-width:1100px;
@@ -124,7 +149,10 @@ body{
     font-size:25px;
 }
 
-/* CARDS */
+/* =========================================================
+   CARDS
+   ========================================================= */
+
 .cards{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
@@ -149,7 +177,10 @@ body{
     font-weight:bold;
 }
 
-/* TASK */
+/* =========================================================
+   TASK
+   ========================================================= */
+
 .taskGrid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -172,7 +203,11 @@ body{
     border:2px solid #2563eb;
 }
 
-/* ACTIVE TASK MESSAGE */
+.taskInfo{
+    margin:8px 0;
+    color:#444;
+}
+
 .activeTaskNotice{
     background:#dbeafe;
     color:#1e40af;
@@ -182,7 +217,10 @@ body{
     font-weight:bold;
 }
 
-/* VIDEO */
+/* =========================================================
+   VIDEO
+   ========================================================= */
+
 .videoBox{
     width:100%;
     aspect-ratio:16/9;
@@ -210,11 +248,17 @@ body{
     font-size:16px;
     font-weight:bold;
     pointer-events:none;
+    text-align:center;
+    padding:15px;
 }
 
 .videoOverlay.hidden{
     display:none;
 }
+
+/* =========================================================
+   TIMER
+   ========================================================= */
 
 .timer{
     font-size:18px;
@@ -238,7 +282,10 @@ body{
     transition:.3s;
 }
 
-/* BUTTON */
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
 button{
     border:0;
     border-radius:7px;
@@ -272,7 +319,10 @@ button:disabled{
     cursor:not-allowed;
 }
 
-/* TABLE */
+/* =========================================================
+   TABLE
+   ========================================================= */
+
 .tableWrap{
     background:white;
     border-radius:12px;
@@ -296,7 +346,10 @@ th{
     background:#f8fafc;
 }
 
-/* BADGES */
+/* =========================================================
+   BADGES
+   ========================================================= */
+
 .badge{
     display:inline-block;
     padding:5px 9px;
@@ -320,7 +373,10 @@ th{
     color:#991b1b;
 }
 
-/* FORM */
+/* =========================================================
+   FORM
+   ========================================================= */
+
 .formBox{
     background:white;
     padding:20px;
@@ -358,7 +414,10 @@ th{
     font-size:22px;
 }
 
-/* MESSAGE */
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
 .message{
     padding:13px;
     border-radius:8px;
@@ -385,7 +444,10 @@ th{
     color:#1e40af;
 }
 
-/* PROFILE */
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
 .profileRow{
     display:flex;
     justify-content:space-between;
@@ -399,7 +461,10 @@ th{
     color:#555;
 }
 
-/* EMPTY */
+/* =========================================================
+   EMPTY / LOADING
+   ========================================================= */
+
 .empty{
     background:white;
     padding:30px;
@@ -408,14 +473,16 @@ th{
     color:#666;
 }
 
-/* LOADING */
 .loading{
     text-align:center;
     padding:30px;
     color:#666;
 }
 
-/* MOBILE */
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media(max-width:600px){
 
     .main{
@@ -442,16 +509,32 @@ th{
         flex-direction:column;
         gap:5px;
     }
+
+    .sidebar{
+        width:280px;
+        left:-280px;
+    }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
 <div class="header">
 
-    <div class="menuBtn" id="menuBtn">☰</div>
+    <div
+        class="menuBtn"
+        id="menuBtn"
+        onclick="toggleMenu()"
+    >
+        ☰
+    </div>
 
     <div class="headerTitle">
         Task Reward System
@@ -459,85 +542,193 @@ th{
 
 </div>
 
-<!-- SIDEBAR -->
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
 <div class="sidebar" id="sidebar">
 
     <div class="sidebarHeader">
-        <strong id="sideMemberName">Member</strong>
-        <small id="sideMemberEmail">Loading...</small>
+
+        <strong id="sideMemberName">
+            Member
+        </strong>
+
+        <small id="sideMemberEmail">
+            Loading...
+        </small>
+
     </div>
 
-    <div class="menuItem" data-page="dashboard">
+
+    <div
+        class="menuItem"
+        data-page="dashboard"
+    >
         🏠 Dashboard
     </div>
 
-    <div class="menuItem" data-page="newTasks">
+
+    <div
+        class="menuItem"
+        data-page="newTasks"
+    >
         ▶️ New Tasks
     </div>
 
-    <div class="menuItem" data-page="completedTasks">
+
+    <div
+        class="menuItem"
+        data-page="completedTasks"
+    >
         ✅ Completed Tasks
     </div>
 
-    <div class="menuItem" data-page="withdraw">
+
+    <div
+        class="menuItem"
+        data-page="withdraw"
+    >
         💰 Withdraw
     </div>
 
-    <div class="menuItem" data-page="withdrawalHistory">
+
+    <div
+        class="menuItem"
+        data-page="withdrawalHistory"
+    >
         📜 Withdrawal History
     </div>
 
-    <div class="menuItem" data-page="profile">
+
+    <div
+        class="menuItem"
+        data-page="profile"
+    >
         👤 Profile
     </div>
 
-    <div class="menuItem logout" id="logoutMenu">
+
+    <div
+        class="menuItem logout"
+        id="logoutMenu"
+    >
         🚪 Logout
     </div>
 
 </div>
 
-<div class="overlay" id="overlay"></div>
 
-<!-- MAIN -->
+<div
+    class="overlay"
+    id="overlay"
+    onclick="closeMenu()"
+></div>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
 <div class="main">
 
-    <div id="authMessage" class="message"></div>
+    <div
+        id="authMessage"
+        class="message"
+    ></div>
 
-    <!-- DASHBOARD -->
-    <section class="page active" id="dashboardPage">
 
-        <h1 class="pageTitle">Dashboard</h1>
+    <!-- =====================================================
+         DASHBOARD
+         ===================================================== -->
+
+    <section
+        class="page active"
+        id="dashboardPage"
+    >
+
+        <h1 class="pageTitle">
+            Dashboard
+        </h1>
+
 
         <div class="cards">
 
             <div class="card">
-                <h3>Total Coins</h3>
-                <div class="value" id="dashboardCoins">0</div>
+
+                <h3>
+                    Total Coins
+                </h3>
+
+                <div
+                    class="value"
+                    id="dashboardCoins"
+                >
+                    0
+                </div>
+
             </div>
 
-            <div class="card">
-                <h3>Current Value</h3>
-                <div class="value" id="dashboardRupees">₹0.00</div>
-            </div>
 
             <div class="card">
-                <h3>New Tasks</h3>
-                <div class="value" id="dashboardNewTasks">0</div>
+
+                <h3>
+                    Current Value
+                </h3>
+
+                <div
+                    class="value"
+                    id="dashboardRupees"
+                >
+                    ₹0.00
+                </div>
+
             </div>
 
+
             <div class="card">
-                <h3>Completed Tasks</h3>
-                <div class="value" id="dashboardCompletedTasks">0</div>
+
+                <h3>
+                    New Tasks
+                </h3>
+
+                <div
+                    class="value"
+                    id="dashboardNewTasks"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    Completed Tasks
+                </h3>
+
+                <div
+                    class="value"
+                    id="dashboardCompletedTasks"
+                >
+                    0
+                </div>
+
             </div>
 
         </div>
 
+
         <br>
+
 
         <div class="card">
 
-            <h3>Welcome</h3>
+            <h3>
+                Welcome
+            </h3>
 
             <h2 id="dashboardWelcome">
                 Loading...
@@ -548,85 +739,147 @@ th{
             </p>
 
             <p>
-                <strong>100 Coins = ₹1</strong>
+                <strong>
+                    100 Coins = ₹1
+                </strong>
             </p>
 
         </div>
 
     </section>
 
-    <!-- NEW TASKS -->
-    <section class="page" id="newTasksPage">
 
-        <h1 class="pageTitle">New Tasks</h1>
+    <!-- =====================================================
+         NEW TASKS
+         ===================================================== -->
 
-        <div id="newTasksMessage" class="message"></div>
+    <section
+        class="page"
+        id="newTasksPage"
+    >
+
+        <h1 class="pageTitle">
+            New Tasks
+        </h1>
+
+
+        <div
+            id="newTasksMessage"
+            class="message"
+        ></div>
+
 
         <div id="activeTaskNotice"></div>
 
-        <div id="tasksContainer" class="taskGrid">
+
+        <div
+            id="tasksContainer"
+            class="taskGrid"
+        >
+
             <div class="loading">
                 Loading tasks...
             </div>
+
         </div>
 
     </section>
 
-    <!-- COMPLETED -->
-    <section class="page" id="completedTasksPage">
+
+    <!-- =====================================================
+         COMPLETED TASKS
+         ===================================================== -->
+
+    <section
+        class="page"
+        id="completedTasksPage"
+    >
 
         <h1 class="pageTitle">
             Completed Tasks
         </h1>
 
+
         <div id="completedTasksContainer">
+
             <div class="loading">
                 Loading completed tasks...
             </div>
+
         </div>
 
     </section>
 
-    <!-- WITHDRAW -->
-    <section class="page" id="withdrawPage">
+
+    <!-- =====================================================
+         WITHDRAW
+         ===================================================== -->
+
+    <section
+        class="page"
+        id="withdrawPage"
+    >
 
         <h1 class="pageTitle">
             Withdraw Coins
         </h1>
 
-        <div id="withdrawMessage" class="message"></div>
+
+        <div
+            id="withdrawMessage"
+            class="message"
+        ></div>
+
 
         <div class="formBox">
 
-            <div class="card" style="margin-bottom:15px;">
+            <div
+                class="card"
+                style="margin-bottom:15px;"
+            >
 
-                <h3>Available Coins</h3>
+                <h3>
+                    Available Coins
+                </h3>
 
-                <div class="value" id="withdrawAvailableCoins">
+                <div
+                    class="value"
+                    id="withdrawAvailableCoins"
+                >
                     0
                 </div>
 
                 <p>
+
                     Current Value:
-                    <strong id="withdrawAvailableRupees">
+
+                    <strong
+                        id="withdrawAvailableRupees"
+                    >
                         ₹0.00
                     </strong>
+
                 </p>
 
             </div>
 
+
             <div class="formGroup">
 
-                <label>Withdrawal Coins</label>
+                <label>
+                    Withdrawal Coins
+                </label>
 
                 <input
                     type="number"
                     id="withdrawCoins"
                     min="1"
+                    step="1"
                     placeholder="Enter coins"
                 >
 
             </div>
+
 
             <div class="amountBox">
 
@@ -634,15 +887,20 @@ th{
 
                 <br>
 
-                <strong id="withdrawRupees">
+                <strong
+                    id="withdrawRupees"
+                >
                     ₹0.00
                 </strong>
 
             </div>
 
+
             <div class="formGroup">
 
-                <label>UPI ID</label>
+                <label>
+                    UPI ID
+                </label>
 
                 <input
                     type="text"
@@ -651,6 +909,7 @@ th{
                 >
 
             </div>
+
 
             <button
                 class="primaryBtn"
@@ -663,53 +922,110 @@ th{
 
     </section>
 
-    <!-- WITHDRAWAL HISTORY -->
-    <section class="page" id="withdrawalHistoryPage">
+
+    <!-- =====================================================
+         WITHDRAWAL HISTORY
+         ===================================================== -->
+
+    <section
+        class="page"
+        id="withdrawalHistoryPage"
+    >
 
         <h1 class="pageTitle">
             Withdrawal History
         </h1>
 
+
         <div id="withdrawalHistoryContainer">
+
             <div class="loading">
                 Loading withdrawal history...
             </div>
+
         </div>
 
     </section>
 
-    <!-- PROFILE -->
-    <section class="page" id="profilePage">
+
+    <!-- =====================================================
+         PROFILE
+         ===================================================== -->
+
+    <section
+        class="page"
+        id="profilePage"
+    >
 
         <h1 class="pageTitle">
             Profile
         </h1>
 
+
         <div class="formBox">
 
             <div class="profileRow">
-                <span class="profileLabel">Name</span>
-                <span id="profileName">-</span>
+
+                <span class="profileLabel">
+                    Name
+                </span>
+
+                <span id="profileName">
+                    -
+                </span>
+
             </div>
 
-            <div class="profileRow">
-                <span class="profileLabel">Email</span>
-                <span id="profileEmail">-</span>
-            </div>
 
             <div class="profileRow">
-                <span class="profileLabel">Role</span>
-                <span id="profileRole">-</span>
+
+                <span class="profileLabel">
+                    Email
+                </span>
+
+                <span id="profileEmail">
+                    -
+                </span>
+
             </div>
 
-            <div class="profileRow">
-                <span class="profileLabel">Status</span>
-                <span id="profileStatus">-</span>
-            </div>
 
             <div class="profileRow">
-                <span class="profileLabel">Coins</span>
-                <span id="profileCoins">0</span>
+
+                <span class="profileLabel">
+                    Role
+                </span>
+
+                <span id="profileRole">
+                    -
+                </span>
+
+            </div>
+
+
+            <div class="profileRow">
+
+                <span class="profileLabel">
+                    Status
+                </span>
+
+                <span id="profileStatus">
+                    -
+                </span>
+
+            </div>
+
+
+            <div class="profileRow">
+
+                <span class="profileLabel">
+                    Coins
+                </span>
+
+                <span id="profileCoins">
+                    0
+                </span>
+
             </div>
 
         </div>
@@ -719,7 +1035,10 @@ th{
 </div>
 
 
-<!-- FIREBASE -->
+<!-- =========================================================
+     FIREBASE + JAVASCRIPT
+     ========================================================= -->
+
 <script type="module">
 
 import {
@@ -747,36 +1066,49 @@ import {
 
 
 /* =========================================================
-   KEEP YOUR EXISTING WORKING FIREBASE CONFIG EXACTLY HERE.
-   DO NOT CHANGE API KEY / APP ID / SENDER ID.
+   FIREBASE CONFIG
+   =========================================================
+
+   IMPORTANT:
+
+   Paste your CURRENT WORKING firebaseConfig here.
+
+   Do NOT change:
+   - apiKey
+   - authDomain
+   - projectId
+   - storageBucket
+   - messagingSenderId
+   - appId
+
    ========================================================= */
 
 const firebaseConfig = {
 
     /*
+       PASTE YOUR EXISTING WORKING CONFIG HERE.
 
-    PASTE THE EXACT firebaseConfig BLOCK
-    FROM YOUR CURRENT WORKING member.html HERE.
+       Example structure:
 
-    Example structure ONLY:
-
-    apiKey: "YOUR_EXISTING_API_KEY",
-    authDomain: "task-reward-system-af46f.firebaseapp.com",
-    projectId: "task-reward-system-af46f",
-    storageBucket: "task-reward-system-af46f.firebasestorage.app",
-    messagingSenderId: "YOUR_EXISTING_SENDER_ID",
-    appId: "YOUR_EXISTING_APP_ID"
-
+       apiKey: "YOUR_EXISTING_API_KEY",
+       authDomain: "task-reward-system-af46f.firebaseapp.com",
+       projectId: "task-reward-system-af46f",
+       storageBucket: "task-reward-system-af46f.firebasestorage.app",
+       messagingSenderId: "YOUR_EXISTING_SENDER_ID",
+       appId: "YOUR_EXISTING_APP_ID"
     */
 
 };
 
 
-const app = initializeApp(firebaseConfig);
+const app =
+    initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+const auth =
+    getAuth(app);
 
-const db = getFirestore(app);
+const db =
+    getFirestore(app);
 
 
 /* =========================================================
@@ -785,24 +1117,30 @@ const db = getFirestore(app);
 
 let youtubeAPIReady = false;
 
-window.onYouTubeIframeAPIReady = function(){
+
+window.onYouTubeIframeAPIReady =
+function(){
 
     youtubeAPIReady = true;
 
-    console.log("YouTube API Ready");
+    console.log(
+        "YouTube IFrame API Ready"
+    );
 
 };
 
 
-/* Load YouTube IFrame API */
-
 const youtubeScript =
     document.createElement("script");
+
 
 youtubeScript.src =
     "https://www.youtube.com/iframe_api";
 
-document.head.appendChild(youtubeScript);
+
+document.head.appendChild(
+    youtubeScript
+);
 
 
 /* =========================================================
@@ -827,19 +1165,78 @@ let activeElapsed = 0;
 
 let activeRequiredTime = 0;
 
+let lastKnownDate =
+    getToday();
+
 
 /* =========================================================
-   ELEMENTS
+   MENU
    ========================================================= */
 
-const sidebar =
-    document.getElementById("sidebar");
+window.toggleMenu =
+function(){
 
-const overlay =
-    document.getElementById("overlay");
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
 
-const menuBtn =
-    document.getElementById("menuBtn");
+    const overlay =
+        document.getElementById(
+            "overlay"
+        );
+
+
+    if(!sidebar || !overlay){
+
+        return;
+
+    }
+
+
+    sidebar.classList.toggle(
+        "open"
+    );
+
+    overlay.classList.toggle(
+        "show"
+    );
+
+};
+
+
+window.closeMenu =
+function(){
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+    const overlay =
+        document.getElementById(
+            "overlay"
+        );
+
+
+    if(sidebar){
+
+        sidebar.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    if(overlay){
+
+        overlay.classList.remove(
+            "show"
+        );
+
+    }
+
+};
 
 
 /* =========================================================
@@ -848,22 +1245,39 @@ const menuBtn =
 
 function getToday(){
 
-    const now = new Date();
+    const now =
+        new Date();
+
 
     const year =
         now.getFullYear();
 
+
     const month =
         String(
             now.getMonth() + 1
-        ).padStart(2,"0");
+        ).padStart(
+            2,
+            "0"
+        );
+
 
     const day =
         String(
             now.getDate()
-        ).padStart(2,"0");
+        ).padStart(
+            2,
+            "0"
+        );
 
-    return `${year}-${month}-${day}`;
+
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+    );
 
 }
 
@@ -883,12 +1297,33 @@ function escapeHtml(value){
 
     }
 
+
     return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
@@ -903,51 +1338,53 @@ function showMessage(
     type="info"
 ){
 
-    const el =
+    const element =
         document.getElementById(
             elementId
         );
 
-    if(!el){
+
+    if(!element){
 
         return;
 
     }
 
-    el.textContent = text;
 
-    el.className =
-        "message show " + type;
+    element.textContent =
+        text;
+
+
+    element.className =
+        "message show " +
+        type;
 
 }
 
 
-/* =========================================================
-   MENU
-   ========================================================= */
+function hideMessage(elementId){
 
-menuBtn.addEventListener(
-    "click",
-    function(){
-
-        sidebar.classList.toggle("open");
-
-        overlay.classList.toggle("show");
-
-    }
-);
+    const element =
+        document.getElementById(
+            elementId
+        );
 
 
-overlay.addEventListener(
-    "click",
-    function(){
+    if(!element){
 
-        sidebar.classList.remove("open");
-
-        overlay.classList.remove("show");
+        return;
 
     }
-);
+
+
+    element.className =
+        "message";
+
+
+    element.textContent =
+        "";
+
+}
 
 
 /* =========================================================
@@ -956,31 +1393,37 @@ overlay.addEventListener(
 
 document.querySelectorAll(
     ".menuItem[data-page]"
-).forEach(item => {
+).forEach(
+    item => {
 
-    item.addEventListener(
-        "click",
-        function(){
+        item.addEventListener(
+            "click",
+            function(){
 
-            showPage(
-                this.dataset.page
-            );
+                showPage(
+                    this.dataset.page
+                );
 
-        }
-    );
+            }
+        );
 
-});
+    }
+);
 
 
 function showPage(page){
 
     document.querySelectorAll(
         ".page"
-    ).forEach(p => {
+    ).forEach(
+        pageElement => {
 
-        p.classList.remove("active");
+            pageElement.classList.remove(
+                "active"
+            );
 
-    });
+        }
+    );
 
 
     const target =
@@ -991,14 +1434,14 @@ function showPage(page){
 
     if(target){
 
-        target.classList.add("active");
+        target.classList.add(
+            "active"
+        );
 
     }
 
 
-    sidebar.classList.remove("open");
-
-    overlay.classList.remove("show");
+    closeMenu();
 
 
     if(page === "dashboard"){
@@ -1010,7 +1453,7 @@ function showPage(page){
 
     if(page === "newTasks"){
 
-        loadTasks();
+        renderAvailableTasks();
 
     }
 
@@ -1063,7 +1506,8 @@ onAuthStateChanged(
         }
 
 
-        currentMember = user;
+        currentMember =
+            user;
 
 
         try{
@@ -1077,7 +1521,9 @@ onAuthStateChanged(
 
 
             const userSnap =
-                await getDoc(userRef);
+                await getDoc(
+                    userRef
+                );
 
 
             if(!userSnap.exists()){
@@ -1129,19 +1575,27 @@ onAuthStateChanged(
 
             hideAuthMessage();
 
+
             updateMemberUI();
+
 
             await loadAllCompletions();
 
+
             await loadTasks();
+
 
             await loadCompletedTasks();
 
+
             await loadWithdrawalHistory();
+
 
             loadProfile();
 
+
             refreshDashboard();
+
 
             refreshWithdrawPage();
 
@@ -1152,6 +1606,7 @@ onAuthStateChanged(
                 "Member authentication error:",
                 error
             );
+
 
             showAuthError(
                 error.message
@@ -1169,55 +1624,85 @@ onAuthStateChanged(
 
 function showAuthError(message){
 
-    const el =
+    const element =
         document.getElementById(
             "authMessage"
         );
 
 
-    el.innerHTML =
-        `<strong>Member Login Issue</strong>
+    element.innerHTML =
+        `
+        <strong>
+            Member Login Issue
+        </strong>
+
         <br><br>
+
         ${escapeHtml(message)}
+
         <br><br>
+
         Check Firestore users collection:
+
         <br>
-        <b>role = member</b>
+
+        <b>
+            role = member
+        </b>
+
         <br>
-        <b>status = active</b>
+
+        <b>
+            status = active
+        </b>
+
         <br><br>
+
         <button
             class="secondaryBtn"
-            id="errorLogoutBtn">
+            id="errorLogoutBtn"
+        >
             Logout
-        </button>`;
+        </button>
+        `;
 
 
-    el.className =
+    element.className =
         "message show error";
 
 
-    document.getElementById(
-        "errorLogoutBtn"
-    ).addEventListener(
-        "click",
-        logoutUser
-    );
+    const logoutButton =
+        document.getElementById(
+            "errorLogoutBtn"
+        );
+
+
+    if(logoutButton){
+
+        logoutButton.addEventListener(
+            "click",
+            logoutUser
+        );
+
+    }
 
 }
 
 
 function hideAuthMessage(){
 
-    const el =
+    const element =
         document.getElementById(
             "authMessage"
         );
 
-    el.className =
+
+    element.className =
         "message";
 
-    el.innerHTML = "";
+
+    element.innerHTML =
+        "";
 
 }
 
@@ -1227,6 +1712,16 @@ function hideAuthMessage(){
    ========================================================= */
 
 function updateMemberUI(){
+
+    if(
+        !currentMember ||
+        !currentMemberData
+    ){
+
+        return;
+
+    }
+
 
     const name =
         currentMemberData.name ||
@@ -1317,9 +1812,11 @@ async function loadAllCompletions(){
                 a.completedAt?.seconds ||
                 0;
 
+
             const bTime =
                 b.completedAt?.seconds ||
                 0;
+
 
             return bTime - aTime;
 
@@ -1342,10 +1839,34 @@ function hasCompletedToday(taskId){
     return allCompletions.some(
         completion => {
 
-            return (
-                completion.taskId === taskId &&
-                completion.completionDate === today
-            );
+            if(
+                completion.taskId !==
+                taskId
+            ){
+
+                return false;
+
+            }
+
+
+            /*
+              New records:
+              completionDate = YYYY-MM-DD
+            */
+
+            if(
+                completion.completionDate
+            ){
+
+                return (
+                    completion.completionDate ===
+                    today
+                );
+
+            }
+
+
+            return false;
 
         }
     );
@@ -1354,7 +1875,7 @@ function hasCompletedToday(taskId){
 
 
 /* =========================================================
-   GET ACTIVE TASK
+   ACTIVE TASK
    ========================================================= */
 
 function getActiveTask(){
@@ -1365,23 +1886,39 @@ function getActiveTask(){
 
     }
 
+
     return allTasks.find(
         task =>
-            task.id === activeTaskId
+            task.id ===
+            activeTaskId
     ) || null;
 
 }
 
 
 /* =========================================================
-   START ONE TASK
+   START TASK
    ========================================================= */
 
 function startTask(taskId){
 
+    if(hasCompletedToday(taskId)){
+
+        alert(
+            "You have already completed this task today."
+        );
+
+        return;
+
+    }
+
+
     if(activeTaskId){
 
-        if(activeTaskId !== taskId){
+        if(
+            activeTaskId !==
+            taskId
+        ){
 
             alert(
                 "Please complete the current task first."
@@ -1398,6 +1935,14 @@ function startTask(taskId){
         taskId;
 
 
+    activeElapsed =
+        0;
+
+
+    activeRequiredTime =
+        0;
+
+
     renderAvailableTasks();
 
 }
@@ -1409,33 +1954,38 @@ function startTask(taskId){
 
 function stopActiveTask(){
 
-    if(activeTimer){
-
-        clearInterval(activeTimer);
-
-        activeTimer = null;
-
-    }
+    stopWatchTimer();
 
 
     if(activePlayer){
 
         try{
 
-            activePlayer.pauseVideo();
+            activePlayer.stopVideo();
 
-        }catch(e){}
+        }catch(error){
+
+            console.log(error);
+
+        }
 
     }
 
 
-    activePlayer = null;
+    activePlayer =
+        null;
 
-    activeTaskId = null;
 
-    activeElapsed = 0;
+    activeTaskId =
+        null;
 
-    activeRequiredTime = 0;
+
+    activeElapsed =
+        0;
+
+
+    activeRequiredTime =
+        0;
 
 }
 
@@ -1452,10 +2002,19 @@ async function loadTasks(){
         );
 
 
+    if(!container){
+
+        return;
+
+    }
+
+
     container.innerHTML =
-        `<div class="loading">
+        `
+        <div class="loading">
             Loading tasks...
-         </div>`;
+        </div>
+        `;
 
 
     try{
@@ -1490,18 +2049,15 @@ async function loadTasks(){
                     "active"
                 ){
 
-                    allTasks.push(task);
+                    allTasks.push(
+                        task
+                    );
 
                 }
 
             }
         );
 
-
-        /*
-          If active task was already completed today,
-          remove it.
-        */
 
         if(
             activeTaskId &&
@@ -1517,22 +2073,32 @@ async function loadTasks(){
 
         renderAvailableTasks();
 
+
         refreshDashboard();
 
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Task loading error:",
+            error
+        );
 
 
         container.innerHTML =
-            `<div class="empty">
+            `
+            <div class="empty">
+
                 Unable to load tasks.
+
                 <br><br>
+
                 ${escapeHtml(
                     error.message
                 )}
-             </div>`;
+
+            </div>
+            `;
 
     }
 
@@ -1540,7 +2106,7 @@ async function loadTasks(){
 
 
 /* =========================================================
-   RENDER AVAILABLE TASKS
+   RENDER TASKS
    ========================================================= */
 
 function renderAvailableTasks(){
@@ -1557,6 +2123,13 @@ function renderAvailableTasks(){
         );
 
 
+    if(!container){
+
+        return;
+
+    }
+
+
     const available =
         allTasks.filter(
             task =>
@@ -1567,21 +2140,38 @@ function renderAvailableTasks(){
 
 
     if(
-        available.length === 0
+        available.length ===
+        0
     ){
 
-        notice.innerHTML = "";
+        if(notice){
+
+            notice.innerHTML =
+                "";
+
+        }
+
 
         container.innerHTML =
-            `<div class="empty">
+            `
+            <div class="empty">
+
                 🎉 No new tasks available today.
+
                 <br><br>
-                Completed tasks will become available again tomorrow.
-             </div>`;
+
+                Completed tasks will become
+                available again tomorrow.
+
+            </div>
+            `;
+
 
         document.getElementById(
             "dashboardNewTasks"
-        ).textContent = "0";
+        ).textContent =
+            "0";
+
 
         return;
 
@@ -1591,34 +2181,49 @@ function renderAvailableTasks(){
     if(activeTaskId){
 
         notice.innerHTML =
-            `<div class="activeTaskNotice">
+            `
+            <div class="activeTaskNotice">
+
                 ▶️ You are currently doing one task.
-                Complete this task before starting another task.
-             </div>`;
+
+                <br>
+
+                Complete this task before
+                starting another task.
+
+            </div>
+            `;
 
     }else{
 
         notice.innerHTML =
-            `<div class="activeTaskNotice">
+            `
+            <div class="activeTaskNotice">
+
                 ℹ️ You can do only one task at a time.
-             </div>`;
+
+            </div>
+            `;
 
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     available.forEach(
         task => {
 
             const isActive =
-                activeTaskId === task.id;
+                activeTaskId ===
+                task.id;
 
 
             const isLocked =
                 activeTaskId &&
-                activeTaskId !== task.id;
+                activeTaskId !==
+                task.id;
 
 
             const card =
@@ -1641,119 +2246,168 @@ function renderAvailableTasks(){
                 );
 
 
-            card.innerHTML = `
+            card.innerHTML =
+                `
 
                 <h3>
-                    ${escapeHtml(task.title)}
+                    ${escapeHtml(
+                        task.title
+                    )}
                 </h3>
 
                 <div class="taskInfo">
+
                     🪙 Reward:
+
                     <strong>
                         ${Number(
                             task.rewardCoins || 0
                         )}
                         Coins
                     </strong>
+
                 </div>
 
                 <div class="taskInfo">
+
                     ⏱ Required Watch Time:
+
                     <strong>
                         ${Number(
                             task.watchTime || 0
                         )}
                         seconds
                     </strong>
+
                 </div>
 
                 ${
                     isActive
-                    ? `
+
+                    ?
+
+                    `
+
                     <div
                         class="videoBox"
                         id="video_${task.id}"
                     >
+
                         <div
                             class="videoOverlay"
-                            id="overlay_${task.id}">
+                            id="overlay_${task.id}"
+                        >
                             Loading YouTube...
                         </div>
 
                         <div
                             id="player_${task.id}"
-                            style="width:100%;height:100%;">
-                        </div>
+                            style="
+                                width:100%;
+                                height:100%;
+                            "
+                        ></div>
+
                     </div>
+
 
                     <div
                         class="timer"
-                        id="timer_${task.id}">
-                        Press Play and watch the video.
+                        id="timer_${task.id}"
+                    >
+                        Preparing video...
                     </div>
+
 
                     <div class="progressOuter">
 
                         <div
                             class="progressInner"
-                            id="progress_${task.id}">
-                        </div>
+                            id="progress_${task.id}"
+                        ></div>
 
                     </div>
+
 
                     <button
                         class="successBtn"
                         id="complete_${task.id}"
-                        disabled>
+                        disabled
+                    >
                         Complete Task
                     </button>
+
 
                     <button
                         class="secondaryBtn"
                         id="cancel_${task.id}"
-                        style="margin-left:5px;">
+                        style="margin-left:5px;"
+                    >
                         Exit Task
                     </button>
+
                     `
-                    : `
+
+                    :
+
+                    `
+
                     <div class="videoBox">
 
                         <div
-                            class="videoOverlay">
+                            class="videoOverlay"
+                        >
+
                             ${
                                 isLocked
-                                ? "🔒 Finish current task first"
-                                : "▶️ Start Task"
+                                ?
+                                "🔒 Finish current task first"
+                                :
+                                "▶️ Start Task"
                             }
+
                         </div>
 
                     </div>
 
+
                     <button
                         class="${
                             isLocked
-                            ? "secondaryBtn"
-                            : "primaryBtn"
+                            ?
+                            "secondaryBtn"
+                            :
+                            "primaryBtn"
                         }"
                         id="start_${task.id}"
                         ${
                             isLocked
-                            ? "disabled"
-                            : ""
-                        }>
+                            ?
+                            "disabled"
+                            :
+                            ""
+                        }
+                    >
+
                         ${
                             isLocked
-                            ? "Locked"
-                            : "Start Task"
+                            ?
+                            "Locked"
+                            :
+                            "Start Task"
                         }
+
                     </button>
+
                     `
                 }
 
-            `;
+                `;
 
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
 
             if(isActive){
@@ -1773,16 +2427,14 @@ function renderAvailableTasks(){
 
                 if(startButton){
 
-                    startButton.addEventListener(
-                        "click",
-                        function(){
+                    startButton.onclick =
+                    function(){
 
-                            startTask(
-                                task.id
-                            );
+                        startTask(
+                            task.id
+                        );
 
-                        }
-                    );
+                    };
 
                 }
 
@@ -1826,8 +2478,13 @@ function getYoutubeVideoId(url){
         ){
 
             return parsed.pathname
-                .replace("/","")
-                .split("/")[0];
+                .replace(
+                    "/",
+                    ""
+                )
+                .split(
+                    "/"
+                )[0];
 
         }
 
@@ -1839,8 +2496,12 @@ function getYoutubeVideoId(url){
         ){
 
             return parsed.pathname
-                .split("/embed/")[1]
-                .split("/")[0];
+                .split(
+                    "/embed/"
+                )[1]
+                .split(
+                    "/"
+                )[0];
 
         }
 
@@ -1852,8 +2513,12 @@ function getYoutubeVideoId(url){
         ){
 
             return parsed.pathname
-                .split("/shorts/")[1]
-                .split("/")[0];
+                .split(
+                    "/shorts/"
+                )[1]
+                .split(
+                    "/"
+                )[0];
 
         }
 
@@ -1867,6 +2532,12 @@ function getYoutubeVideoId(url){
 
     }catch(error){
 
+        console.error(
+            "YouTube URL error:",
+            error
+        );
+
+
         return "";
 
     }
@@ -1875,7 +2546,7 @@ function getYoutubeVideoId(url){
 
 
 /* =========================================================
-   YOUTUBE TASK
+   SETUP YOUTUBE TASK
    ========================================================= */
 
 function setupYouTubeTask(task){
@@ -1888,31 +2559,36 @@ function setupYouTubeTask(task){
 
     const timerEl =
         document.getElementById(
-            "timer_" + task.id
+            "timer_" +
+            task.id
         );
 
 
     const progressEl =
         document.getElementById(
-            "progress_" + task.id
+            "progress_" +
+            task.id
         );
 
 
     const completeButton =
         document.getElementById(
-            "complete_" + task.id
+            "complete_" +
+            task.id
         );
 
 
     const cancelButton =
         document.getElementById(
-            "cancel_" + task.id
+            "cancel_" +
+            task.id
         );
 
 
     const overlayEl =
         document.getElementById(
-            "overlay_" + task.id
+            "overlay_" +
+            task.id
         );
 
 
@@ -1926,7 +2602,9 @@ function setupYouTubeTask(task){
     }
 
 
-    activeElapsed = 0;
+    activeElapsed =
+        0;
+
 
     activeRequiredTime =
         Number(
@@ -1936,7 +2614,10 @@ function setupYouTubeTask(task){
 
     function createPlayer(){
 
-        if(!window.YT){
+        if(
+            !window.YT ||
+            !window.YT.Player
+        ){
 
             setTimeout(
                 createPlayer,
@@ -1950,7 +2631,8 @@ function setupYouTubeTask(task){
 
         activePlayer =
             new YT.Player(
-                "player_" + task.id,
+                "player_" +
+                task.id,
                 {
 
                     videoId:
@@ -1971,26 +2653,48 @@ function setupYouTubeTask(task){
                     events:{
 
                         onReady:
-                            function(){
+                        function(){
+
+                            if(
+                                overlayEl
+                            ){
 
                                 overlayEl.classList.add(
                                     "hidden"
                                 );
 
-                                timerEl.textContent =
-                                    "▶️ Press Play to start watch timer.";
+                            }
 
-                            },
+
+                            timerEl.textContent =
+                                "▶️ Press Play to start watch timer.";
+
+                        },
+
 
                         onStateChange:
-                            function(event){
+                        function(event){
 
-                                handleYoutubeState(
-                                    event,
-                                    task
-                                );
+                            handleYoutubeState(
+                                event,
+                                task
+                            );
 
-                            }
+                        },
+
+                        onError:
+                        function(event){
+
+                            console.error(
+                                "YouTube player error:",
+                                event.data
+                            );
+
+
+                            timerEl.textContent =
+                                "Unable to load YouTube video.";
+
+                        }
 
                     }
 
@@ -2003,51 +2707,52 @@ function setupYouTubeTask(task){
     createPlayer();
 
 
-    completeButton.addEventListener(
-        "click",
-        async function(){
+    completeButton.onclick =
+    async function(){
 
-            if(
-                activeElapsed <
-                activeRequiredTime
-            ){
+        if(
+            activeElapsed <
+            activeRequiredTime
+        ){
 
-                return;
+            return;
 
-            }
-
-
-            completeButton.disabled =
-                true;
+        }
 
 
-            await completeTask(
-                task,
-                completeButton
+        completeButton.disabled =
+            true;
+
+
+        await completeTask(
+            task,
+            completeButton
+        );
+
+    };
+
+
+    cancelButton.onclick =
+    function(){
+
+        const confirmExit =
+            confirm(
+                "Exit this task? Your watch time will not be submitted."
             );
 
-        }
-    );
+
+        if(
+            confirmExit
+        ){
+
+            stopActiveTask();
 
 
-    cancelButton.addEventListener(
-        "click",
-        function(){
-
-            if(
-                confirm(
-                    "Exit this task? Your watch time will not be submitted."
-                )
-            ){
-
-                stopActiveTask();
-
-                renderAvailableTasks();
-
-            }
+            renderAvailableTasks();
 
         }
-    );
+
+    };
 
 }
 
@@ -2063,25 +2768,24 @@ function handleYoutubeState(
 
     const timerEl =
         document.getElementById(
-            "timer_" + task.id
+            "timer_" +
+            task.id
         );
 
 
     const progressEl =
         document.getElementById(
-            "progress_" + task.id
+            "progress_" +
+            task.id
         );
 
 
     const completeButton =
         document.getElementById(
-            "complete_" + task.id
+            "complete_" +
+            task.id
         );
 
-
-    /*
-      PLAYING
-    */
 
     if(
         event.data ===
@@ -2099,10 +2803,6 @@ function handleYoutubeState(
     }
 
 
-    /*
-      PAUSED
-    */
-
     if(
         event.data ===
         YT.PlayerState.PAUSED
@@ -2116,10 +2816,6 @@ function handleYoutubeState(
 
     }
 
-
-    /*
-      ENDED
-    */
 
     if(
         event.data ===
@@ -2135,14 +2831,13 @@ function handleYoutubeState(
     }
 
 
-    /*
-      BUFFERING
-    */
-
     if(
         event.data ===
         YT.PlayerState.BUFFERING
     ){
+
+        stopWatchTimer();
+
 
         timerEl.textContent =
             "⏳ Buffering...";
@@ -2150,20 +2845,48 @@ function handleYoutubeState(
     }
 
 
+    updateTaskProgress(
+        task,
+        timerEl,
+        progressEl,
+        completeButton
+    );
+
+}
+
+
+/* =========================================================
+   TASK PROGRESS
+   ========================================================= */
+
+function updateTaskProgress(
+    task,
+    timerEl,
+    progressEl,
+    completeButton
+){
+
     const percentage =
         activeRequiredTime > 0
-        ? Math.min(
+
+        ?
+
+        Math.min(
             100,
             (
                 activeElapsed /
                 activeRequiredTime
             ) * 100
         )
-        : 0;
+
+        :
+
+        0;
 
 
     progressEl.style.width =
-        percentage + "%";
+        percentage +
+        "%";
 
 
     if(
@@ -2185,6 +2908,7 @@ function handleYoutubeState(
         completeButton.disabled =
             false;
 
+
         completeButton.className =
             "successBtn";
 
@@ -2194,7 +2918,7 @@ function handleYoutubeState(
 
 
 /* =========================================================
-   START TIMER
+   START WATCH TIMER
    ========================================================= */
 
 function startWatchTimer(task){
@@ -2210,10 +2934,6 @@ function startWatchTimer(task){
         setInterval(
             function(){
 
-                /*
-                  Only count while YouTube is actually playing.
-                */
-
                 if(
                     !activePlayer ||
                     !activePlayer.getPlayerState
@@ -2224,9 +2944,25 @@ function startWatchTimer(task){
                 }
 
 
-                const state =
-                    activePlayer.getPlayerState();
+                let state;
 
+
+                try{
+
+                    state =
+                        activePlayer.getPlayerState();
+
+                }catch(error){
+
+                    return;
+
+                }
+
+
+                /*
+                  Timer ONLY counts while
+                  YouTube state = PLAYING
+                */
 
                 if(
                     state !==
@@ -2243,19 +2979,22 @@ function startWatchTimer(task){
 
                 const timerEl =
                     document.getElementById(
-                        "timer_" + task.id
+                        "timer_" +
+                        task.id
                     );
 
 
                 const progressEl =
                     document.getElementById(
-                        "progress_" + task.id
+                        "progress_" +
+                        task.id
                     );
 
 
                 const completeButton =
                     document.getElementById(
-                        "complete_" + task.id
+                        "complete_" +
+                        task.id
                     );
 
 
@@ -2274,7 +3013,8 @@ function startWatchTimer(task){
 
 
                 progressEl.style.width =
-                    percentage + "%";
+                    percentage +
+                    "%";
 
 
                 if(
@@ -2296,6 +3036,7 @@ function startWatchTimer(task){
                     completeButton.disabled =
                         false;
 
+
                     completeButton.className =
                         "successBtn";
 
@@ -2309,7 +3050,7 @@ function startWatchTimer(task){
 
 
 /* =========================================================
-   STOP TIMER
+   STOP WATCH TIMER
    ========================================================= */
 
 function stopWatchTimer(){
@@ -2320,7 +3061,9 @@ function stopWatchTimer(){
             activeTimer
         );
 
-        activeTimer = null;
+
+        activeTimer =
+            null;
 
     }
 
@@ -2347,6 +3090,10 @@ async function completeTask(
         getToday();
 
 
+    /*
+      Refresh completion data before submitting.
+    */
+
     await loadAllCompletions();
 
 
@@ -2360,14 +3107,25 @@ async function completeTask(
             "You have already completed this task today."
         );
 
+
         stopActiveTask();
 
+
         await loadTasks();
+
 
         return;
 
     }
 
+
+    /*
+      Deterministic daily ID.
+
+      Example:
+
+      memberUID_task1_2026-09-13
+    */
 
     const completionId =
         currentMember.uid +
@@ -2399,11 +3157,15 @@ async function completeTask(
                 "This task has already been submitted today."
             );
 
+
             stopActiveTask();
+
 
             await loadAllCompletions();
 
+
             await loadTasks();
+
 
             return;
 
@@ -2469,9 +3231,12 @@ async function completeTask(
 
         await loadAllCompletions();
 
+
         await loadTasks();
 
+
         await loadCompletedTasks();
+
 
         refreshDashboard();
 
@@ -2510,6 +3275,13 @@ async function loadCompletedTasks(){
         );
 
 
+    if(!container){
+
+        return;
+
+    }
+
+
     if(!currentMember){
 
         return;
@@ -2520,7 +3292,8 @@ async function loadCompletedTasks(){
     try{
 
         if(
-            allCompletions.length === 0
+            allCompletions.length ===
+            0
         ){
 
             await loadAllCompletions();
@@ -2533,25 +3306,33 @@ async function loadCompletedTasks(){
 
 
         if(
-            completed.length === 0
+            completed.length ===
+            0
         ){
 
             container.innerHTML =
-                `<div class="empty">
+                `
+                <div class="empty">
+
                     No completed tasks yet.
-                 </div>`;
+
+                </div>
+                `;
+
 
             document.getElementById(
                 "dashboardCompletedTasks"
             ).textContent =
                 "0";
 
+
             return;
 
         }
 
 
-        let html = `
+        let html =
+            `
 
             <div class="tableWrap">
 
@@ -2561,20 +3342,29 @@ async function loadCompletedTasks(){
 
                     <tr>
 
-                        <th>Task</th>
+                        <th>
+                            Task
+                        </th>
 
-                        <th>Date</th>
+                        <th>
+                            Date
+                        </th>
 
-                        <th>Coins</th>
+                        <th>
+                            Coins
+                        </th>
 
-                        <th>Status</th>
+                        <th>
+                            Status
+                        </th>
 
                     </tr>
 
                 </thead>
 
                 <tbody>
-        `;
+
+            `;
 
 
         completed.forEach(
@@ -2599,7 +3389,8 @@ async function loadCompletedTasks(){
 
                     }else{
 
-                        date = "-";
+                        date =
+                            "-";
 
                     }
 
@@ -2617,7 +3408,8 @@ async function loadCompletedTasks(){
 
 
                 if(
-                    status === "Approved"
+                    status ===
+                    "Approved"
                 ){
 
                     badgeClass =
@@ -2627,7 +3419,8 @@ async function loadCompletedTasks(){
 
 
                 if(
-                    status === "Rejected"
+                    status ===
+                    "Rejected"
                 ){
 
                     badgeClass =
@@ -2636,13 +3429,15 @@ async function loadCompletedTasks(){
                 }
 
 
-                html += `
+                html +=
+                    `
 
                     <tr>
 
                         <td>
                             ${escapeHtml(
-                                item.taskTitle || "-"
+                                item.taskTitle ||
+                                "-"
                             )}
                         </td>
 
@@ -2654,14 +3449,16 @@ async function loadCompletedTasks(){
 
                         <td>
                             ${Number(
-                                item.rewardCoins || 0
+                                item.rewardCoins ||
+                                0
                             )}
                         </td>
 
                         <td>
 
                             <span
-                                class="badge ${badgeClass}">
+                                class="badge ${badgeClass}"
+                            >
                                 ${escapeHtml(
                                     status
                                 )}
@@ -2671,20 +3468,22 @@ async function loadCompletedTasks(){
 
                     </tr>
 
-                `;
+                    `;
 
             }
         );
 
 
-        html += `
+        html +=
+            `
 
                 </tbody>
 
             </table>
 
             </div>
-        `;
+
+            `;
 
 
         container.innerHTML =
@@ -2699,17 +3498,26 @@ async function loadCompletedTasks(){
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Completed task error:",
+            error
+        );
 
 
         container.innerHTML =
-            `<div class="empty">
+            `
+            <div class="empty">
+
                 Unable to load completed tasks.
+
                 <br><br>
+
                 ${escapeHtml(
                     error.message
                 )}
-             </div>`;
+
+            </div>
+            `;
 
     }
 
@@ -2731,7 +3539,8 @@ function refreshDashboard(){
 
     const coins =
         Number(
-            currentMemberData.coins || 0
+            currentMemberData.coins ||
+            0
         );
 
 
@@ -2745,13 +3554,16 @@ function refreshDashboard(){
         "dashboardRupees"
     ).textContent =
         "₹" +
-        (coins / 100).toFixed(2);
+        (
+            coins / 100
+        ).toFixed(2);
 
 
     const newTasks =
         allTasks.filter(
             task =>
-                task.status === "active" &&
+                task.status ===
+                "active" &&
                 !hasCompletedToday(
                     task.id
                 )
@@ -2773,7 +3585,7 @@ function refreshDashboard(){
 
 
 /* =========================================================
-   WITHDRAW
+   WITHDRAW PAGE
    ========================================================= */
 
 function refreshWithdrawPage(){
@@ -2787,7 +3599,8 @@ function refreshWithdrawPage(){
 
     const coins =
         Number(
-            currentMemberData.coins || 0
+            currentMemberData.coins ||
+            0
         );
 
 
@@ -2801,13 +3614,19 @@ function refreshWithdrawPage(){
         "withdrawAvailableRupees"
     ).textContent =
         "₹" +
-        (coins / 100).toFixed(2);
+        (
+            coins / 100
+        ).toFixed(2);
 
 
     calculateWithdrawal();
 
 }
 
+
+/* =========================================================
+   WITHDRAW CALCULATION
+   ========================================================= */
 
 document.getElementById(
     "withdrawCoins"
@@ -2819,11 +3638,16 @@ document.getElementById(
 
 function calculateWithdrawal(){
 
+    const input =
+        document.getElementById(
+            "withdrawCoins"
+        );
+
+
     const coins =
         Number(
-            document.getElementById(
-                "withdrawCoins"
-            ).value || 0
+            input.value ||
+            0
         );
 
 
@@ -2831,7 +3655,9 @@ function calculateWithdrawal(){
         "withdrawRupees"
     ).textContent =
         "₹" +
-        (coins / 100).toFixed(2);
+        (
+            coins / 100
+        ).toFixed(2);
 
 }
 
@@ -2879,18 +3705,19 @@ async function submitWithdrawal(){
 
     const availableCoins =
         Number(
-            currentMemberData.coins || 0
+            currentMemberData.coins ||
+            0
         );
 
 
     if(
-        !coins ||
+        !Number.isInteger(coins) ||
         coins <= 0
     ){
 
         showMessage(
             "withdrawMessage",
-            "Enter valid withdrawal coins.",
+            "Enter valid whole-number withdrawal coins.",
             "error"
         );
 
@@ -2900,7 +3727,8 @@ async function submitWithdrawal(){
 
 
     if(
-        coins > availableCoins
+        coins >
+        availableCoins
     ){
 
         showMessage(
@@ -2933,7 +3761,8 @@ async function submitWithdrawal(){
         coins / 100;
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
 
 
     try{
@@ -2989,22 +3818,28 @@ async function submitWithdrawal(){
 
         document.getElementById(
             "withdrawCoins"
-        ).value = "";
+        ).value =
+            "";
 
 
         document.getElementById(
             "withdrawUpi"
-        ).value = "";
+        ).value =
+            "";
 
 
         calculateWithdrawal();
+
 
         await loadWithdrawalHistory();
 
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Withdrawal error:",
+            error
+        );
 
 
         showMessage(
@@ -3017,7 +3852,8 @@ async function submitWithdrawal(){
     }
 
 
-    button.disabled = false;
+    button.disabled =
+        false;
 
 }
 
@@ -3032,6 +3868,13 @@ async function loadWithdrawalHistory(){
         document.getElementById(
             "withdrawalHistoryContainer"
         );
+
+
+    if(!container){
+
+        return;
+
+    }
 
 
     if(!currentMember){
@@ -3061,7 +3904,8 @@ async function loadWithdrawalHistory(){
             await getDocs(q);
 
 
-        const withdrawals = [];
+        const withdrawals =
+            [];
 
 
         snapshot.forEach(
@@ -3087,9 +3931,11 @@ async function loadWithdrawalHistory(){
                     a.requestedAt?.seconds ||
                     0;
 
+
                 const bTime =
                     b.requestedAt?.seconds ||
                     0;
+
 
                 return bTime - aTime;
 
@@ -3098,20 +3944,27 @@ async function loadWithdrawalHistory(){
 
 
         if(
-            withdrawals.length === 0
+            withdrawals.length ===
+            0
         ){
 
             container.innerHTML =
-                `<div class="empty">
+                `
+                <div class="empty">
+
                     No withdrawal history yet.
-                 </div>`;
+
+                </div>
+                `;
+
 
             return;
 
         }
 
 
-        let html = `
+        let html =
+            `
 
             <div class="tableWrap">
 
@@ -3121,28 +3974,40 @@ async function loadWithdrawalHistory(){
 
                     <tr>
 
-                        <th>Date</th>
+                        <th>
+                            Date
+                        </th>
 
-                        <th>Coins</th>
+                        <th>
+                            Coins
+                        </th>
 
-                        <th>Amount</th>
+                        <th>
+                            Amount
+                        </th>
 
-                        <th>UPI</th>
+                        <th>
+                            UPI
+                        </th>
 
-                        <th>Status</th>
+                        <th>
+                            Status
+                        </th>
 
                     </tr>
 
                 </thead>
 
                 <tbody>
-        `;
+
+            `;
 
 
         withdrawals.forEach(
             item => {
 
-                let date = "-";
+                let date =
+                    "-";
 
 
                 if(
@@ -3169,7 +4034,8 @@ async function loadWithdrawalHistory(){
 
 
                 if(
-                    status === "approved"
+                    status ===
+                    "approved"
                 ){
 
                     badgeClass =
@@ -3179,7 +4045,8 @@ async function loadWithdrawalHistory(){
 
 
                 if(
-                    status === "rejected"
+                    status ===
+                    "rejected"
                 ){
 
                     badgeClass =
@@ -3188,36 +4055,43 @@ async function loadWithdrawalHistory(){
                 }
 
 
-                html += `
+                html +=
+                    `
 
                     <tr>
 
                         <td>
-                            ${escapeHtml(date)}
+                            ${escapeHtml(
+                                date
+                            )}
                         </td>
 
                         <td>
                             ${Number(
-                                item.coins || 0
+                                item.coins ||
+                                0
                             )}
                         </td>
 
                         <td>
                             ₹${Number(
-                                item.amount || 0
+                                item.amount ||
+                                0
                             ).toFixed(2)}
                         </td>
 
                         <td>
                             ${escapeHtml(
-                                item.upiId || "-"
+                                item.upiId ||
+                                "-"
                             )}
                         </td>
 
                         <td>
 
                             <span
-                                class="badge ${badgeClass}">
+                                class="badge ${badgeClass}"
+                            >
                                 ${escapeHtml(
                                     status
                                 )}
@@ -3227,20 +4101,22 @@ async function loadWithdrawalHistory(){
 
                     </tr>
 
-                `;
+                    `;
 
             }
         );
 
 
-        html += `
+        html +=
+            `
 
                 </tbody>
 
             </table>
 
             </div>
-        `;
+
+            `;
 
 
         container.innerHTML =
@@ -3249,17 +4125,26 @@ async function loadWithdrawalHistory(){
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Withdrawal history error:",
+            error
+        );
 
 
         container.innerHTML =
-            `<div class="empty">
+            `
+            <div class="empty">
+
                 Unable to load withdrawal history.
+
                 <br><br>
+
                 ${escapeHtml(
                     error.message
                 )}
-             </div>`;
+
+            </div>
+            `;
 
     }
 
@@ -3272,7 +4157,10 @@ async function loadWithdrawalHistory(){
 
 function loadProfile(){
 
-    if(!currentMemberData){
+    if(
+        !currentMemberData ||
+        !currentMember
+    ){
 
         return;
 
@@ -3313,7 +4201,8 @@ function loadProfile(){
         "profileCoins"
     ).textContent =
         Number(
-            currentMemberData.coins || 0
+            currentMemberData.coins ||
+            0
         );
 
 }
@@ -3337,14 +4226,23 @@ async function logoutUser(){
 
         stopActiveTask();
 
-        await signOut(auth);
+
+        await signOut(
+            auth
+        );
+
 
         window.location.href =
             "index.html";
 
+
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Logout error:",
+            error
+        );
+
 
         alert(
             "Logout failed: " +
@@ -3357,21 +4255,24 @@ async function logoutUser(){
 
 
 /* =========================================================
-   VISIBILITY
+   PAGE VISIBILITY
    ========================================================= */
 
 document.addEventListener(
     "visibilitychange",
     function(){
 
+        /*
+          YouTube player state is still checked
+          before counting each second.
+
+          If user switches tab and YouTube pauses,
+          timer will stop.
+        */
+
         if(
             document.hidden
         ){
-
-            /*
-              We don't count hidden tab time.
-              YouTube player state is checked every second.
-            */
 
             return;
 
@@ -3384,10 +4285,6 @@ document.addEventListener(
 /* =========================================================
    NEW DAY AUTO REFRESH
    ========================================================= */
-
-let lastKnownDate =
-    getToday();
-
 
 setInterval(
     async function(){
@@ -3410,11 +4307,15 @@ setInterval(
 
             await loadAllCompletions();
 
+
             await loadTasks();
+
 
             await loadCompletedTasks();
 
+
             refreshDashboard();
+
 
             refreshWithdrawPage();
 
@@ -3426,12 +4327,15 @@ setInterval(
 
 
 /* =========================================================
-   INITIAL
+   INITIAL PAGE
    ========================================================= */
 
-showPage("dashboard");
+showPage(
+    "dashboard"
+);
 
 </script>
 
 </body>
 </html>
+```
