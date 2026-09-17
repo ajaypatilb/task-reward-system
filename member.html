@@ -15,14 +15,14 @@
 body{
     margin:0;
     background:#f5f7fb;
-    color:#1f2937;
+    color:#222;
 }
 
 /* ================= HEADER ================= */
 
 .header{
-    height:60px;
-    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+    height:65px;
+    background:linear-gradient(135deg,#5b2be0,#7b4cff);
     color:white;
     display:flex;
     align-items:center;
@@ -32,118 +32,88 @@ body{
     left:0;
     right:0;
     z-index:1000;
-    box-shadow:0 3px 15px rgba(0,0,0,.12);
 }
 
 .menuBtn{
-    width:40px;
-    height:40px;
-    border:none;
-    background:rgba(255,255,255,.15);
-    color:white;
-    border-radius:10px;
-    font-size:22px;
+    font-size:27px;
     cursor:pointer;
+    margin-right:15px;
 }
 
 .headerTitle{
-    margin-left:14px;
-    font-size:19px;
+    font-size:20px;
     font-weight:bold;
+    flex:1;
 }
 
-.headerRight{
-    margin-left:auto;
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-
-.coinMini{
-    background:rgba(255,255,255,.15);
+.headerCoins{
+    background:rgba(255,255,255,.18);
     padding:8px 12px;
     border-radius:20px;
-    font-size:13px;
+    font-weight:bold;
 }
 
 /* ================= SIDEBAR ================= */
 
 .sidebar{
     position:fixed;
-    top:60px;
+    top:65px;
     left:-270px;
     width:270px;
     bottom:0;
-    background:#fff;
-    box-shadow:3px 0 15px rgba(0,0,0,.1);
-    z-index:999;
+    background:white;
+    box-shadow:2px 0 12px rgba(0,0,0,.12);
     transition:.3s;
-    overflow-y:auto;
+    z-index:999;
+    padding:20px 0;
 }
 
 .sidebar.active{
     left:0;
 }
 
-.sidebarProfile{
-    padding:22px 18px;
-    background:linear-gradient(135deg,#eef2ff,#f5f3ff);
-    border-bottom:1px solid #e5e7eb;
-}
-
-.profileCircle{
-    width:55px;
-    height:55px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#4f46e5,#9333ea);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:24px;
-    font-weight:bold;
+.sidebarUser{
+    padding:15px 20px;
+    border-bottom:1px solid #eee;
     margin-bottom:10px;
 }
 
-.sidebarName{
+.sidebarUserName{
     font-weight:bold;
-    font-size:16px;
+    font-size:17px;
 }
 
-.sidebarEmail{
-    color:#6b7280;
-    font-size:12px;
-    margin-top:4px;
+.sidebarUserEmail{
+    color:#777;
+    font-size:13px;
+    margin-top:5px;
     word-break:break-word;
 }
 
 .navItem{
-    padding:14px 18px;
-    display:flex;
-    align-items:center;
-    gap:12px;
+    padding:14px 20px;
     cursor:pointer;
-    font-size:14px;
-    border-bottom:1px solid #f3f4f6;
+    font-size:15px;
 }
 
 .navItem:hover{
-    background:#f5f3ff;
-    color:#4f46e5;
+    background:#f0ebff;
+    color:#5b2be0;
 }
 
-.navIcon{
-    width:25px;
-    text-align:center;
+.navItem.logout{
+    color:#e53935;
 }
 
 /* ================= MAIN ================= */
 
 .main{
-    padding:82px 18px 30px;
-    max-width:1200px;
+    padding:85px 18px 30px;
+    max-width:1100px;
     margin:auto;
 }
+
+/* ================= PAGES ================= */
 
 .page{
     display:none;
@@ -155,386 +125,163 @@ body{
 
 /* ================= DASHBOARD HERO ================= */
 
-.dashboardHero{
-    background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 55%,#9333ea 100%);
-    border-radius:24px;
-    padding:25px;
+.hero{
+    background:linear-gradient(135deg,#5b2be0,#8a63ff);
     color:white;
-    position:relative;
-    overflow:hidden;
+    border-radius:22px;
+    padding:25px;
     margin-bottom:20px;
-    box-shadow:0 12px 30px rgba(79,70,229,.22);
+    box-shadow:0 8px 25px rgba(91,43,224,.25);
 }
 
-.dashboardHero:before{
-    content:"";
-    position:absolute;
-    width:220px;
-    height:220px;
-    border-radius:50%;
-    background:rgba(255,255,255,.08);
-    right:-70px;
-    top:-80px;
-}
-
-.dashboardHero:after{
-    content:"";
-    position:absolute;
-    width:150px;
-    height:150px;
-    border-radius:50%;
-    background:rgba(255,255,255,.06);
-    right:80px;
-    bottom:-100px;
-}
-
-.dashboardHeroContent{
-    position:relative;
-    z-index:2;
-}
-
-.dashboardHero h2{
+.hero h2{
     margin:0 0 8px;
     font-size:25px;
 }
 
-.dashboardHero p{
-    margin:0;
+.hero p{
+    margin:5px 0;
     opacity:.9;
-    font-size:14px;
 }
 
-.heroRate{
+.rate{
     display:inline-block;
-    margin-top:18px;
+    margin-top:12px;
+    background:rgba(255,255,255,.18);
     padding:8px 13px;
-    background:rgba(255,255,255,.16);
-    border:1px solid rgba(255,255,255,.18);
     border-radius:20px;
     font-size:13px;
 }
 
-.heroCoin{
-    position:absolute;
-    right:30px;
-    top:25px;
-    font-size:70px;
-    z-index:2;
-    filter:drop-shadow(0 8px 10px rgba(0,0,0,.15));
-}
+/* ================= CARDS ================= */
 
-.heroCoinSmall{
-    position:absolute;
-    right:100px;
-    bottom:20px;
-    font-size:32px;
-    opacity:.9;
-}
-
-/* ================= STATS ================= */
-
-.dashboardStats{
+.cards{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.dashboardStat{
-    background:white;
-    border-radius:18px;
-    padding:18px;
-    min-height:145px;
-    cursor:pointer;
-    border:1px solid #edf0f5;
-    box-shadow:0 5px 18px rgba(15,23,42,.06);
-    transition:.2s;
-}
-
-.dashboardStat:hover{
-    transform:translateY(-3px);
-    box-shadow:0 9px 25px rgba(15,23,42,.1);
-}
-
-.dashboardStatIcon{
-    width:45px;
-    height:45px;
-    border-radius:13px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:22px;
-    margin-bottom:12px;
-}
-
-.statBlue .dashboardStatIcon{
-    background:#e0f2fe;
-}
-
-.statPurple .dashboardStatIcon{
-    background:#ede9fe;
-}
-
-.statOrange .dashboardStatIcon{
-    background:#ffedd5;
-}
-
-.statGreen .dashboardStatIcon{
-    background:#dcfce7;
-}
-
-.dashboardStatTitle{
-    font-size:12px;
-    color:#6b7280;
-    margin-bottom:5px;
-}
-
-.dashboardStatValue{
-    font-size:22px;
-    font-weight:bold;
-    color:#111827;
-}
-
-.dashboardStatSub{
-    margin-top:5px;
-    font-size:12px;
-    color:#9ca3af;
-}
-
-/* ================= DASHBOARD SECTION ================= */
-
-.dashboardSection{
-    background:white;
-    border-radius:20px;
-    padding:20px;
-    margin-bottom:20px;
-    box-shadow:0 5px 18px rgba(15,23,42,.05);
-    border:1px solid #edf0f5;
-}
-
-.dashboardSectionTitle{
-    font-size:17px;
-    font-weight:bold;
-    margin-bottom:17px;
-}
-
-/* ================= TASK SUMMARY ================= */
-
-.taskSummaryGrid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
     gap:14px;
+    margin-bottom:22px;
 }
-
-.taskSummaryItem{
-    border:1px solid #edf0f5;
-    background:#fafbff;
-    border-radius:15px;
-    padding:16px;
-    text-align:center;
-}
-
-.taskSummaryIcon{
-    font-size:25px;
-    margin-bottom:7px;
-}
-
-.taskSummaryValue{
-    font-size:22px;
-    font-weight:bold;
-}
-
-.taskSummaryLabel{
-    font-size:12px;
-    color:#6b7280;
-    margin-top:4px;
-}
-
-/* ================= PROGRESS ================= */
-
-.progressHeader{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:10px;
-}
-
-.progressCoins{
-    font-weight:bold;
-    font-size:15px;
-}
-
-.progressAmount{
-    color:#6b7280;
-    font-size:13px;
-}
-
-.earningProgressOuter{
-    width:100%;
-    height:14px;
-    background:#e5e7eb;
-    border-radius:20px;
-    overflow:hidden;
-}
-
-.earningProgressInner{
-    height:100%;
-    width:0%;
-    border-radius:20px;
-    background:linear-gradient(90deg,#4f46e5,#9333ea);
-    transition:width .5s ease;
-}
-
-.progressBottom{
-    display:flex;
-    justify-content:space-between;
-    color:#9ca3af;
-    font-size:11px;
-    margin-top:8px;
-}
-
-/* ================= QUICK ACTIONS ================= */
-
-.quickActionGrid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:14px;
-}
-
-.quickAction{
-    border:1px solid #e5e7eb;
-    border-radius:15px;
-    padding:16px;
-    background:#fff;
-    cursor:pointer;
-    text-align:center;
-    transition:.2s;
-}
-
-.quickAction:hover{
-    border-color:#8b5cf6;
-    background:#faf7ff;
-}
-
-.quickActionIcon{
-    font-size:25px;
-    margin-bottom:7px;
-}
-
-.quickAction div:last-child{
-    font-size:13px;
-    font-weight:bold;
-}
-
-/* ================= GENERAL ================= */
 
 .card{
     background:white;
     border-radius:18px;
+    padding:18px;
+    box-shadow:0 4px 15px rgba(0,0,0,.07);
+}
+
+.card.clickable{
+    cursor:pointer;
+}
+
+.card.clickable:hover{
+    transform:translateY(-2px);
+}
+
+.cardIcon{
+    font-size:30px;
+}
+
+.cardLabel{
+    color:#777;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.cardValue{
+    font-size:23px;
+    font-weight:bold;
+    margin-top:5px;
+}
+
+.cardAmount{
+    color:#5b2be0;
+    font-size:13px;
+    margin-top:4px;
+}
+
+/* ================= SECTION ================= */
+
+.section{
+    background:white;
+    border-radius:18px;
     padding:20px;
     margin-bottom:20px;
-    box-shadow:0 5px 18px rgba(15,23,42,.05);
-    border:1px solid #edf0f5;
+    box-shadow:0 4px 15px rgba(0,0,0,.06);
 }
 
-.card h2{
-    margin-top:0;
+.sectionTitle{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:16px;
 }
 
-button{
-    border:none;
-    border-radius:10px;
-    padding:11px 16px;
+/* ================= SUMMARY ================= */
+
+.summaryGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.summaryBox{
+    background:#f7f5ff;
+    border-radius:15px;
+    padding:15px;
+    text-align:center;
+}
+
+.summaryNumber{
+    font-size:24px;
+    font-weight:bold;
+    color:#5b2be0;
+}
+
+.summaryLabel{
+    font-size:13px;
+    color:#777;
+    margin-top:5px;
+}
+
+/* ================= PROGRESS ================= */
+
+.progressOuter{
+    width:100%;
+    height:14px;
+    background:#eee;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progressInner{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#5b2be0,#9b75ff);
+    border-radius:20px;
+    transition:.4s;
+}
+
+.progressText{
+    margin-top:10px;
+    color:#666;
+    font-size:14px;
+}
+
+/* ================= QUICK ACTION ================= */
+
+.quickActions{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.quickBtn{
+    border:0;
+    background:#f3efff;
+    color:#5b2be0;
+    padding:14px;
+    border-radius:14px;
     cursor:pointer;
     font-weight:bold;
-}
-
-.primaryBtn{
-    background:#4f46e5;
-    color:white;
-}
-
-.primaryBtn:hover{
-    background:#4338ca;
-}
-
-.dangerBtn{
-    background:#ef4444;
-    color:white;
-}
-
-.successBtn{
-    background:#16a34a;
-    color:white;
-}
-
-.secondaryBtn{
-    background:#e5e7eb;
-    color:#111827;
-}
-
-input{
-    width:100%;
-    padding:12px;
-    border:1px solid #d1d5db;
-    border-radius:10px;
-    margin-top:7px;
-    margin-bottom:15px;
-    outline:none;
-}
-
-input:focus{
-    border-color:#6366f1;
-}
-
-label{
-    font-size:13px;
-    font-weight:bold;
-    color:#374151;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:650px;
-}
-
-th,td{
-    padding:12px;
-    border-bottom:1px solid #e5e7eb;
-    text-align:left;
-    font-size:13px;
-}
-
-th{
-    background:#f8fafc;
-}
-
-.tableWrap{
-    overflow-x:auto;
-}
-
-.badge{
-    display:inline-block;
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:bold;
-}
-
-.badgePending{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.badgeApproved{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.badgeRejected{
-    background:#fee2e2;
-    color:#991b1b;
 }
 
 /* ================= TASK ================= */
@@ -544,189 +291,265 @@ th{
     border-radius:18px;
     padding:18px;
     margin-bottom:15px;
-    border:1px solid #e5e7eb;
-    box-shadow:0 4px 15px rgba(0,0,0,.05);
+    box-shadow:0 4px 15px rgba(0,0,0,.07);
 }
 
-.taskCard h3{
-    margin-top:0;
+.taskTitle{
+    font-size:18px;
+    font-weight:bold;
 }
 
 .taskInfo{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin:10px 0;
+    color:#666;
+    font-size:14px;
+    margin:8px 0 14px;
 }
 
-.taskInfo span{
-    background:#f3f4f6;
-    padding:6px 9px;
-    border-radius:20px;
-    font-size:12px;
+.reward{
+    color:#5b2be0;
+    font-weight:bold;
+}
+
+.startBtn,
+.completeBtn,
+.exitBtn,
+.withdrawBtn{
+    border:0;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.startBtn{
+    background:#5b2be0;
+    color:white;
+}
+
+.completeBtn{
+    background:#20a464;
+    color:white;
+    margin-top:12px;
+}
+
+.completeBtn:disabled{
+    background:#aaa;
+    cursor:not-allowed;
+}
+
+.exitBtn{
+    background:#e53935;
+    color:white;
+    margin-top:12px;
+    margin-left:8px;
 }
 
 .videoBox{
-    margin-top:15px;
     display:none;
-}
-
-.videoContainer{
-    width:100%;
-    max-width:760px;
-    margin:auto;
-    aspect-ratio:16/9;
-    background:#111827;
-    border-radius:14px;
-    overflow:hidden;
+    background:#111;
+    padding:12px;
+    border-radius:15px;
+    margin-top:15px;
 }
 
 #youtubePlayer{
     width:100%;
-    height:100%;
+    min-height:250px;
 }
 
-.timerBox{
+.activeTaskTitle{
+    color:white;
+    margin:0 0 10px;
+}
+
+.timerText{
+    color:white;
     text-align:center;
-    margin-top:15px;
-    font-size:22px;
+    margin:10px 0;
     font-weight:bold;
 }
 
-.progressOuter{
+.taskProgressOuter{
     width:100%;
     height:10px;
-    background:#e5e7eb;
-    border-radius:20px;
+    background:#555;
+    border-radius:10px;
     overflow:hidden;
-    margin-top:10px;
 }
 
-.progressInner{
-    height:100%;
+.taskProgress{
     width:0%;
-    background:#4f46e5;
-    transition:.2s;
+    height:100%;
+    background:#6d42ff;
 }
 
-/* ================= WITHDRAW ================= */
-
-.withdrawGrid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    margin-bottom:20px;
+.taskMessage{
+    margin-top:12px;
+    padding:10px;
+    border-radius:10px;
+    background:#f1f1f1;
+    display:none;
 }
 
-.withdrawInfo{
-    background:white;
-    border-radius:16px;
-    padding:18px;
-    border:1px solid #e5e7eb;
+/* ================= HISTORY ================= */
+
+.historyItem{
+    padding:15px;
+    border:1px solid #eee;
+    border-radius:14px;
+    margin-bottom:10px;
 }
 
-.withdrawInfoTitle{
-    color:#6b7280;
-    font-size:12px;
-}
-
-.withdrawInfoValue{
-    font-size:21px;
+.historyTitle{
     font-weight:bold;
-    margin-top:6px;
+}
+
+.historyMeta{
+    color:#777;
+    font-size:13px;
+    margin-top:5px;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.badge.pending{
+    background:#fff2cc;
+    color:#9a6b00;
+}
+
+.badge.approved{
+    background:#dff7e8;
+    color:#168348;
+}
+
+.badge.rejected{
+    background:#ffe1e1;
+    color:#c62828;
+}
+
+/* ================= FORM ================= */
+
+.formGroup{
+    margin-bottom:15px;
+}
+
+.formGroup label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.formGroup input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    outline:none;
+}
+
+.formGroup input:focus{
+    border-color:#5b2be0;
+}
+
+.withdrawPreview{
+    background:#f3efff;
+    padding:15px;
+    border-radius:14px;
+    margin-bottom:15px;
+}
+
+.withdrawPreview strong{
+    color:#5b2be0;
+}
+
+.withdrawBtn{
+    background:#5b2be0;
+    color:white;
+    width:100%;
+}
+
+.withdrawBtn:disabled{
+    background:#aaa;
 }
 
 /* ================= PROFILE ================= */
 
-.profileBox{
-    max-width:600px;
+.profileRow{
+    padding:13px 0;
+    border-bottom:1px solid #eee;
+}
+
+.profileLabel{
+    color:#777;
+    font-size:13px;
+}
+
+.profileValue{
+    margin-top:4px;
+    font-weight:bold;
+}
+
+/* ================= EMPTY ================= */
+
+.empty{
+    text-align:center;
+    color:#777;
+    padding:30px 10px;
 }
 
 /* ================= RESPONSIVE ================= */
 
-@media(max-width:900px){
-    .dashboardStats{
+@media(max-width:800px){
+
+    .cards{
         grid-template-columns:repeat(2,1fr);
     }
 
-    .withdrawGrid{
-        grid-template-columns:1fr;
-    }
 }
 
 @media(max-width:600px){
+
     .main{
-        padding:75px 12px 25px;
+        padding:82px 12px 25px;
     }
 
-    .dashboardHero{
-        padding:20px;
-        border-radius:20px;
-    }
-
-    .dashboardHero h2{
-        font-size:21px;
-        max-width:75%;
-    }
-
-    .heroCoin{
-        font-size:52px;
-        right:15px;
-        top:28px;
-    }
-
-    .heroCoinSmall{
-        right:65px;
-        font-size:25px;
-    }
-
-    .dashboardStats{
-        grid-template-columns:1fr 1fr;
+    .cards{
+        grid-template-columns:repeat(2,1fr);
         gap:10px;
     }
 
-    .dashboardStat{
-        min-height:135px;
+    .card{
         padding:14px;
     }
 
-    .dashboardStatValue{
-        font-size:19px;
+    .cardValue{
+        font-size:20px;
     }
 
-    .taskSummaryGrid{
-        grid-template-columns:1fr 1fr 1fr;
-        gap:7px;
+    .summaryGrid{
+        grid-template-columns:1fr;
     }
 
-    .taskSummaryItem{
-        padding:12px 5px;
+    .quickActions{
+        grid-template-columns:1fr;
     }
 
-    .taskSummaryValue{
-        font-size:19px;
-    }
-
-    .quickActionGrid{
-        grid-template-columns:1fr 1fr 1fr;
-        gap:8px;
-    }
-
-    .quickAction{
-        padding:13px 5px;
-    }
-
-    .quickActionIcon{
-        font-size:22px;
+    #youtubePlayer{
+        min-height:210px;
     }
 
     .headerTitle{
-        font-size:16px;
+        font-size:17px;
     }
 
-    .coinMini{
-        padding:7px 9px;
-    }
 }
 </style>
 </head>
@@ -735,211 +558,242 @@ th{
 
 <!-- ================= HEADER ================= -->
 
-<header class="header">
-    <button class="menuBtn" onclick="toggleSidebar()">☰</button>
+<div class="header">
+
+    <div class="menuBtn" id="menuBtn">
+        ☰
+    </div>
 
     <div class="headerTitle">
         Task Reward System
     </div>
 
-    <div class="headerRight">
-        <div class="coinMini">
-            🪙 <span id="headerCoins">0</span>
-        </div>
+    <div class="headerCoins">
+        🪙 <span id="headerCoins">0</span>
     </div>
-</header>
+
+</div>
 
 
 <!-- ================= SIDEBAR ================= -->
 
-<aside class="sidebar" id="sidebar">
+<div class="sidebar" id="sidebar">
 
-    <div class="sidebarProfile">
+    <div class="sidebarUser">
 
-        <div class="profileCircle" id="profileInitial">
-            M
-        </div>
-
-        <div class="sidebarName" id="sidebarName">
+        <div
+            class="sidebarUserName"
+            id="sidebarUserName"
+        >
             Member
         </div>
 
-        <div class="sidebarEmail" id="sidebarEmail">
+        <div
+            class="sidebarUserEmail"
+            id="sidebarUserEmail"
+        >
             -
         </div>
 
     </div>
 
-    <div class="navItem" onclick="showPage('dashboard')">
-        <div class="navIcon">🏠</div>
-        <div>Dashboard</div>
+    <div
+        class="navItem"
+        data-page="dashboardPage"
+    >
+        🏠 Dashboard
     </div>
 
-    <div class="navItem" onclick="showPage('newTasks')">
-        <div class="navIcon">🎯</div>
-        <div>New Tasks</div>
+    <div
+        class="navItem"
+        data-page="newTasksPage"
+    >
+        🎯 New Tasks
     </div>
 
-    <div class="navItem" onclick="showPage('completedTasks')">
-        <div class="navIcon">✅</div>
-        <div>Completed Tasks</div>
+    <div
+        class="navItem"
+        data-page="completedTasksPage"
+    >
+        ✅ Completed Tasks
     </div>
 
-    <div class="navItem" onclick="showPage('withdraw')">
-        <div class="navIcon">💸</div>
-        <div>Withdraw</div>
+    <div
+        class="navItem"
+        data-page="withdrawPage"
+    >
+        💸 Withdraw
     </div>
 
-    <div class="navItem" onclick="showPage('withdrawalHistory')">
-        <div class="navIcon">📜</div>
-        <div>Withdrawal History</div>
+    <div
+        class="navItem"
+        data-page="withdrawalHistoryPage"
+    >
+        📜 Withdrawal History
     </div>
 
-    <div class="navItem" onclick="showPage('profile')">
-        <div class="navIcon">👤</div>
-        <div>Profile</div>
+    <div
+        class="navItem"
+        data-page="profilePage"
+    >
+        👤 Profile
     </div>
 
-    <div class="navItem" onclick="logout()">
-        <div class="navIcon">🚪</div>
-        <div>Logout</div>
+    <div
+        class="navItem logout"
+        id="logoutButton"
+    >
+        🚪 Logout
     </div>
 
-</aside>
+</div>
 
 
 <!-- ================= MAIN ================= -->
 
-<main class="main">
+<div class="main">
 
 
 <!-- ================= DASHBOARD ================= -->
 
-<section class="page active" id="dashboard">
+<div
+    class="page active"
+    id="dashboardPage"
+>
 
-    <div class="dashboardHero">
+    <div class="hero">
 
-        <div class="dashboardHeroContent">
+        <h2>
+            👋 Welcome,
+            <span id="dashboardWelcome">
+                Member
+            </span>
+        </h2>
 
-            <h2>
-                Welcome, <span id="dashboardWelcome">Member</span> 👋
-            </h2>
+        <p>
+            Complete tasks and earn rewards.
+        </p>
 
-            <p>
-                Complete tasks and earn rewards.
-            </p>
-
-            <div class="heroRate">
-                🪙 100 Coins = ₹1
-            </div>
-
-        </div>
-
-        <div class="heroCoin">
-            🪙
-        </div>
-
-        <div class="heroCoinSmall">
-            💰
+        <div class="rate">
+            💰 100 Coins = ₹1
         </div>
 
     </div>
 
 
-    <!-- EARNING CARDS -->
+    <div class="cards">
 
-    <div class="dashboardStats">
+        <div
+            class="card clickable"
+            data-page="withdrawPage"
+        >
 
-        <div class="dashboardStat statBlue"
-             onclick="showPage('withdraw')">
-
-            <div class="dashboardStatIcon">
+            <div class="cardIcon">
                 🪙
             </div>
 
-            <div class="dashboardStatTitle">
+            <div class="cardLabel">
                 Available Coins
             </div>
 
-            <div class="dashboardStatValue"
-                 id="dashboardCoins">
+            <div
+                class="cardValue"
+                id="dashboardCoins"
+            >
                 0
             </div>
 
-            <div class="dashboardStatSub"
-                 id="dashboardRupees">
+            <div
+                class="cardAmount"
+                id="dashboardRupees"
+            >
                 ₹0.00
             </div>
 
         </div>
 
 
-        <div class="dashboardStat statPurple"
-             onclick="showPage('completedTasks')">
+        <div class="card">
 
-            <div class="dashboardStatIcon">
+            <div class="cardIcon">
                 💰
             </div>
 
-            <div class="dashboardStatTitle">
+            <div class="cardLabel">
                 Total Earned
             </div>
 
-            <div class="dashboardStatValue"
-                 id="dashboardTotalEarning">
+            <div
+                class="cardValue"
+                id="dashboardTotalEarning"
+            >
                 0
             </div>
 
-            <div class="dashboardStatSub"
-                 id="dashboardTotalEarningRupees">
+            <div
+                class="cardAmount"
+                id="dashboardTotalEarningRupees"
+            >
                 ₹0.00
             </div>
 
         </div>
 
 
-        <div class="dashboardStat statOrange"
-             onclick="showPage('withdrawalHistory')">
+        <div
+            class="card clickable"
+            data-page="withdrawalHistoryPage"
+        >
 
-            <div class="dashboardStatIcon">
+            <div class="cardIcon">
                 ⏳
             </div>
 
-            <div class="dashboardStatTitle">
+            <div class="cardLabel">
                 Pending Withdrawal
             </div>
 
-            <div class="dashboardStatValue"
-                 id="dashboardPendingWithdrawal">
+            <div
+                class="cardValue"
+                id="dashboardPendingWithdrawal"
+            >
                 0
             </div>
 
-            <div class="dashboardStatSub"
-                 id="dashboardPendingWithdrawalRupees">
+            <div
+                class="cardAmount"
+                id="dashboardPendingWithdrawalRupees"
+            >
                 ₹0.00
             </div>
 
         </div>
 
 
-        <div class="dashboardStat statGreen"
-             onclick="showPage('withdrawalHistory')">
+        <div
+            class="card clickable"
+            data-page="withdrawalHistoryPage"
+        >
 
-            <div class="dashboardStatIcon">
-                ✅
+            <div class="cardIcon">
+                💵
             </div>
 
-            <div class="dashboardStatTitle">
+            <div class="cardLabel">
                 Total Withdrawn
             </div>
 
-            <div class="dashboardStatValue"
-                 id="dashboardTotalWithdrawn">
+            <div
+                class="cardValue"
+                id="dashboardTotalWithdrawn"
+            >
                 0
             </div>
 
-            <div class="dashboardStatSub"
-                 id="dashboardTotalWithdrawnRupees">
+            <div
+                class="cardAmount"
+                id="dashboardTotalWithdrawnRupees"
+            >
                 ₹0.00
             </div>
 
@@ -948,64 +802,56 @@ th{
     </div>
 
 
-    <!-- TASK SUMMARY -->
+    <div class="section">
 
-    <div class="dashboardSection">
-
-        <div class="dashboardSectionTitle">
+        <div class="sectionTitle">
             📊 Task Summary
         </div>
 
-        <div class="taskSummaryGrid">
+        <div class="summaryGrid">
 
-            <div class="taskSummaryItem">
+            <div class="summaryBox">
 
-                <div class="taskSummaryIcon">
-                    🎯
-                </div>
-
-                <div class="taskSummaryValue"
-                     id="dashboardNewTasks">
+                <div
+                    class="summaryNumber"
+                    id="dashboardNewTasks"
+                >
                     0
                 </div>
 
-                <div class="taskSummaryLabel">
+                <div class="summaryLabel">
                     New Tasks
                 </div>
 
             </div>
 
 
-            <div class="taskSummaryItem">
+            <div class="summaryBox">
 
-                <div class="taskSummaryIcon">
-                    ✅
-                </div>
-
-                <div class="taskSummaryValue"
-                     id="dashboardCompletedTasks">
+                <div
+                    class="summaryNumber"
+                    id="dashboardCompletedTasks"
+                >
                     0
                 </div>
 
-                <div class="taskSummaryLabel">
+                <div class="summaryLabel">
                     Completed
                 </div>
 
             </div>
 
 
-            <div class="taskSummaryItem">
+            <div class="summaryBox">
 
-                <div class="taskSummaryIcon">
-                    ⏳
-                </div>
-
-                <div class="taskSummaryValue"
-                     id="dashboardPendingTasks">
+                <div
+                    class="summaryNumber"
+                    id="dashboardPendingTasks"
+                >
                     0
                 </div>
 
-                <div class="taskSummaryLabel">
+                <div class="summaryLabel">
                     Pending
                 </div>
 
@@ -1016,405 +862,366 @@ th{
     </div>
 
 
-    <!-- EARNING PROGRESS -->
+    <div class="section">
 
-    <div class="dashboardSection">
-
-        <div class="dashboardSectionTitle">
-            🚀 Earning Progress
+        <div class="sectionTitle">
+            🏆 Earning Progress
         </div>
 
-        <div class="progressHeader">
+        <div class="progressOuter">
 
-            <div class="progressCoins"
-                 id="dashboardProgressCoins">
-                0 / 500 Coins
-            </div>
-
-            <div class="progressAmount"
-                 id="dashboardProgressAmount">
-                ₹0 / ₹5
-            </div>
+            <div
+                class="progressInner"
+                id="dashboardEarningProgress"
+            ></div>
 
         </div>
 
-        <div class="earningProgressOuter">
-
-            <div class="earningProgressInner"
-                 id="dashboardEarningProgress">
-            </div>
-
+        <div
+            class="progressText"
+            id="dashboardProgressCoins"
+        >
+            0 / 500 Coins
         </div>
 
-        <div class="progressBottom">
-            <span>0 Coins</span>
-            <span>Goal: 500 Coins</span>
+        <div
+            class="progressText"
+            id="dashboardProgressAmount"
+        >
+            ₹0.00 / ₹5.00
         </div>
 
     </div>
 
 
-    <!-- QUICK ACTIONS -->
+    <div class="section">
 
-    <div class="dashboardSection">
-
-        <div class="dashboardSectionTitle">
+        <div class="sectionTitle">
             ⚡ Quick Actions
         </div>
 
-        <div class="quickActionGrid">
+        <div class="quickActions">
 
-            <div class="quickAction"
-                 onclick="showPage('newTasks')">
+            <button
+                class="quickBtn"
+                data-page="newTasksPage"
+            >
+                🎯 Start Task
+            </button>
 
-                <div class="quickActionIcon">
-                    🎯
-                </div>
+            <button
+                class="quickBtn"
+                data-page="completedTasksPage"
+            >
+                📋 Task History
+            </button>
 
-                <div>
-                    New Tasks
-                </div>
-
-            </div>
-
-
-            <div class="quickAction"
-                 onclick="showPage('withdraw')">
-
-                <div class="quickActionIcon">
-                    💸
-                </div>
-
-                <div>
-                    Withdraw
-                </div>
-
-            </div>
-
-
-            <div class="quickAction"
-                 onclick="showPage('withdrawalHistory')">
-
-                <div class="quickActionIcon">
-                    📜
-                </div>
-
-                <div>
-                    History
-                </div>
-
-            </div>
+            <button
+                class="quickBtn"
+                data-page="withdrawPage"
+            >
+                💸 Withdraw
+            </button>
 
         </div>
 
     </div>
 
-</section>
+</div>
 
 
 <!-- ================= NEW TASKS ================= -->
 
-<section class="page" id="newTasks">
+<div
+    class="page"
+    id="newTasksPage"
+>
 
-    <div class="card">
+    <div class="section">
 
-        <h2>🎯 New Tasks</h2>
+        <div class="sectionTitle">
+            🎯 Available Tasks
+        </div>
 
-        <p>
-            Complete tasks and earn coins after owner approval.
-        </p>
-
-    </div>
-
-    <div id="tasksContainer">
-        Loading tasks...
-    </div>
-
-
-    <div class="videoBox" id="videoBox">
-
-        <div class="card">
-
-            <h3 id="activeTaskTitle">
-                YouTube Task
-            </h3>
-
-            <div class="videoContainer">
-                <div id="youtubePlayer"></div>
+        <div id="tasksContainer">
+            <div class="empty">
+                Loading tasks...
             </div>
-
-            <div class="timerBox"
-                 id="timerText">
-                0 sec
-            </div>
-
-            <div class="progressOuter">
-
-                <div class="progressInner"
-                     id="taskProgress">
-                </div>
-
-            </div>
-
-            <br>
-
-            <button class="primaryBtn"
-                    id="completeTaskButton"
-                    disabled>
-                Complete Task
-            </button>
-
-            <button class="secondaryBtn"
-                    id="exitTaskButton">
-                Exit Task
-            </button>
-
-            <p id="taskMessage"></p>
-
         </div>
 
     </div>
 
-</section>
+
+    <div
+        class="videoBox"
+        id="videoBox"
+    >
+
+        <h3
+            class="activeTaskTitle"
+            id="activeTaskTitle"
+        >
+            Task
+        </h3>
+
+        <div id="youtubePlayer"></div>
+
+        <div
+            class="timerText"
+            id="timerText"
+        >
+            0 / 0 seconds
+        </div>
+
+        <div class="taskProgressOuter">
+
+            <div
+                class="taskProgress"
+                id="taskProgress"
+            ></div>
+
+        </div>
+
+        <button
+            class="completeBtn"
+            id="completeTaskButton"
+            disabled
+        >
+            Complete Task
+        </button>
+
+        <button
+            class="exitBtn"
+            id="exitTaskButton"
+        >
+            Exit Task
+        </button>
+
+        <div
+            class="taskMessage"
+            id="taskMessage"
+        ></div>
+
+    </div>
+
+</div>
 
 
 <!-- ================= COMPLETED TASKS ================= -->
 
-<section class="page" id="completedTasks">
+<div
+    class="page"
+    id="completedTasksPage"
+>
 
-    <div class="card">
+    <div class="section">
 
-        <h2>✅ Completed Tasks</h2>
+        <div class="sectionTitle">
+            📋 Completed Tasks
+        </div>
 
-        <div class="tableWrap">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-                        <th>Task</th>
-                        <th>Coins</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                    </tr>
-
-                </thead>
-
-                <tbody id="completedTasksBody">
-
-                </tbody>
-
-            </table>
-
+        <div id="completedTasksContainer">
+            <div class="empty">
+                Loading...
+            </div>
         </div>
 
     </div>
 
-</section>
+</div>
 
 
 <!-- ================= WITHDRAW ================= -->
 
-<section class="page" id="withdraw">
+<div
+    class="page"
+    id="withdrawPage"
+>
 
-    <div class="card">
+    <div class="section">
 
-        <h2>💸 Withdraw</h2>
+        <div class="sectionTitle">
+            💸 Withdraw Coins
+        </div>
 
-        <p>
-            Withdraw your available coins through UPI.
-        </p>
+        <div class="withdrawPreview">
 
-    </div>
-
-
-    <div class="withdrawGrid">
-
-        <div class="withdrawInfo">
-
-            <div class="withdrawInfoTitle">
-                Available Coins
-            </div>
-
-            <div class="withdrawInfoValue"
-                 id="withdrawAvailableCoins">
+            Available Coins:
+            <strong id="withdrawAvailableCoins">
                 0
-            </div>
+            </strong>
+
+            <br><br>
+
+            Withdrawal Amount:
+            <strong id="withdrawRupees">
+                ₹0.00
+            </strong>
 
         </div>
 
 
-        <div class="withdrawInfo">
+        <div class="formGroup">
 
-            <div class="withdrawInfoTitle">
-                Pending Withdrawal
-            </div>
+            <label>
+                Coins to Withdraw
+            </label>
 
-            <div class="withdrawInfoValue"
-                 id="withdrawPendingCoins">
-                0
-            </div>
+            <input
+                type="number"
+                id="withdrawCoins"
+                min="1"
+                placeholder="Enter coins"
+            >
+
+        </div>
+
+
+        <div class="formGroup">
+
+            <label>
+                UPI ID
+            </label>
+
+            <input
+                type="text"
+                id="withdrawUpi"
+                placeholder="example@upi"
+            >
 
         </div>
 
 
-        <div class="withdrawInfo">
-
-            <div class="withdrawInfoTitle">
-                Total Withdrawn
-            </div>
-
-            <div class="withdrawInfoValue"
-                 id="withdrawTotalWithdrawn">
-                0
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="card">
-
-        <h2>Request Withdrawal</h2>
-
-        <label>
-            Coins
-        </label>
-
-        <input
-            type="number"
-            id="withdrawCoins"
-            min="1"
-            placeholder="Enter coins">
-
-
-        <label>
-            Amount
-        </label>
-
-        <input
-            type="text"
-            id="withdrawRupees"
-            value="₹0.00"
-            readonly>
-
-
-        <label>
-            UPI ID
-        </label>
-
-        <input
-            type="text"
-            id="withdrawUpi"
-            placeholder="example@upi">
-
-
-        <button class="primaryBtn"
-                id="withdrawButton">
-            Submit Withdrawal
+        <button
+            class="withdrawBtn"
+            id="withdrawButton"
+        >
+            Submit Withdrawal Request
         </button>
 
-        <p id="withdrawMessage"></p>
+
+        <div
+            class="taskMessage"
+            id="withdrawMessage"
+        ></div>
 
     </div>
 
-</section>
+</div>
 
 
 <!-- ================= WITHDRAWAL HISTORY ================= -->
 
-<section class="page"
-         id="withdrawalHistory">
+<div
+    class="page"
+    id="withdrawalHistoryPage"
+>
 
-    <div class="card">
+    <div class="section">
 
-        <h2>📜 Withdrawal History</h2>
+        <div class="sectionTitle">
+            📜 Withdrawal History
+        </div>
 
-        <div class="tableWrap">
+        <div id="withdrawalHistory">
+            <div class="empty">
+                Loading...
+            </div>
+        </div>
 
-            <table>
+    </div>
 
-                <thead>
+</div>
 
-                    <tr>
-                        <th>Coins</th>
-                        <th>Amount</th>
-                        <th>UPI</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                    </tr>
 
-                </thead>
+<!-- ================= PROFILE ================= -->
 
-                <tbody id="withdrawalHistoryBody">
+<div
+    class="page"
+    id="profilePage"
+>
 
-                </tbody>
+    <div class="section">
 
-            </table>
+        <div class="sectionTitle">
+            👤 My Profile
+        </div>
+
+        <div class="profileRow">
+
+            <div class="profileLabel">
+                Name
+            </div>
+
+            <div
+                class="profileValue"
+                id="profileName"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="profileRow">
+
+            <div class="profileLabel">
+                Email
+            </div>
+
+            <div
+                class="profileValue"
+                id="profileEmail"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="profileRow">
+
+            <div class="profileLabel">
+                Mobile
+            </div>
+
+            <div
+                class="profileValue"
+                id="profileMobile"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="profileRow">
+
+            <div class="profileLabel">
+                Available Coins
+            </div>
+
+            <div
+                class="profileValue"
+                id="profileCoins"
+            >
+                0
+            </div>
 
         </div>
 
     </div>
 
-</section>
+</div>
 
+</div>
 
-<!-- ================= PROFILE ================= -->
-
-<section class="page" id="profile">
-
-    <div class="card profileBox">
-
-        <h2>👤 Profile</h2>
-
-        <label>
-            Name
-        </label>
-
-        <input
-            id="profileName"
-            readonly>
-
-
-        <label>
-            Email
-        </label>
-
-        <input
-            id="profileEmail"
-            readonly>
-
-
-        <label>
-            Mobile
-        </label>
-
-        <input
-            id="profileMobile"
-            readonly>
-
-
-        <label>
-            Role
-        </label>
-
-        <input
-            id="profileRole"
-            readonly>
-
-    </div>
-
-</section>
-
-
-</main>
-
-
-<!-- ================= FIREBASE ================= -->
 
 <script type="module">
+
+/* =========================================================
+   FIREBASE IMPORTS
+========================================================= */
 
 import {
     initializeApp
@@ -1435,13 +1242,14 @@ import {
     addDoc,
     query,
     where,
-    orderBy,
     serverTimestamp,
     runTransaction
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-/* ================= FIREBASE CONFIG ================= */
+/* =========================================================
+   FIREBASE CONFIG
+========================================================= */
 
 const firebaseConfig = {
     apiKey: "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",
@@ -1454,54 +1262,59 @@ const firebaseConfig = {
 };
 
 
-const app = initializeApp(firebaseConfig);
+const app =
+    initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+const auth =
+    getAuth(app);
 
-const db = getFirestore(app);
+const db =
+    getFirestore(app);
 
 
-/* ================= GLOBAL VARIABLES ================= */
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
 
 let currentUser = null;
+
 let currentMemberData = null;
 
 let allTasks = [];
+
 let allCompletions = [];
+
 let allWithdrawals = [];
 
 let activeTask = null;
-let activeTaskId = null;
-let activeTaskVideoId = null;
 
-let player = null;
-let timerInterval = null;
+let activeTaskId = null;
 
 let requiredWatchTime = 0;
+
 let watchedSeconds = 0;
+
+let timerInterval = null;
 
 let taskCompleted = false;
 
+let youtubePlayer = null;
 
-/* ================= SIDEBAR ================= */
-
-window.toggleSidebar = function(){
-
-    document
-        .getElementById("sidebar")
-        .classList.toggle("active");
-
-};
+let youtubeApiReady = false;
 
 
-/* ================= PAGE ================= */
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
 
-window.showPage = function(pageId){
+function showPage(pageId){
 
     document
         .querySelectorAll(".page")
         .forEach(page => {
+
             page.classList.remove("active");
+
         });
 
     const page =
@@ -1515,103 +1328,67 @@ window.showPage = function(pageId){
         .getElementById("sidebar")
         .classList.remove("active");
 
-
-    if(pageId === "dashboard"){
-        refreshDashboard();
-    }
-
-    if(pageId === "newTasks"){
+    if(pageId === "newTasksPage"){
         loadTasks();
     }
 
-    if(pageId === "completedTasks"){
-        loadCompletedTasks();
+    if(pageId === "completedTasksPage"){
+        loadCompletionsData();
+        setTimeout(
+            renderCompletedTasks,
+            100
+        );
     }
 
-    if(pageId === "withdraw"){
-        refreshWithdrawalStats();
+    if(pageId === "withdrawalHistoryPage"){
+        loadWithdrawalsData();
     }
-
-    if(pageId === "withdrawalHistory"){
-        loadWithdrawalHistory();
-    }
-
-};
-
-
-/* ================= HELPERS ================= */
-
-function formatRupees(coins){
-
-    return "₹" +
-        (Number(coins || 0) / 100)
-        .toFixed(2);
 
 }
 
 
-function getDateValue(value){
+/* =========================================================
+   NAVIGATION EVENTS
+========================================================= */
 
-    if(!value){
-        return null;
-    }
+document
+    .querySelectorAll("[data-page]")
+    .forEach(item => {
 
-    if(value.toDate){
-        return value.toDate();
-    }
+        item.addEventListener(
+            "click",
+            () => {
 
-    if(value instanceof Date){
-        return value;
-    }
+                const page =
+                    item.getAttribute(
+                        "data-page"
+                    );
 
-    return new Date(value);
-}
-
-
-function formatDate(value){
-
-    const date = getDateValue(value);
-
-    if(!date || isNaN(date.getTime())){
-        return "-";
-    }
-
-    return date.toLocaleDateString("en-IN");
-
-}
-
-
-/* ================= TOTAL EARNING ================= */
-
-function calculateTotalEarning(){
-
-    return allCompletions.reduce(
-        (total,item) => {
-
-            const status =
-                String(
-                    item.rewardStatus ||
-                    item.status ||
-                    ""
-                ).toLowerCase();
-
-            if(status === "approved"){
-
-                return total +
-                    Number(item.rewardCoins || 0);
+                showPage(page);
 
             }
+        );
 
-            return total;
+    });
 
-        },
-        0
+
+document
+    .getElementById("menuBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById("sidebar")
+                .classList.toggle("active");
+
+        }
     );
 
-}
 
-
-/* ================= AUTH ================= */
+/* =========================================================
+   AUTH
+========================================================= */
 
 onAuthStateChanged(
     auth,
@@ -1619,183 +1396,190 @@ onAuthStateChanged(
 
         if(!user){
 
-            window.location.href = "index.html";
+            window.location.href =
+                "index.html";
+
             return;
 
         }
 
-
         currentUser = user;
 
+        await loadMemberData();
 
-        try{
+        await loadCompletionsData();
 
-            const userSnap =
-                await getDoc(
-                    doc(
-                        db,
-                        "users",
-                        user.uid
-                    )
-                );
+        await loadWithdrawalsData();
 
+        await loadTasks();
 
-            if(!userSnap.exists()){
+        refreshDashboard();
 
-                alert("Member profile not found.");
-                await signOut(auth);
-                window.location.href = "index.html";
-                return;
+        renderCompletedTasks();
 
-            }
-
-
-            currentMemberData =
-                userSnap.data();
-
-
-            if(
-                currentMemberData.role &&
-                currentMemberData.role !== "member"
-            ){
-
-                alert("This account is not a member account.");
-                await signOut(auth);
-                window.location.href = "index.html";
-                return;
-
-            }
-
-
-            updateProfileUI();
-
-            await loadAllData();
-
-            refreshDashboard();
-
-            loadTasks();
-
-            loadCompletedTasks();
-
-            loadWithdrawalHistory();
-
-            refreshWithdrawalStats();
-
-
-        }catch(error){
-
-            console.error(error);
-
-            alert(
-                "Unable to load member dashboard."
-            );
-
-        }
+        renderWithdrawalHistory();
 
     }
 );
 
 
-/* ================= LOAD ALL DATA ================= */
+/* =========================================================
+   LOAD MEMBER DATA
+========================================================= */
 
-async function loadAllData(){
+async function loadMemberData(){
 
-    await loadTasksData();
+    try{
 
-    await loadCompletionsData();
+        const memberRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
 
-    await loadWithdrawalsData();
+        const snap =
+            await getDoc(memberRef);
+
+        if(snap.exists()){
+
+            currentMemberData =
+                snap.data();
+
+        }else{
+
+            currentMemberData = {
+                name:
+                    currentUser.displayName ||
+                    "Member",
+                email:
+                    currentUser.email || "",
+                mobile:"",
+                coins:0
+            };
+
+        }
+
+        updateMemberUI();
+
+    }catch(error){
+
+        console.error(
+            "Member load error:",
+            error
+        );
+
+    }
 
 }
 
 
-/* ================= USER PROFILE ================= */
+/* =========================================================
+   MEMBER UI
+========================================================= */
 
-function updateProfileUI(){
+function updateMemberUI(){
 
     const name =
         currentMemberData?.name ||
-        currentUser?.displayName ||
+        currentUser.displayName ||
         "Member";
 
     const email =
         currentMemberData?.email ||
-        currentUser?.email ||
-        "-";
+        currentUser.email ||
+        "";
 
     const mobile =
         currentMemberData?.mobile ||
         "-";
 
-
-    document.getElementById(
-        "dashboardWelcome"
-    ).textContent = name;
-
-
-    document.getElementById(
-        "sidebarName"
-    ).textContent = name;
+    const coins =
+        Number(
+            currentMemberData?.coins || 0
+        );
 
 
-    document.getElementById(
-        "sidebarEmail"
-    ).textContent = email;
+    document
+        .getElementById("dashboardWelcome")
+        .textContent = name;
 
+    document
+        .getElementById("sidebarUserName")
+        .textContent = name;
 
-    document.getElementById(
-        "profileInitial"
-    ).textContent =
-        name.charAt(0).toUpperCase();
+    document
+        .getElementById("sidebarUserEmail")
+        .textContent = email;
 
+    document
+        .getElementById("headerCoins")
+        .textContent = coins;
 
-    document.getElementById(
-        "profileName"
-    ).value = name;
+    document
+        .getElementById("profileName")
+        .textContent = name;
 
+    document
+        .getElementById("profileEmail")
+        .textContent = email;
 
-    document.getElementById(
-        "profileEmail"
-    ).value = email;
+    document
+        .getElementById("profileMobile")
+        .textContent = mobile;
 
+    document
+        .getElementById("profileCoins")
+        .textContent = coins;
 
-    document.getElementById(
-        "profileMobile"
-    ).value = mobile;
-
-
-    document.getElementById(
-        "profileRole"
-    ).value = "Member";
+    document
+        .getElementById("withdrawAvailableCoins")
+        .textContent = coins;
 
 }
 
 
-/* ================= TASK DATA ================= */
+/* =========================================================
+   LOAD TASKS
+========================================================= */
 
-async function loadTasksData(){
+async function loadTasks(){
 
     try{
 
         const snap =
             await getDocs(
-                collection(db,"tasks")
+                collection(
+                    db,
+                    "tasks"
+                )
             );
-
 
         allTasks = [];
 
-        snap.forEach(
-            item => {
+        snap.forEach(item => {
+
+            const data =
+                item.data();
+
+            if(
+                String(
+                    data.status || ""
+                ).toLowerCase() === "active"
+            ){
 
                 allTasks.push({
                     id:item.id,
-                    ...item.data()
+                    ...data
                 });
 
             }
-        );
 
+        });
+
+        renderTasks();
+
+        refreshDashboard();
 
     }catch(error){
 
@@ -1804,16 +1588,927 @@ async function loadTasksData(){
             error
         );
 
-        allTasks = [];
+        document
+            .getElementById("tasksContainer")
+            .innerHTML = `
+                <div class="empty">
+                    Unable to load tasks.
+                </div>
+            `;
 
     }
 
 }
 
 
-/* ================= COMPLETIONS ================= */
+/* =========================================================
+   RENDER TASKS
+========================================================= */
+
+function renderTasks(){
+
+    const container =
+        document.getElementById(
+            "tasksContainer"
+        );
+
+    if(!allTasks.length){
+
+        container.innerHTML = `
+            <div class="empty">
+                No new tasks available.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    allTasks.forEach(task => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "taskCard";
+
+        const reward =
+            Number(
+                task.rewardCoins || 0
+            );
+
+        const watchTime =
+            Number(
+                task.watchTime || 0
+            );
+
+
+        card.innerHTML = `
+
+            <div class="taskTitle">
+                ${escapeHtml(
+                    task.title || "Task"
+                )}
+            </div>
+
+            <div class="taskInfo">
+
+                🎁 Reward:
+                <span class="reward">
+                    ${reward} Coins
+                </span>
+
+                <br>
+
+                ⏱ Required Watch Time:
+                ${watchTime} seconds
+
+            </div>
+
+            <button
+                class="startBtn"
+                data-task-id="${task.id}"
+            >
+                ▶ Start Task
+            </button>
+
+        `;
+
+
+        card
+            .querySelector(".startBtn")
+            .addEventListener(
+                "click",
+                () => startTask(task)
+            );
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   YOUTUBE VIDEO ID
+========================================================= */
+
+function getYouTubeVideoId(url){
+
+    if(!url){
+        return null;
+    }
+
+    try{
+
+        const parsed =
+            new URL(url);
+
+        const host =
+            parsed.hostname
+                .toLowerCase()
+                .replace("www.","");
+
+
+        if(
+            host === "youtube.com" ||
+            host === "m.youtube.com"
+        ){
+
+            const v =
+                parsed.searchParams.get("v");
+
+            if(v){
+                return v;
+            }
+
+
+            const parts =
+                parsed.pathname
+                    .split("/")
+                    .filter(Boolean);
+
+
+            if(
+                parts[0] === "shorts" ||
+                parts[0] === "embed" ||
+                parts[0] === "live"
+            ){
+
+                return parts[1] || null;
+
+            }
+
+        }
+
+
+        if(host === "youtu.be"){
+
+            return parsed.pathname
+                .split("/")
+                .filter(Boolean)[0] || null;
+
+        }
+
+        if(
+            host === "youtube-nocookie.com"
+        ){
+
+            const parts =
+                parsed.pathname
+                    .split("/")
+                    .filter(Boolean);
+
+            if(parts[0] === "embed"){
+                return parts[1] || null;
+            }
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "YouTube URL error:",
+            error
+        );
+
+    }
+
+    return null;
+
+}
+
+
+/* =========================================================
+   LOAD YOUTUBE API
+========================================================= */
+
+function loadYouTubeAPI(){
+
+    return new Promise(
+        resolve => {
+
+            if(
+                window.YT &&
+                window.YT.Player
+            ){
+
+                youtubeApiReady = true;
+
+                resolve();
+
+                return;
+
+            }
+
+
+            const oldCallback =
+                window.onYouTubeIframeAPIReady;
+
+
+            window.onYouTubeIframeAPIReady =
+                () => {
+
+                    youtubeApiReady = true;
+
+                    if(oldCallback){
+                        oldCallback();
+                    }
+
+                    resolve();
+
+                };
+
+
+            const script =
+                document.createElement(
+                    "script"
+                );
+
+            script.src =
+                "https://www.youtube.com/iframe_api";
+
+            document.head.appendChild(
+                script
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   START TASK
+========================================================= */
+
+async function startTask(task){
+
+    stopActiveTask();
+
+
+    activeTask =
+        task;
+
+    activeTaskId =
+        task.id;
+
+    requiredWatchTime =
+        Number(
+            task.watchTime || 0
+        );
+
+    watchedSeconds = 0;
+
+    taskCompleted = false;
+
+
+    document
+        .getElementById(
+            "videoBox"
+        )
+        .style.display = "block";
+
+
+    document
+        .getElementById(
+            "activeTaskTitle"
+        )
+        .textContent =
+            task.title || "Task";
+
+
+    document
+        .getElementById(
+            "timerText"
+        )
+        .textContent =
+            `0 / ${requiredWatchTime} seconds`;
+
+
+    document
+        .getElementById(
+            "taskProgress"
+        )
+        .style.width = "0%";
+
+
+    document
+        .getElementById(
+            "completeTaskButton"
+        )
+        .disabled = true;
+
+
+    document
+        .getElementById(
+            "taskMessage"
+        )
+        .style.display = "none";
+
+
+    const videoId =
+        getYouTubeVideoId(
+            task.youtubeUrl
+        );
+
+
+    if(!videoId){
+
+        showTaskMessage(
+            "Invalid YouTube URL.",
+            true
+        );
+
+        return;
+
+    }
+
+
+    await loadYouTubeAPI();
+
+
+    createYouTubePlayer(
+        videoId
+    );
+
+}
+
+
+/* =========================================================
+   CREATE YOUTUBE PLAYER
+========================================================= */
+
+function createYouTubePlayer(videoId){
+
+    if(youtubePlayer){
+
+        try{
+            youtubePlayer.destroy();
+        }catch(error){}
+
+        youtubePlayer = null;
+
+    }
+
+
+    youtubePlayer =
+        new YT.Player(
+            "youtubePlayer",
+            {
+
+                videoId: videoId,
+
+                playerVars:{
+                    rel:0,
+                    modestbranding:1,
+                    playsinline:1
+                },
+
+                events:{
+
+                    onReady:
+                        event => {
+
+                            event
+                                .target
+                                .playVideo();
+
+                        },
+
+                    onStateChange:
+                        event => {
+
+                            if(
+                                event.data ===
+                                YT.PlayerState.PLAYING
+                            ){
+
+                                startTimer();
+
+                            }else{
+
+                                stopTimer();
+
+                            }
+
+                        }
+
+                }
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function startTimer(){
+
+    if(timerInterval){
+        return;
+    }
+
+
+    timerInterval =
+        setInterval(
+            () => {
+
+                if(
+                    !youtubePlayer ||
+                    !activeTask
+                ){
+                    return;
+                }
+
+
+                if(
+                    youtubePlayer.getPlayerState() !==
+                    YT.PlayerState.PLAYING
+                ){
+                    return;
+                }
+
+
+                if(
+                    watchedSeconds >=
+                    requiredWatchTime
+                ){
+
+                    stopTimer();
+
+                    taskCompleted = true;
+
+                    document
+                        .getElementById(
+                            "completeTaskButton"
+                        )
+                        .disabled = false;
+
+                    return;
+
+                }
+
+
+                watchedSeconds++;
+
+
+                const percent =
+                    requiredWatchTime > 0
+                    ? Math.min(
+                        100,
+                        (
+                            watchedSeconds /
+                            requiredWatchTime
+                        ) * 100
+                    )
+                    : 100;
+
+
+                document
+                    .getElementById(
+                        "timerText"
+                    )
+                    .textContent =
+                        `${watchedSeconds} / ${requiredWatchTime} seconds`;
+
+
+                document
+                    .getElementById(
+                        "taskProgress"
+                    )
+                    .style.width =
+                        percent + "%";
+
+
+                if(
+                    watchedSeconds >=
+                    requiredWatchTime
+                ){
+
+                    stopTimer();
+
+                    taskCompleted = true;
+
+                    document
+                        .getElementById(
+                            "completeTaskButton"
+                        )
+                        .disabled = false;
+
+
+                    showTaskMessage(
+                        "Required watch time completed. You can now complete the task.",
+                        false
+                    );
+
+                }
+
+            },
+            1000
+        );
+
+}
+
+
+function stopTimer(){
+
+    if(timerInterval){
+
+        clearInterval(
+            timerInterval
+        );
+
+        timerInterval = null;
+
+    }
+
+}
+
+
+/* =========================================================
+   TASK MESSAGE
+========================================================= */
+
+function showTaskMessage(
+    message,
+    error = false
+){
+
+    const box =
+        document.getElementById(
+            "taskMessage"
+        );
+
+    box.style.display =
+        "block";
+
+    box.textContent =
+        message;
+
+    box.style.background =
+        error
+        ? "#ffe1e1"
+        : "#e3f8eb";
+
+    box.style.color =
+        error
+        ? "#c62828"
+        : "#168348";
+
+}
+
+
+/* =========================================================
+   STOP ACTIVE TASK
+========================================================= */
+
+function stopActiveTask(){
+
+    stopTimer();
+
+
+    if(youtubePlayer){
+
+        try{
+            youtubePlayer.stopVideo();
+        }catch(error){}
+
+        try{
+            youtubePlayer.destroy();
+        }catch(error){}
+
+        youtubePlayer = null;
+
+    }
+
+
+    activeTask = null;
+
+    activeTaskId = null;
+
+    requiredWatchTime = 0;
+
+    watchedSeconds = 0;
+
+    taskCompleted = false;
+
+
+    const videoBox =
+        document.getElementById(
+            "videoBox"
+        );
+
+    if(videoBox){
+        videoBox.style.display = "none";
+    }
+
+
+    const player =
+        document.getElementById(
+            "youtubePlayer"
+        );
+
+    if(player){
+        player.innerHTML = "";
+    }
+
+
+    document
+        .getElementById(
+            "completeTaskButton"
+        )
+        .disabled = true;
+
+}
+
+
+document
+    .getElementById(
+        "exitTaskButton"
+    )
+    .addEventListener(
+        "click",
+        stopActiveTask
+    );
+
+
+/* =========================================================
+   COMPLETE TASK
+   IMPORTANT FIX
+========================================================= */
+
+document
+    .getElementById(
+        "completeTaskButton"
+    )
+    .addEventListener(
+        "click",
+        async () => {
+
+            if(
+                !activeTask ||
+                !activeTaskId ||
+                !taskCompleted ||
+                !currentUser
+            ){
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    "completeTaskButton"
+                );
+
+
+            button.disabled = true;
+
+            button.textContent =
+                "Submitting...";
+
+
+            try{
+
+                /*
+                 * Duplicate check is done
+                 * using already loaded data.
+                 *
+                 * No extra compound Firestore
+                 * query is used here.
+                 */
+
+                const duplicate =
+                    allCompletions.find(
+                        item => {
+
+                            const sameTask =
+                                item.taskId ===
+                                activeTaskId;
+
+                            const status =
+                                String(
+                                    item.rewardStatus ||
+                                    item.status ||
+                                    ""
+                                ).toLowerCase();
+
+
+                            return (
+                                sameTask &&
+                                (
+                                    status ===
+                                    "pending" ||
+                                    status ===
+                                    "approved"
+                                )
+                            );
+
+                        }
+                    );
+
+
+                if(duplicate){
+
+                    showTaskMessage(
+                        duplicate.rewardStatus ===
+                        "approved"
+                        ? "You have already completed this task."
+                        : "This task is already waiting for owner approval.",
+                        false
+                    );
+
+
+                    button.textContent =
+                        "Task Submitted";
+
+
+                    return;
+
+                }
+
+
+                /*
+                 * Completion document
+                 */
+
+                const completionData = {
+
+                    taskId:
+                        activeTaskId,
+
+                    taskTitle:
+                        activeTask.title ||
+                        "Task",
+
+                    memberId:
+                        currentUser.uid,
+
+                    memberName:
+                        currentMemberData?.name ||
+                        currentUser.displayName ||
+                        currentUser.email ||
+                        "Member",
+
+                    rewardCoins:
+                        Number(
+                            activeTask.rewardCoins ||
+                            0
+                        ),
+
+                    rewardStatus:
+                        "pending",
+
+                    status:
+                        "pending",
+
+                    watchTime:
+                        Number(
+                            requiredWatchTime ||
+                            0
+                        ),
+
+                    completedAt:
+                        serverTimestamp(),
+
+                    createdAt:
+                        serverTimestamp()
+
+                };
+
+
+                console.log(
+                    "Saving task completion:",
+                    completionData
+                );
+
+
+                /*
+                 * THIS IS THE IMPORTANT FIRESTORE WRITE
+                 */
+
+                const completionRef =
+                    await addDoc(
+                        collection(
+                            db,
+                            "taskCompletions"
+                        ),
+                        completionData
+                    );
+
+
+                console.log(
+                    "Task completion saved:",
+                    completionRef.id
+                );
+
+
+                /*
+                 * Update local data immediately
+                 */
+
+                allCompletions.push({
+
+                    id:
+                        completionRef.id,
+
+                    ...completionData,
+
+                    completedAt:
+                        new Date(),
+
+                    createdAt:
+                        new Date()
+
+                });
+
+
+                showTaskMessage(
+                    "Task completed successfully. Waiting for owner approval.",
+                    false
+                );
+
+
+                button.textContent =
+                    "Submitted ✓";
+
+
+                refreshDashboard();
+
+                renderCompletedTasks();
+
+
+                setTimeout(
+                    () => {
+
+                        stopActiveTask();
+
+                        loadTasks();
+
+                    },
+                    1500
+                );
+
+
+            }catch(error){
+
+                console.error(
+                    "TASK COMPLETION ERROR:",
+                    error
+                );
+
+                console.error(
+                    "Firebase error code:",
+                    error.code
+                );
+
+                console.error(
+                    "Firebase error message:",
+                    error.message
+                );
+
+
+                button.disabled =
+                    false;
+
+                button.textContent =
+                    "Complete Task";
+
+
+                showTaskMessage(
+                    "Unable to save task completion: " +
+                    (
+                        error.message ||
+                        "Unknown error"
+                    ),
+                    true
+                );
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   LOAD COMPLETIONS
+========================================================= */
 
 async function loadCompletionsData(){
+
+    if(!currentUser){
+        return;
+    }
+
 
     try{
 
@@ -1838,16 +2533,23 @@ async function loadCompletionsData(){
         allCompletions = [];
 
 
-        snap.forEach(
-            item => {
+        snap.forEach(item => {
 
-                allCompletions.push({
-                    id:item.id,
-                    ...item.data()
-                });
+            allCompletions.push({
 
-            }
-        );
+                id:
+                    item.id,
+
+                ...item.data()
+
+            });
+
+        });
+
+
+        refreshDashboard();
+
+        renderCompletedTasks();
 
 
     }catch(error){
@@ -1864,9 +2566,169 @@ async function loadCompletionsData(){
 }
 
 
-/* ================= WITHDRAWALS ================= */
+/* =========================================================
+   RENDER COMPLETED TASKS
+========================================================= */
+
+function renderCompletedTasks(){
+
+    const container =
+        document.getElementById(
+            "completedTasksContainer"
+        );
+
+
+    if(!container){
+        return;
+    }
+
+
+    if(!allCompletions.length){
+
+        container.innerHTML = `
+            <div class="empty">
+                No completed tasks yet.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    const sorted =
+        [...allCompletions]
+            .reverse();
+
+
+    container.innerHTML = "";
+
+
+    sorted.forEach(item => {
+
+        const status =
+            String(
+                item.rewardStatus ||
+                item.status ||
+                "pending"
+            ).toLowerCase();
+
+
+        let badgeClass =
+            "pending";
+
+        if(status === "approved"){
+            badgeClass = "approved";
+        }
+
+        if(status === "rejected"){
+            badgeClass = "rejected";
+        }
+
+
+        const date =
+            formatDate(
+                item.completedAt ||
+                item.createdAt
+            );
+
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "historyItem";
+
+
+        div.innerHTML = `
+
+            <div class="historyTitle">
+                ${escapeHtml(
+                    item.taskTitle ||
+                    "Task"
+                )}
+            </div>
+
+            <div class="historyMeta">
+                Reward:
+                ${Number(
+                    item.rewardCoins || 0
+                )} Coins
+            </div>
+
+            <div class="historyMeta">
+                Completed:
+                ${date}
+            </div>
+
+            <span class="badge ${badgeClass}">
+                ${capitalize(status)}
+            </span>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+/* =========================================================
+   TOTAL EARNING
+========================================================= */
+
+function calculateTotalEarning(){
+
+    return allCompletions.reduce(
+        (
+            total,
+            item
+        ) => {
+
+            const status =
+                String(
+                    item.rewardStatus ||
+                    item.status ||
+                    ""
+                ).toLowerCase();
+
+
+            if(
+                status === "approved"
+            ){
+
+                return total +
+                    Number(
+                        item.rewardCoins ||
+                        0
+                    );
+
+            }
+
+
+            return total;
+
+        },
+        0
+    );
+
+}
+
+
+/* =========================================================
+   LOAD WITHDRAWALS
+========================================================= */
 
 async function loadWithdrawalsData(){
+
+    if(!currentUser){
+        return;
+    }
+
 
     try{
 
@@ -1891,16 +2753,23 @@ async function loadWithdrawalsData(){
         allWithdrawals = [];
 
 
-        snap.forEach(
-            item => {
+        snap.forEach(item => {
 
-                allWithdrawals.push({
-                    id:item.id,
-                    ...item.data()
-                });
+            allWithdrawals.push({
 
-            }
-        );
+                id:
+                    item.id,
+
+                ...item.data()
+
+            });
+
+        });
+
+
+        renderWithdrawalHistory();
+
+        refreshDashboard();
 
 
     }catch(error){
@@ -1917,246 +2786,28 @@ async function loadWithdrawalsData(){
 }
 
 
-/* ================= DASHBOARD ================= */
+/* =========================================================
+   RENDER WITHDRAWAL HISTORY
+========================================================= */
 
-function refreshDashboard(){
+function renderWithdrawalHistory(){
 
-    if(!currentMemberData){
+    const container =
+        document.getElementById(
+            "withdrawalHistory"
+        );
+
+
+    if(!container){
         return;
     }
 
 
-    const availableCoins =
-        Number(
-            currentMemberData.coins || 0
-        );
-
-
-    const totalEarning =
-        calculateTotalEarning();
-
-
-    const pendingWithdrawal =
-        allWithdrawals.reduce(
-            (total,item) => {
-
-                const status =
-                    String(
-                        item.status || ""
-                    ).toLowerCase();
-
-                if(status === "pending"){
-
-                    return total +
-                        Number(
-                            item.coins ||
-                            item.amountCoins ||
-                            0
-                        );
-
-                }
-
-                return total;
-
-            },
-            0
-        );
-
-
-    const totalWithdrawn =
-        allWithdrawals.reduce(
-            (total,item) => {
-
-                const status =
-                    String(
-                        item.status || ""
-                    ).toLowerCase();
-
-                if(status === "approved"){
-
-                    return total +
-                        Number(
-                            item.coins ||
-                            item.amountCoins ||
-                            0
-                        );
-
-                }
-
-                return total;
-
-            },
-            0
-        );
-
-
-    const activeTasks =
-        allTasks.filter(
-            task =>
-                String(
-                    task.status || ""
-                ).toLowerCase() === "active"
-        );
-
-
-    const completedCount =
-        allCompletions.length;
-
-
-    const pendingTasks =
-        allCompletions.filter(
-            item => {
-
-                const status =
-                    String(
-                        item.rewardStatus ||
-                        item.status ||
-                        ""
-                    ).toLowerCase();
-
-                return status === "pending";
-
-            }
-        ).length;
-
-
-    document.getElementById(
-        "dashboardCoins"
-    ).textContent =
-        availableCoins;
-
-
-    document.getElementById(
-        "dashboardRupees"
-    ).textContent =
-        formatRupees(availableCoins);
-
-
-    document.getElementById(
-        "dashboardTotalEarning"
-    ).textContent =
-        totalEarning;
-
-
-    document.getElementById(
-        "dashboardTotalEarningRupees"
-    ).textContent =
-        formatRupees(totalEarning);
-
-
-    document.getElementById(
-        "dashboardPendingWithdrawal"
-    ).textContent =
-        pendingWithdrawal;
-
-
-    document.getElementById(
-        "dashboardPendingWithdrawalRupees"
-    ).textContent =
-        formatRupees(pendingWithdrawal);
-
-
-    document.getElementById(
-        "dashboardTotalWithdrawn"
-    ).textContent =
-        totalWithdrawn;
-
-
-    document.getElementById(
-        "dashboardTotalWithdrawnRupees"
-    ).textContent =
-        formatRupees(totalWithdrawn);
-
-
-    document.getElementById(
-        "dashboardNewTasks"
-    ).textContent =
-        activeTasks.length;
-
-
-    document.getElementById(
-        "dashboardCompletedTasks"
-    ).textContent =
-        completedCount;
-
-
-    document.getElementById(
-        "dashboardPendingTasks"
-    ).textContent =
-        pendingTasks;
-
-
-    const goal = 500;
-
-    const progress =
-        Math.min(
-            100,
-            (totalEarning / goal) * 100
-        );
-
-
-    document.getElementById(
-        "dashboardProgressCoins"
-    ).textContent =
-        totalEarning +
-        " / " +
-        goal +
-        " Coins";
-
-
-    document.getElementById(
-        "dashboardProgressAmount"
-    ).textContent =
-        formatRupees(totalEarning) +
-        " / ₹5";
-
-
-    document.getElementById(
-        "dashboardEarningProgress"
-    ).style.width =
-        progress + "%";
-
-
-    document.getElementById(
-        "headerCoins"
-    ).textContent =
-        availableCoins;
-
-}
-
-
-/* ================= LOAD TASKS ================= */
-
-async function loadTasks(){
-
-    const container =
-        document.getElementById(
-            "tasksContainer"
-        );
-
-
-    container.innerHTML =
-        "Loading tasks...";
-
-
-    await loadTasksData();
-
-
-    const activeTasks =
-        allTasks.filter(
-            task =>
-                String(
-                    task.status || ""
-                ).toLowerCase() === "active"
-        );
-
-
-    if(activeTasks.length === 0){
+    if(!allWithdrawals.length){
 
         container.innerHTML = `
-            <div class="card">
-                <h3>No new tasks available.</h3>
-                <p>Please check again later.</p>
+            <div class="empty">
+                No withdrawal history yet.
             </div>
         `;
 
@@ -2165,1600 +2816,803 @@ async function loadTasks(){
     }
 
 
+    const sorted =
+        [...allWithdrawals]
+            .reverse();
+
+
     container.innerHTML = "";
 
 
-    activeTasks.forEach(
-        task => {
+    sorted.forEach(item => {
 
-            const reward =
+        const status =
+            String(
+                item.status ||
+                "pending"
+            ).toLowerCase();
+
+
+        let badgeClass =
+            "pending";
+
+        if(status === "approved"){
+            badgeClass = "approved";
+        }
+
+        if(
+            status === "rejected"
+        ){
+            badgeClass = "rejected";
+        }
+
+
+        const coins =
+            Number(
+                item.coins || 0
+            );
+
+
+        const amount =
+            Number(
+                item.amount ||
+                coins / 100
+            );
+
+
+        const date =
+            formatDate(
+                item.createdAt
+            );
+
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "historyItem";
+
+
+        div.innerHTML = `
+
+            <div class="historyTitle">
+                ${coins} Coins
+            </div>
+
+            <div class="historyMeta">
+                Amount:
+                ₹${amount.toFixed(2)}
+            </div>
+
+            <div class="historyMeta">
+                UPI:
+                ${escapeHtml(
+                    item.upiId || "-"
+                )}
+            </div>
+
+            <div class="historyMeta">
+                Date:
+                ${date}
+            </div>
+
+            <span class="badge ${badgeClass}">
+                ${capitalize(status)}
+            </span>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+/* =========================================================
+   WITHDRAW COINS CALCULATOR
+========================================================= */
+
+document
+    .getElementById(
+        "withdrawCoins"
+    )
+    .addEventListener(
+        "input",
+        () => {
+
+            const coins =
                 Number(
-                    task.rewardCoins || 0
+                    document
+                        .getElementById(
+                            "withdrawCoins"
+                        )
+                        .value || 0
                 );
 
-            const watchTime =
-                Number(
-                    task.watchTime || 0
-                );
+
+            const amount =
+                coins / 100;
 
 
-            const div =
-                document.createElement("div");
-
-
-            div.className =
-                "taskCard";
-
-
-            div.innerHTML = `
-
-                <h3>${escapeHtml(
-                    task.title || "Task"
-                )}</h3>
-
-                <div class="taskInfo">
-
-                    <span>
-                        🪙 ${reward} Coins
-                    </span>
-
-                    <span>
-                        ⏱ ${watchTime} Seconds
-                    </span>
-
-                </div>
-
-                <p>
-                    Watch the video for the required time and submit the task.
-                </p>
-
-                <button
-                    class="primaryBtn startTaskBtn">
-                    ▶ Start Task
-                </button>
-
-            `;
-
-
-            div
-                .querySelector(
-                    ".startTaskBtn"
+            document
+                .getElementById(
+                    "withdrawRupees"
                 )
-                .addEventListener(
-                    "click",
-                    () => startTask(task)
-                );
-
-
-            container.appendChild(div);
+                .textContent =
+                    "₹" +
+                    amount.toFixed(2);
 
         }
     );
 
-}
 
+/* =========================================================
+   WITHDRAW
+========================================================= */
 
-/* ================= ESCAPE HTML ================= */
+document
+    .getElementById(
+        "withdrawButton"
+    )
+    .addEventListener(
+        "click",
+        async () => {
 
-function escapeHtml(value){
-
-    return String(value)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-
-}
-
-
-/* ================= YOUTUBE URL ================= */
-
-function getYouTubeVideoId(url){
-
-    if(!url){
-        return null;
-    }
-
-
-    try{
-
-        const parsed =
-            new URL(url);
-
-
-        const host =
-            parsed.hostname
-                .toLowerCase()
-                .replace("www.","");
-
-
-        if(
-            host === "youtube.com" ||
-            host === "m.youtube.com" ||
-            host === "youtube-nocookie.com"
-        ){
-
-            if(
-                parsed.pathname ===
-                "/watch"
-            ){
-
-                return parsed.searchParams.get(
-                    "v"
+            const button =
+                document.getElementById(
+                    "withdrawButton"
                 );
 
-            }
+
+            const message =
+                document.getElementById(
+                    "withdrawMessage"
+                );
+
+
+            const coins =
+                Number(
+                    document
+                        .getElementById(
+                            "withdrawCoins"
+                        )
+                        .value || 0
+                );
+
+
+            const upiId =
+                document
+                    .getElementById(
+                        "withdrawUpi"
+                    )
+                    .value
+                    .trim();
+
+
+            const availableCoins =
+                Number(
+                    currentMemberData?.coins ||
+                    0
+                );
+
+
+            message.style.display =
+                "none";
 
 
             if(
-                parsed.pathname.startsWith(
-                    "/shorts/"
-                )
+                !Number.isInteger(coins) ||
+                coins <= 0
             ){
 
-                return parsed.pathname
-                    .split("/shorts/")[1]
-                    .split("/")[0];
+                showWithdrawMessage(
+                    "Please enter valid coins.",
+                    true
+                );
 
-            }
-
-
-            if(
-                parsed.pathname.startsWith(
-                    "/embed/"
-                )
-            ){
-
-                return parsed.pathname
-                    .split("/embed/")[1]
-                    .split("/")[0];
-
-            }
-
-
-            if(
-                parsed.pathname.startsWith(
-                    "/live/"
-                )
-            ){
-
-                return parsed.pathname
-                    .split("/live/")[1]
-                    .split("/")[0];
-
-            }
-
-        }
-
-
-        if(
-            host === "youtu.be"
-        ){
-
-            return parsed.pathname
-                .replace("/","")
-                .split("/")[0];
-
-        }
-
-
-    }catch(error){
-
-        console.error(error);
-
-    }
-
-
-    return null;
-
-}
-
-
-/* ================= YOUTUBE API ================= */
-
-function loadYouTubeAPI(){
-
-    return new Promise(
-        (resolve,reject) => {
-
-            if(
-                window.YT &&
-                window.YT.Player
-            ){
-
-                resolve();
                 return;
 
             }
 
 
             if(
-                document.getElementById(
-                    "youtube-api-script"
-                )
+                coins > availableCoins
             ){
 
-                const check =
-                    setInterval(
-                        () => {
+                showWithdrawMessage(
+                    "Insufficient coins.",
+                    true
+                );
 
-                            if(
-                                window.YT &&
-                                window.YT.Player
-                            ){
+                return;
 
-                                clearInterval(
-                                    check
-                                );
+            }
 
-                                resolve();
 
-                            }
+            if(!upiId){
 
-                        },
-                        200
+                showWithdrawMessage(
+                    "Please enter UPI ID.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            button.disabled =
+                true;
+
+            button.textContent =
+                "Submitting...";
+
+
+            try{
+
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid
                     );
+
+
+                await runTransaction(
+                    db,
+                    async transaction => {
+
+                        const userSnap =
+                            await transaction.get(
+                                userRef
+                            );
+
+
+                        if(
+                            !userSnap.exists()
+                        ){
+
+                            throw new Error(
+                                "Member account not found."
+                            );
+
+                        }
+
+
+                        const data =
+                            userSnap.data();
+
+
+                        const currentCoins =
+                            Number(
+                                data.coins ||
+                                0
+                            );
+
+
+                        if(
+                            currentCoins <
+                            coins
+                        ){
+
+                            throw new Error(
+                                "Insufficient coins."
+                            );
+
+                        }
+
+
+                        transaction.update(
+                            userRef,
+                            {
+                                coins:
+                                    currentCoins -
+                                    coins
+                            }
+                        );
+
+                    }
+                );
+
+
+                await addDoc(
+                    collection(
+                        db,
+                        "withdrawals"
+                    ),
+                    {
+
+                        memberId:
+                            currentUser.uid,
+
+                        memberName:
+                            currentMemberData?.name ||
+                            currentUser.email ||
+                            "Member",
+
+                        memberEmail:
+                            currentMemberData?.email ||
+                            currentUser.email ||
+                            "",
+
+                        coins:
+                            coins,
+
+                        amount:
+                            coins / 100,
+
+                        upiId:
+                            upiId,
+
+                        status:
+                            "pending",
+
+                        createdAt:
+                            serverTimestamp()
+
+                    }
+                );
+
+
+                currentMemberData.coins =
+                    availableCoins -
+                    coins;
+
+
+                updateMemberUI();
+
+                refreshDashboard();
+
+                await loadWithdrawalsData();
+
+
+                document
+                    .getElementById(
+                        "withdrawCoins"
+                    )
+                    .value = "";
+
+
+                document
+                    .getElementById(
+                        "withdrawUpi"
+                    )
+                    .value = "";
+
+
+                document
+                    .getElementById(
+                        "withdrawRupees"
+                    )
+                    .textContent =
+                        "₹0.00";
+
+
+                showWithdrawMessage(
+                    "Withdrawal request submitted successfully.",
+                    false
+                );
+
+
+                button.textContent =
+                    "Submitted ✓";
 
 
                 setTimeout(
                     () => {
 
-                        clearInterval(
-                            check
-                        );
+                        button.disabled =
+                            false;
 
-                        reject(
-                            new Error(
-                                "YouTube API timeout"
-                            )
-                        );
+                        button.textContent =
+                            "Submit Withdrawal Request";
 
                     },
-                    15000
+                    1500
                 );
 
-                return;
+
+            }catch(error){
+
+                console.error(
+                    "Withdrawal error:",
+                    error
+                );
+
+
+                showWithdrawMessage(
+                    error.message ||
+                    "Unable to submit withdrawal.",
+                    true
+                );
+
+
+                button.disabled =
+                    false;
+
+                button.textContent =
+                    "Submit Withdrawal Request";
 
             }
-
-
-            window.onYouTubeIframeAPIReady =
-                () => {
-
-                    resolve();
-
-                };
-
-
-            const script =
-                document.createElement(
-                    "script"
-                );
-
-
-            script.id =
-                "youtube-api-script";
-
-
-            script.src =
-                "https://www.youtube.com/iframe_api";
-
-
-            script.onerror =
-                () => {
-
-                    reject(
-                        new Error(
-                            "Unable to load YouTube API"
-                        )
-                    );
-
-                };
-
-
-            document.head.appendChild(
-                script
-            );
-
-
-            setTimeout(
-                () => {
-
-                    if(
-                        !window.YT ||
-                        !window.YT.Player
-                    ){
-
-                        reject(
-                            new Error(
-                                "YouTube API timeout"
-                            )
-                        );
-
-                    }
-
-                },
-                15000
-            );
 
         }
     );
 
-}
 
+/* =========================================================
+   WITHDRAW MESSAGE
+========================================================= */
 
-/* ================= START TASK ================= */
+function showWithdrawMessage(
+    text,
+    error
+){
 
-async function startTask(task){
-
-    stopActiveTask();
-
-
-    activeTask =
-        task;
-
-
-    activeTaskId =
-        task.id;
-
-
-    activeTaskVideoId =
-        getYouTubeVideoId(
-            task.youtubeUrl ||
-            task.videoUrl ||
-            ""
+    const box =
+        document.getElementById(
+            "withdrawMessage"
         );
 
 
-    requiredWatchTime =
-        Number(
-            task.watchTime || 0
-        );
-
-
-    watchedSeconds = 0;
-
-    taskCompleted = false;
-
-
-    document.getElementById(
-        "activeTaskTitle"
-    ).textContent =
-        task.title || "YouTube Task";
-
-
-    document.getElementById(
-        "videoBox"
-    ).style.display =
+    box.style.display =
         "block";
 
+    box.textContent =
+        text;
 
-    document.getElementById(
-        "taskMessage"
-    ).textContent =
-        "";
+    box.style.background =
+        error
+        ? "#ffe1e1"
+        : "#e3f8eb";
 
-
-    document.getElementById(
-        "timerText"
-    ).textContent =
-        "0 / " +
-        requiredWatchTime +
-        " sec";
-
-
-    document.getElementById(
-        "taskProgress"
-    ).style.width =
-        "0%";
-
-
-    const completeButton =
-        document.getElementById(
-            "completeTaskButton"
-        );
-
-
-    completeButton.disabled =
-        true;
-
-
-    if(!activeTaskVideoId){
-
-        document.getElementById(
-            "taskMessage"
-        ).textContent =
-            "Invalid YouTube URL.";
-
-        return;
-
-    }
-
-
-    try{
-
-        await loadYouTubeAPI();
-
-
-        createPlayer();
-
-
-    }catch(error){
-
-        console.error(error);
-
-        document.getElementById(
-            "taskMessage"
-        ).textContent =
-            "Unable to load YouTube video. Please try again.";
-
-    }
+    box.style.color =
+        error
+        ? "#c62828"
+        : "#168348";
 
 }
 
 
-/* ================= CREATE PLAYER ================= */
+/* =========================================================
+   REFRESH DASHBOARD
+========================================================= */
 
-function createPlayer(){
+function refreshDashboard(){
 
-    if(!activeTaskVideoId){
+    if(!currentUser){
         return;
     }
 
-
-    if(player){
-
-        try{
-            player.destroy();
-        }catch(error){}
-
-        player = null;
-
-    }
-
-
-    player =
-        new YT.Player(
-            "youtubePlayer",
-            {
-
-                videoId:
-                    activeTaskVideoId,
-
-                playerVars:{
-                    autoplay:1,
-                    rel:0,
-                    modestbranding:1
-                },
-
-                events:{
-
-                    onReady:
-                        event => {
-
-                            event.target.playVideo();
-
-                        },
-
-                    onStateChange:
-                        event => {
-
-                            if(
-                                event.data ===
-                                YT.PlayerState.PLAYING
-                            ){
-
-                                startWatchTimer();
-
-                            }else{
-
-                                stopWatchTimer();
-
-                            }
-
-                        },
-
-                    onError:
-                        event => {
-
-                            console.error(
-                                "YouTube error:",
-                                event.data
-                            );
-
-                            document.getElementById(
-                                "taskMessage"
-                            ).textContent =
-                                "Unable to play this YouTube video.";
-
-                            stopWatchTimer();
-
-                        }
-
-                }
-
-            }
-        );
-
-}
-
-
-/* ================= TIMER ================= */
-
-function startWatchTimer(){
-
-    stopWatchTimer();
-
-
-    timerInterval =
-        setInterval(
-            () => {
-
-                if(!activeTask){
-                    return;
-                }
-
-
-                watchedSeconds++;
-
-
-                const percent =
-                    Math.min(
-                        100,
-                        (
-                            watchedSeconds /
-                            requiredWatchTime
-                        ) * 100
-                    );
-
-
-                document.getElementById(
-                    "timerText"
-                ).textContent =
-                    watchedSeconds +
-                    " / " +
-                    requiredWatchTime +
-                    " sec";
-
-
-                document.getElementById(
-                    "taskProgress"
-                ).style.width =
-                    percent + "%";
-
-
-                if(
-                    watchedSeconds >=
-                    requiredWatchTime
-                ){
-
-                    stopWatchTimer();
-
-
-                    taskCompleted = true;
-
-
-                    document.getElementById(
-                        "completeTaskButton"
-                    ).disabled =
-                        false;
-
-
-                    document.getElementById(
-                        "taskMessage"
-                    ).textContent =
-                        "Required time completed. You can now complete the task.";
-
-                }
-
-            },
-            1000
-        );
-
-}
-
-
-/* ================= STOP TIMER ================= */
-
-function stopWatchTimer(){
-
-    if(timerInterval){
-
-        clearInterval(
-            timerInterval
-        );
-
-        timerInterval = null;
-
-    }
-
-}
-
-
-/* ================= STOP ACTIVE TASK ================= */
-
-function stopActiveTask(){
-
-    stopWatchTimer();
-
-
-    if(player){
-
-        try{
-            player.stopVideo();
-        }catch(error){}
-
-
-        try{
-            player.destroy();
-        }catch(error){}
-
-
-        player = null;
-
-    }
-
-
-    activeTask = null;
-    activeTaskId = null;
-    activeTaskVideoId = null;
-
-
-    document.getElementById(
-        "videoBox"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "youtubePlayer"
-    ).innerHTML =
-        "";
-
-}
-
-
-/* ================= EXIT TASK ================= */
-
-document.getElementById(
-    "exitTaskButton"
-).addEventListener(
-    "click",
-    () => {
-
-        stopActiveTask();
-
-        document.getElementById(
-            "taskMessage"
-        ).textContent =
-            "";
-
-    }
-);
-
-
-/* ================= COMPLETE TASK ================= */
-
-document.getElementById(
-    "completeTaskButton"
-).addEventListener(
-    "click",
-    async () => {
-
-        if(
-            !activeTask ||
-            !taskCompleted
-        ){
-
-            return;
-
-        }
-
-
-        const button =
-            document.getElementById(
-                "completeTaskButton"
-            );
-
-
-        button.disabled =
-            true;
-
-
-        button.textContent =
-            "Submitting...";
-
-
-        try{
-
-            const completionQuery =
-                query(
-                    collection(
-                        db,
-                        "taskCompletions"
-                    ),
-                    where(
-                        "memberId",
-                        "==",
-                        currentUser.uid
-                    ),
-                    where(
-                        "taskId",
-                        "==",
-                        activeTaskId
-                    )
-                );
-
-
-            const existing =
-                await getDocs(
-                    completionQuery
-                );
-
-
-            let alreadyPending =
-                false;
-
-
-            existing.forEach(
-                item => {
-
-                    const data =
-                        item.data();
-
-
-                    const status =
-                        String(
-                            data.rewardStatus ||
-                            data.status ||
-                            ""
-                        ).toLowerCase();
-
-
-                    if(
-                        status === "pending" ||
-                        status === "approved"
-                    ){
-
-                        alreadyPending = true;
-
-                    }
-
-                }
-            );
-
-
-            if(alreadyPending){
-
-                document.getElementById(
-                    "taskMessage"
-                ).textContent =
-                    "You have already submitted this task.";
-
-                button.textContent =
-                    "Complete Task";
-
-                return;
-
-            }
-
-
-            await addDoc(
-                collection(
-                    db,
-                    "taskCompletions"
-                ),
-                {
-
-                    taskId:
-                        activeTaskId,
-
-                    taskTitle:
-                        activeTask.title ||
-                        "Task",
-
-                    memberId:
-                        currentUser.uid,
-
-                    memberName:
-                        currentMemberData?.name ||
-                        currentUser.email ||
-                        "Member",
-
-                    rewardCoins:
-                        Number(
-                            activeTask.rewardCoins || 0
-                        ),
-
-                    rewardStatus:
-                        "pending",
-
-                    status:
-                        "pending",
-
-                    watchTime:
-                        requiredWatchTime,
-
-                    completedAt:
-                        serverTimestamp()
-
-                }
-            );
-
-
-            document.getElementById(
-                "taskMessage"
-            ).textContent =
-                "Task completed successfully. Waiting for owner approval.";
-
-
-            await loadCompletionsData();
-
-            refreshDashboard();
-
-            loadCompletedTasks();
-
-
-            button.textContent =
-                "Submitted";
-
-
-            setTimeout(
-                () => {
-
-                    stopActiveTask();
-
-                    button.textContent =
-                        "Complete Task";
-
-                    button.disabled =
-                        true;
-
-                },
-                1200
-            );
-
-
-        }catch(error){
-
-            console.error(error);
-
-            document.getElementById(
-                "taskMessage"
-            ).textContent =
-                "Unable to save task completion. " +
-                error.message;
-
-
-            button.disabled =
-                false;
-
-
-            button.textContent =
-                "Complete Task";
-
-        }
-
-    }
-);
-
-
-/* ================= COMPLETED TASKS ================= */
-
-async function loadCompletedTasks(){
-
-    await loadCompletionsData();
-
-
-    const body =
-        document.getElementById(
-            "completedTasksBody"
-        );
-
-
-    body.innerHTML = "";
-
-
-    if(allCompletions.length === 0){
-
-        body.innerHTML = `
-            <tr>
-                <td colspan="4">
-                    No completed tasks yet.
-                </td>
-            </tr>
-        `;
-
-        return;
-
-    }
-
-
-    allCompletions
-        .sort(
-            (a,b) => {
-
-                const ad =
-                    getDateValue(
-                        a.completedAt
-                    )?.getTime() || 0;
-
-                const bd =
-                    getDateValue(
-                        b.completedAt
-                    )?.getTime() || 0;
-
-                return bd - ad;
-
-            }
-        )
-        .forEach(
-            item => {
-
-                const status =
-                    String(
-                        item.rewardStatus ||
-                        item.status ||
-                        "pending"
-                    ).toLowerCase();
-
-
-                let badge =
-                    `<span class="badge badgePending">
-                        Pending Verification
-                    </span>`;
-
-
-                if(status === "approved"){
-
-                    badge =
-                        `<span class="badge badgeApproved">
-                            Approved
-                        </span>`;
-
-                }
-
-
-                if(status === "rejected"){
-
-                    badge =
-                        `<span class="badge badgeRejected">
-                            Rejected
-                        </span>`;
-
-                }
-
-
-                body.innerHTML += `
-
-                    <tr>
-
-                        <td>
-                            ${escapeHtml(
-                                item.taskTitle ||
-                                "Task"
-                            )}
-                        </td>
-
-                        <td>
-                            ${Number(
-                                item.rewardCoins || 0
-                            )}
-                        </td>
-
-                        <td>
-                            ${badge}
-                        </td>
-
-                        <td>
-                            ${formatDate(
-                                item.completedAt
-                            )}
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
-        );
-
-}
-
-
-/* ================= WITHDRAWAL STATS ================= */
-
-function refreshWithdrawalStats(){
 
     const coins =
         Number(
-            currentMemberData?.coins || 0
+            currentMemberData?.coins ||
+            0
         );
 
 
-    const pending =
-        allWithdrawals.reduce(
-            (total,item) => {
+    const totalEarning =
+        calculateTotalEarning();
 
-                if(
+
+    const pendingWithdrawal =
+        allWithdrawals
+            .filter(
+                item =>
                     String(
                         item.status || ""
                     ).toLowerCase() ===
                     "pending"
-                ){
-
-                    return total +
-                        Number(
-                            item.coins ||
-                            item.amountCoins ||
-                            0
-                        );
-
-                }
-
-                return total;
-
-            },
-            0
-        );
+            )
+            .reduce(
+                (
+                    total,
+                    item
+                ) =>
+                    total +
+                    Number(
+                        item.coins || 0
+                    ),
+                0
+            );
 
 
-    const withdrawn =
-        allWithdrawals.reduce(
-            (total,item) => {
-
-                if(
+    const totalWithdrawn =
+        allWithdrawals
+            .filter(
+                item =>
                     String(
                         item.status || ""
                     ).toLowerCase() ===
                     "approved"
-                ){
+            )
+            .reduce(
+                (
+                    total,
+                    item
+                ) =>
+                    total +
+                    Number(
+                        item.coins || 0
+                    ),
+                0
+            );
 
-                    return total +
-                        Number(
-                            item.coins ||
-                            item.amountCoins ||
-                            0
-                        );
 
-                }
+    const pendingTasks =
+        allCompletions.filter(
+            item =>
+                String(
+                    item.rewardStatus ||
+                    item.status ||
+                    ""
+                ).toLowerCase() ===
+                "pending"
+        ).length;
 
-                return total;
 
-            },
-            0
+    document
+        .getElementById(
+            "dashboardCoins"
+        )
+        .textContent =
+            coins;
+
+
+    document
+        .getElementById(
+            "dashboardRupees"
+        )
+        .textContent =
+            "₹" +
+            (coins / 100)
+                .toFixed(2);
+
+
+    document
+        .getElementById(
+            "dashboardTotalEarning"
+        )
+        .textContent =
+            totalEarning;
+
+
+    document
+        .getElementById(
+            "dashboardTotalEarningRupees"
+        )
+        .textContent =
+            "₹" +
+            (totalEarning / 100)
+                .toFixed(2);
+
+
+    document
+        .getElementById(
+            "dashboardPendingWithdrawal"
+        )
+        .textContent =
+            pendingWithdrawal;
+
+
+    document
+        .getElementById(
+            "dashboardPendingWithdrawalRupees"
+        )
+        .textContent =
+            "₹" +
+            (pendingWithdrawal / 100)
+                .toFixed(2);
+
+
+    document
+        .getElementById(
+            "dashboardTotalWithdrawn"
+        )
+        .textContent =
+            totalWithdrawn;
+
+
+    document
+        .getElementById(
+            "dashboardTotalWithdrawnRupees"
+        )
+        .textContent =
+            "₹" +
+            (totalWithdrawn / 100)
+                .toFixed(2);
+
+
+    document
+        .getElementById(
+            "dashboardNewTasks"
+        )
+        .textContent =
+            allTasks.length;
+
+
+    document
+        .getElementById(
+            "dashboardCompletedTasks"
+        )
+        .textContent =
+            allCompletions.length;
+
+
+    document
+        .getElementById(
+            "dashboardPendingTasks"
+        )
+        .textContent =
+            pendingTasks;
+
+
+    const target =
+        500;
+
+
+    const progress =
+        Math.min(
+            100,
+            (
+                totalEarning /
+                target
+            ) * 100
         );
 
 
-    document.getElementById(
-        "withdrawAvailableCoins"
-    ).textContent =
-        coins;
+    document
+        .getElementById(
+            "dashboardEarningProgress"
+        )
+        .style.width =
+            progress + "%";
 
 
-    document.getElementById(
-        "withdrawPendingCoins"
-    ).textContent =
-        pending;
+    document
+        .getElementById(
+            "dashboardProgressCoins"
+        )
+        .textContent =
+            `${totalEarning} / ${target} Coins`;
 
 
-    document.getElementById(
-        "withdrawTotalWithdrawn"
-    ).textContent =
-        withdrawn;
+    document
+        .getElementById(
+            "dashboardProgressAmount"
+        )
+        .textContent =
+            `₹${(
+                totalEarning / 100
+            ).toFixed(2)} / ₹5.00`;
 
 }
 
 
-/* ================= WITHDRAW AMOUNT ================= */
+/* =========================================================
+   LOGOUT
+========================================================= */
 
-document.getElementById(
-    "withdrawCoins"
-).addEventListener(
-    "input",
-    () => {
+document
+    .getElementById(
+        "logoutButton"
+    )
+    .addEventListener(
+        "click",
+        async () => {
 
-        const coins =
-            Number(
-                document.getElementById(
-                    "withdrawCoins"
-                ).value || 0
-            );
+            try{
 
+                stopActiveTask();
 
-        document.getElementById(
-            "withdrawRupees"
-        ).value =
-            formatRupees(coins);
+                await signOut(auth);
 
-    }
-);
+                window.location.href =
+                    "index.html";
 
+            }catch(error){
 
-/* ================= SUBMIT WITHDRAWAL ================= */
-
-document.getElementById(
-    "withdrawButton"
-).addEventListener(
-    "click",
-    async () => {
-
-        const button =
-            document.getElementById(
-                "withdrawButton"
-            );
-
-
-        const message =
-            document.getElementById(
-                "withdrawMessage"
-            );
-
-
-        const coinsInput =
-            document.getElementById(
-                "withdrawCoins"
-            );
-
-
-        const upiInput =
-            document.getElementById(
-                "withdrawUpi"
-            );
-
-
-        const coins =
-            Number(
-                coinsInput.value || 0
-            );
-
-
-        const upi =
-            upiInput.value.trim();
-
-
-        message.textContent = "";
-
-
-        if(
-            !Number.isFinite(coins) ||
-            coins <= 0
-        ){
-
-            message.textContent =
-                "Please enter valid coins.";
-
-            return;
-
-        }
-
-
-        if(
-            coins >
-            Number(
-                currentMemberData?.coins || 0
-            )
-        ){
-
-            message.textContent =
-                "Insufficient coins.";
-
-            return;
-
-        }
-
-
-        if(!upi){
-
-            message.textContent =
-                "Please enter your UPI ID.";
-
-            return;
-
-        }
-
-
-        button.disabled =
-            true;
-
-
-        button.textContent =
-            "Submitting...";
-
-
-        try{
-
-            await runTransaction(
-                db,
-                async transaction => {
-
-                    const memberRef =
-                        doc(
-                            db,
-                            "users",
-                            currentUser.uid
-                        );
-
-
-                    const memberSnap =
-                        await transaction.get(
-                            memberRef
-                        );
-
-
-                    if(
-                        !memberSnap.exists()
-                    ){
-
-                        throw new Error(
-                            "Member account not found."
-                        );
-
-                    }
-
-
-                    const memberData =
-                        memberSnap.data();
-
-
-                    const availableCoins =
-                        Number(
-                            memberData.coins || 0
-                        );
-
-
-                    if(
-                        coins >
-                        availableCoins
-                    ){
-
-                        throw new Error(
-                            "Insufficient coins."
-                        );
-
-                    }
-
-
-                    const withdrawalRef =
-                        doc(
-                            collection(
-                                db,
-                                "withdrawals"
-                            )
-                        );
-
-
-                    transaction.update(
-                        memberRef,
-                        {
-                            coins:
-                                availableCoins -
-                                coins
-                        }
-                    );
-
-
-                    transaction.set(
-                        withdrawalRef,
-                        {
-
-                            memberId:
-                                currentUser.uid,
-
-                            memberName:
-                                currentMemberData?.name ||
-                                currentUser.email ||
-                                "Member",
-
-                            memberEmail:
-                                currentUser.email ||
-                                currentMemberData?.email ||
-                                "",
-
-                            coins:
-                                coins,
-
-                            amount:
-                                coins / 100,
-
-                            upiId:
-                                upi,
-
-                            status:
-                                "pending",
-
-                            createdAt:
-                                serverTimestamp()
-
-                        }
-                    );
-
-                }
-            );
-
-
-            message.textContent =
-                "Withdrawal request submitted successfully.";
-
-
-            coinsInput.value =
-                "";
-
-
-            upiInput.value =
-                "";
-
-
-            document.getElementById(
-                "withdrawRupees"
-            ).value =
-                "₹0.00";
-
-
-            const updatedUser =
-                await getDoc(
-                    doc(
-                        db,
-                        "users",
-                        currentUser.uid
-                    )
+                console.error(
+                    "Logout error:",
+                    error
                 );
 
-
-            if(updatedUser.exists()){
-
-                currentMemberData =
-                    updatedUser.data();
-
             }
-
-
-            await loadWithdrawalsData();
-
-            refreshWithdrawalStats();
-
-            refreshDashboard();
-
-            loadWithdrawalHistory();
-
-
-        }catch(error){
-
-            console.error(error);
-
-            message.textContent =
-                error.message ||
-                "Unable to submit withdrawal.";
 
         }
+    );
 
 
-        button.disabled =
-            false;
+/* =========================================================
+   HELPERS
+========================================================= */
 
+function escapeHtml(value){
 
-        button.textContent =
-            "Submit Withdrawal";
-
-    }
-);
-
-
-/* ================= WITHDRAWAL HISTORY ================= */
-
-async function loadWithdrawalHistory(){
-
-    await loadWithdrawalsData();
-
-
-    const body =
-        document.getElementById(
-            "withdrawalHistoryBody"
-        );
-
-
-    body.innerHTML = "";
-
-
-    if(allWithdrawals.length === 0){
-
-        body.innerHTML = `
-            <tr>
-                <td colspan="5">
-                    No withdrawal history yet.
-                </td>
-            </tr>
-        `;
-
-        return;
-
-    }
-
-
-    allWithdrawals
-        .sort(
-            (a,b) => {
-
-                const ad =
-                    getDateValue(
-                        a.createdAt
-                    )?.getTime() || 0;
-
-                const bd =
-                    getDateValue(
-                        b.createdAt
-                    )?.getTime() || 0;
-
-                return bd - ad;
-
-            }
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
         )
-        .forEach(
-            item => {
-
-                const status =
-                    String(
-                        item.status || "pending"
-                    ).toLowerCase();
-
-
-                let badge =
-                    `<span class="badge badgePending">
-                        Pending
-                    </span>`;
-
-
-                if(status === "approved"){
-
-                    badge =
-                        `<span class="badge badgeApproved">
-                            Approved
-                        </span>`;
-
-                }
-
-
-                if(status === "rejected"){
-
-                    badge =
-                        `<span class="badge badgeRejected">
-                            Rejected
-                        </span>`;
-
-                }
-
-
-                const coins =
-                    Number(
-                        item.coins ||
-                        item.amountCoins ||
-                        0
-                    );
-
-
-                const amount =
-                    Number(
-                        item.amount ??
-                        coins / 100
-                    );
-
-
-                body.innerHTML += `
-
-                    <tr>
-
-                        <td>
-                            ${coins}
-                        </td>
-
-                        <td>
-                            ₹${amount.toFixed(2)}
-                        </td>
-
-                        <td>
-                            ${escapeHtml(
-                                item.upiId ||
-                                item.upi ||
-                                "-"
-                            )}
-                        </td>
-
-                        <td>
-                            ${badge}
-                        </td>
-
-                        <td>
-                            ${formatDate(
-                                item.createdAt
-                            )}
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
         );
 
 }
 
 
-/* ================= LOGOUT ================= */
+function capitalize(value){
 
-window.logout = async function(){
+    if(!value){
+        return "";
+    }
 
-    stopActiveTask();
+    return value.charAt(0)
+        .toUpperCase() +
+        value.slice(1);
+
+}
+
+
+function formatDate(timestamp){
+
+    if(!timestamp){
+        return "-";
+    }
 
 
     try{
 
-        await signOut(auth);
+        if(
+            typeof timestamp.toDate ===
+            "function"
+        ){
 
-        window.location.href =
-            "index.html";
+            return timestamp
+                .toDate()
+                .toLocaleString();
+
+        }
+
+
+        if(
+            timestamp instanceof Date
+        ){
+
+            return timestamp
+                .toLocaleString();
+
+        }
+
+
+        return new Date(
+            timestamp
+        ).toLocaleString();
 
     }catch(error){
 
-        console.error(error);
-
-        alert(
-            "Unable to logout."
-        );
+        return "-";
 
     }
 
-};
-
-
-/* ================= DAILY REFRESH ================= */
-
-setInterval(
-    async () => {
-
-        if(!currentUser){
-            return;
-        }
-
-
-        try{
-
-            const userSnap =
-                await getDoc(
-                    doc(
-                        db,
-                        "users",
-                        currentUser.uid
-                    )
-                );
-
-
-            if(userSnap.exists()){
-
-                currentMemberData =
-                    userSnap.data();
-
-            }
-
-
-            await loadAllData();
-
-            refreshDashboard();
-
-            refreshWithdrawalStats();
-
-        }catch(error){
-
-            console.error(
-                "Refresh error:",
-                error
-            );
-
-        }
-
-    },
-    30000
-);
+}
 
 </script>
 
