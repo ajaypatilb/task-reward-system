@@ -228,6 +228,8 @@ body{
     font-weight:bold;
     pointer-events:none;
     z-index:2;
+    text-align:center;
+    padding:15px;
 }
 
 .videoOverlay.hidden{
@@ -1124,9 +1126,7 @@ function toggleMemberMenu(){
     sidebar.classList.toggle("open");
 
     if(overlay){
-
         overlay.classList.toggle("show");
-
     }
 
 }
@@ -1141,15 +1141,11 @@ function closeMemberMenu(){
         document.getElementById("overlay");
 
     if(sidebar){
-
         sidebar.classList.remove("open");
-
     }
 
     if(overlay){
-
         overlay.classList.remove("show");
-
     }
 
 }
@@ -1296,7 +1292,7 @@ try{
 
 
 /* =====================================================
-   YOUTUBE
+   YOUTUBE API
 ===================================================== */
 
 let youtubeAPIReady = false;
@@ -1318,6 +1314,9 @@ const youtubeScript =
 
 youtubeScript.src =
     "https://www.youtube.com/iframe_api";
+
+youtubeScript.async =
+    true;
 
 document.head.appendChild(
     youtubeScript
@@ -1512,44 +1511,32 @@ function showPage(page){
 
 
     if(page === "dashboard"){
-
         refreshDashboard();
-
     }
 
 
     if(page === "newTasks"){
-
         renderAvailableTasks();
-
     }
 
 
     if(page === "completedTasks"){
-
         loadCompletedTasks();
-
     }
 
 
     if(page === "withdraw"){
-
         refreshWithdrawPage();
-
     }
 
 
     if(page === "withdrawalHistory"){
-
         loadWithdrawalHistory();
-
     }
 
 
     if(page === "profile"){
-
         loadProfile();
-
     }
 
 }
@@ -1887,9 +1874,7 @@ async function loadAllCompletions(){
 
 
     if(!currentMember){
-
         return;
-
     }
 
 
@@ -1958,9 +1943,7 @@ async function loadAllWithdrawals(){
 
 
     if(!currentMember){
-
         return;
-
     }
 
 
@@ -2069,9 +2052,7 @@ function hasCompletedToday(taskId){
 async function loadTasks(){
 
     if(!db){
-
         return;
-
     }
 
 
@@ -2515,13 +2496,26 @@ function startTask(taskId){
     }
 
 
+    /*
+     * Stop any old timer/player state.
+     */
+    stopWatchTimer();
+
+
     activeTaskId =
         taskId;
 
 
-    activeElapsed = 0;
+    activeElapsed =
+        0;
 
-    activeRequiredTime = 0;
+
+    activeRequiredTime =
+        0;
+
+
+    activePlayer =
+        null;
 
 
     renderAvailableTasks();
@@ -2535,27 +2529,75 @@ function startTask(taskId){
 
 function stopActiveTask(){
 
+    /*
+     * Stop timer.
+     */
     stopWatchTimer();
 
 
+    /*
+     * Stop and destroy YouTube player.
+     */
     if(activePlayer){
 
         try{
 
-            activePlayer.stopVideo();
+            if(
+                typeof activePlayer.stopVideo ===
+                "function"
+            ){
 
-        }catch(e){}
+                activePlayer.stopVideo();
+
+            }
+
+        }catch(e){
+
+            console.log(
+                "YouTube stopVideo error:",
+                e
+            );
+
+        }
+
+
+        try{
+
+            if(
+                typeof activePlayer.destroy ===
+                "function"
+            ){
+
+                activePlayer.destroy();
+
+            }
+
+        }catch(e){
+
+            console.log(
+                "YouTube destroy error:",
+                e
+            );
+
+        }
 
     }
 
 
-    activePlayer = null;
+    activePlayer =
+        null;
 
-    activeTaskId = null;
 
-    activeElapsed = 0;
+    activeTaskId =
+        null;
 
-    activeRequiredTime = 0;
+
+    activeElapsed =
+        0;
+
+
+    activeRequiredTime =
+        0;
 
 }
 
@@ -2567,67 +2609,218 @@ function stopActiveTask(){
 function getYoutubeVideoId(url){
 
     if(!url){
-
         return "";
+    }
 
+
+    let cleanUrl =
+        String(url).trim();
+
+
+    if(!cleanUrl){
+        return "";
     }
 
 
     try{
 
+        /*
+         * Support:
+         *
+         * youtube.com/watch?v=ID
+         * youtu.be/ID
+         * youtube.com/shorts/ID
+         * youtube.com/embed/ID
+         * youtube.com/live/ID
+         */
+
+        if(
+            !cleanUrl.startsWith("http://") &&
+            !cleanUrl.startsWith("https://")
+        ){
+
+            cleanUrl =
+                "https://" +
+                cleanUrl;
+
+        }
+
+
         const parsed =
-            new URL(url);
+            new URL(cleanUrl);
 
 
+        const hostname =
+            parsed.hostname
+                .toLowerCase()
+                .replace(/^www\./,"");
+
+
+        /*
+         * youtu.be
+         */
         if(
-            parsed.hostname.includes(
-                "youtu.be"
-            )
+            hostname === "youtu.be"
         ){
 
-            return parsed.pathname
-                .replace("/","")
-                .split("/")[0];
+            const id =
+                parsed.pathname
+                    .split("/")
+                    .filter(Boolean)[0];
+
+
+            return cleanYoutubeVideoId(
+                id
+            );
 
         }
 
 
+        /*
+         * youtube.com
+         */
         if(
-            parsed.pathname.includes(
-                "/embed/"
-            )
+            hostname === "youtube.com" ||
+            hostname === "m.youtube.com"
         ){
 
-            return parsed.pathname
-                .split("/embed/")[1]
-                .split("/")[0];
+            /*
+             * Normal watch URL.
+             */
+            const watchId =
+                parsed.searchParams.get("v");
+
+
+            if(watchId){
+
+                return cleanYoutubeVideoId(
+                    watchId
+                );
+
+            }
+
+
+            /*
+             * /embed/VIDEO_ID
+             */
+            if(
+                parsed.pathname.startsWith(
+                    "/embed/"
+                )
+            ){
+
+                const id =
+                    parsed.pathname
+                        .split("/embed/")[1]
+                        .split("/")[0];
+
+
+                return cleanYoutubeVideoId(
+                    id
+                );
+
+            }
+
+
+            /*
+             * /shorts/VIDEO_ID
+             */
+            if(
+                parsed.pathname.startsWith(
+                    "/shorts/"
+                )
+            ){
+
+                const id =
+                    parsed.pathname
+                        .split("/shorts/")[1]
+                        .split("/")[0];
+
+
+                return cleanYoutubeVideoId(
+                    id
+                );
+
+            }
+
+
+            /*
+             * /live/VIDEO_ID
+             */
+            if(
+                parsed.pathname.startsWith(
+                    "/live/"
+                )
+            ){
+
+                const id =
+                    parsed.pathname
+                        .split("/live/")[1]
+                        .split("/")[0];
+
+
+                return cleanYoutubeVideoId(
+                    id
+                );
+
+            }
 
         }
 
 
-        if(
-            parsed.pathname.includes(
-                "/shorts/"
-            )
-        ){
-
-            return parsed.pathname
-                .split("/shorts/")[1]
-                .split("/")[0];
-
-        }
-
-
-        return (
-            parsed.searchParams.get("v") ||
-            ""
-        );
+        return "";
 
     }catch(error){
+
+        console.error(
+            "YouTube URL parsing error:",
+            error
+        );
 
         return "";
 
     }
+
+}
+
+
+/* =====================================================
+   CLEAN YOUTUBE VIDEO ID
+===================================================== */
+
+function cleanYoutubeVideoId(id){
+
+    if(!id){
+        return "";
+    }
+
+
+    let videoId =
+        String(id)
+            .trim()
+            .split("?")[0]
+            .split("&")[0]
+            .split("#")[0]
+            .split("/")[0];
+
+
+    /*
+     * YouTube video IDs are normally
+     * 11 characters.
+     *
+     * Keep flexible for valid IDs.
+     */
+    if(
+        videoId.length < 6 ||
+        videoId.length > 20
+    ){
+
+        return "";
+
+    }
+
+
+    return videoId;
 
 }
 
@@ -2638,9 +2831,23 @@ function getYoutubeVideoId(url){
 
 function setupYouTubeTask(task){
 
+    /*
+     * Support the existing youtubeUrl field.
+     *
+     * Also support a few alternate fields
+     * without changing existing Firestore data.
+     */
+    const youtubeUrl =
+        task.youtubeUrl ||
+        task.youtubeURL ||
+        task.url ||
+        task.link ||
+        "";
+
+
     const videoId =
         getYoutubeVideoId(
-            task.youtubeUrl
+            youtubeUrl
         );
 
 
@@ -2679,17 +2886,55 @@ function setupYouTubeTask(task){
         );
 
 
-    if(!videoId){
+    /*
+     * =================================================
+     * EXIT TASK
+     * =================================================
+     *
+     * IMPORTANT:
+     * This is attached BEFORE URL validation.
+     *
+     * Therefore Exit Task works even if:
+     *
+     * - URL is invalid
+     * - YouTube API is loading
+     * - YouTube player fails
+     * - YouTube video cannot be loaded
+     */
+    if(cancelButton){
 
-        timerEl.textContent =
-            "Invalid YouTube URL.";
+        cancelButton.addEventListener(
+            "click",
+            function(){
 
-        return;
+                const shouldExit =
+                    confirm(
+                        "Exit this task? Your watch time will not be submitted."
+                    );
+
+
+                if(!shouldExit){
+                    return;
+                }
+
+
+                stopActiveTask();
+
+
+                renderAvailableTasks();
+
+            }
+        );
 
     }
 
 
-    activeElapsed = 0;
+    /*
+     * Reset task state.
+     */
+    activeElapsed =
+        0;
+
 
     activeRequiredTime =
         Number(
@@ -2697,71 +2942,306 @@ function setupYouTubeTask(task){
         );
 
 
+    /*
+     * =================================================
+     * INVALID URL
+     * =================================================
+     */
+    if(!videoId){
+
+        if(overlayEl){
+
+            overlayEl.textContent =
+                "Invalid YouTube URL.";
+
+            overlayEl.classList.remove(
+                "hidden"
+            );
+
+        }
+
+
+        if(timerEl){
+
+            timerEl.textContent =
+                "Invalid YouTube URL. Please contact the owner.";
+
+        }
+
+
+        if(completeButton){
+
+            completeButton.disabled =
+                true;
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*
+     * =================================================
+     * PLAYER CREATION
+     * =================================================
+     */
+
+    let playerCreated =
+        false;
+
+
+    let playerLoadAttempts =
+        0;
+
+
+    const maxPlayerLoadAttempts =
+        40;
+
+
     function createPlayer(){
 
-        if(!window.YT){
-
-            setTimeout(
-                createPlayer,
-                300
-            );
+        /*
+         * User already exited task.
+         */
+        if(
+            activeTaskId !==
+            task.id
+        ){
 
             return;
 
         }
 
 
-        activePlayer =
-            new YT.Player(
-                "player_" +
-                task.id,
-                {
+        /*
+         * YouTube API not ready.
+         */
+        if(
+            !window.YT ||
+            !window.YT.Player
+        ){
 
-                    videoId:
-                        videoId,
-
-                    playerVars:{
-
-                        rel:0,
-
-                        modestbranding:1,
-
-                        playsinline:1,
-
-                        controls:1
-
-                    },
-
-                    events:{
-
-                        onReady:
-                        function(){
-
-                            overlayEl.classList.add(
-                                "hidden"
-                            );
+            playerLoadAttempts++;
 
 
-                            timerEl.textContent =
-                                "▶️ Press Play to start watch timer.";
+            if(
+                playerLoadAttempts >=
+                maxPlayerLoadAttempts
+            ){
+
+                if(overlayEl){
+
+                    overlayEl.textContent =
+                        "YouTube could not be loaded.";
+
+                    overlayEl.classList.remove(
+                        "hidden"
+                    );
+
+                }
+
+
+                if(timerEl){
+
+                    timerEl.textContent =
+                        "YouTube could not be loaded. You can Exit Task.";
+
+                }
+
+
+                return;
+
+            }
+
+
+            if(overlayEl){
+
+                overlayEl.textContent =
+                    "Loading YouTube...";
+
+            }
+
+
+            setTimeout(
+                createPlayer,
+                300
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+         * Prevent duplicate player.
+         */
+        if(playerCreated){
+
+            return;
+
+        }
+
+
+        playerCreated =
+            true;
+
+
+        try{
+
+            activePlayer =
+                new YT.Player(
+                    "player_" +
+                    task.id,
+                    {
+
+                        videoId:
+                            videoId,
+
+                        playerVars:{
+
+                            rel:0,
+
+                            modestbranding:1,
+
+                            playsinline:1,
+
+                            controls:1
 
                         },
 
+                        events:{
 
-                        onStateChange:
-                        function(event){
+                            onReady:
+                            function(){
 
-                            handleYoutubeState(
-                                event,
-                                task
-                            );
+                                /*
+                                 * User may have exited
+                                 * while player was loading.
+                                 */
+                                if(
+                                    activeTaskId !==
+                                    task.id
+                                ){
+
+                                    return;
+
+                                }
+
+
+                                if(overlayEl){
+
+                                    overlayEl.classList.add(
+                                        "hidden"
+                                    );
+
+                                }
+
+
+                                if(timerEl){
+
+                                    timerEl.textContent =
+                                        "▶️ Press Play to start watch timer.";
+
+                                }
+
+                            },
+
+
+                            onStateChange:
+                            function(event){
+
+                                if(
+                                    activeTaskId !==
+                                    task.id
+                                ){
+
+                                    return;
+
+                                }
+
+
+                                handleYoutubeState(
+                                    event,
+                                    task
+                                );
+
+                            },
+
+
+                            onError:
+                            function(event){
+
+                                console.error(
+                                    "YouTube Player Error:",
+                                    event.data
+                                );
+
+
+                                stopWatchTimer();
+
+
+                                if(overlayEl){
+
+                                    overlayEl.textContent =
+                                        "Unable to load this YouTube video.";
+
+                                    overlayEl.classList.remove(
+                                        "hidden"
+                                    );
+
+                                }
+
+
+                                if(timerEl){
+
+                                    timerEl.textContent =
+                                        "Unable to load this YouTube video. You can Exit Task.";
+
+                                }
+
+                            }
 
                         }
 
                     }
+                );
 
-                }
+
+        }catch(error){
+
+            console.error(
+                "YouTube player creation error:",
+                error
             );
+
+
+            playerCreated =
+                false;
+
+
+            if(overlayEl){
+
+                overlayEl.textContent =
+                    "Unable to load YouTube.";
+
+                overlayEl.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+
+            if(timerEl){
+
+                timerEl.textContent =
+                    "YouTube player could not be loaded. You can Exit Task.";
+
+            }
+
+        }
 
     }
 
@@ -2769,51 +3249,51 @@ function setupYouTubeTask(task){
     createPlayer();
 
 
-    completeButton.addEventListener(
-        "click",
-        async function(){
+    /*
+     * =================================================
+     * COMPLETE TASK
+     * =================================================
+     */
 
-            if(
-                activeElapsed <
-                activeRequiredTime
-            ){
+    if(completeButton){
 
-                return;
+        completeButton.addEventListener(
+            "click",
+            async function(){
+
+                if(
+                    activeTaskId !==
+                    task.id
+                ){
+
+                    return;
+
+                }
+
+
+                if(
+                    activeElapsed <
+                    activeRequiredTime
+                ){
+
+                    return;
+
+                }
+
+
+                completeButton.disabled =
+                    true;
+
+
+                await completeTask(
+                    task,
+                    completeButton
+                );
 
             }
+        );
 
-
-            completeButton.disabled =
-                true;
-
-
-            await completeTask(
-                task,
-                completeButton
-            );
-
-        }
-    );
-
-
-    cancelButton.addEventListener(
-        "click",
-        function(){
-
-            if(
-                confirm(
-                    "Exit this task? Your watch time will not be submitted."
-                )
-            ){
-
-                stopActiveTask();
-
-                renderAvailableTasks();
-
-            }
-
-        }
-    );
+    }
 
 }
 
@@ -2903,9 +3383,7 @@ function handleYoutubeState(
 function startWatchTimer(task){
 
     if(activeTimer){
-
         return;
-
     }
 
 
@@ -3084,9 +3562,7 @@ async function completeTask(
 ){
 
     if(!currentMember){
-
         return;
-
     }
 
 
@@ -3247,9 +3723,7 @@ async function loadCompletedTasks(){
 
 
     if(!currentMember){
-
         return;
-
     }
 
 
@@ -3505,9 +3979,7 @@ function calculateTotalEarning(){
 function refreshDashboard(){
 
     if(!currentMemberData){
-
         return;
-
     }
 
 
@@ -3618,9 +4090,7 @@ function refreshDashboard(){
 function refreshWithdrawPage(){
 
     if(!currentMemberData){
-
         return;
-
     }
 
 
@@ -3752,6 +4222,7 @@ function calculateWithdrawal(){
 
 }
 
+
 /* =====================================================
    WITHDRAW SUBMIT
 ===================================================== */
@@ -3796,10 +4267,6 @@ async function submitWithdrawal(){
             "withdrawUpi"
         ).value.trim();
 
-
-    /* =================================================
-       VALIDATION
-    ================================================= */
 
     if(
         !Number.isInteger(coins) ||
@@ -3846,10 +4313,6 @@ async function submitWithdrawal(){
             );
 
 
-        /*
-         * Generate withdrawal document ID
-         * before starting transaction.
-         */
         const withdrawalRef =
             doc(
                 collection(
@@ -3859,19 +4322,10 @@ async function submitWithdrawal(){
             );
 
 
-        /* =================================================
-           ATOMIC TRANSACTION
-        ================================================= */
-
         await runTransaction(
             db,
             async transaction => {
 
-                /*
-                 * IMPORTANT:
-                 * Always read the latest balance
-                 * from Firestore.
-                 */
                 const userSnap =
                     await transaction.get(
                         userRef
@@ -3893,9 +4347,6 @@ async function submitWithdrawal(){
                     userSnap.data();
 
 
-                /*
-                 * Check member role.
-                 */
                 if(
                     latestData.role !==
                     "member"
@@ -3908,9 +4359,6 @@ async function submitWithdrawal(){
                 }
 
 
-                /*
-                 * Check member status.
-                 */
                 if(
                     latestData.status !==
                     "active"
@@ -3923,9 +4371,6 @@ async function submitWithdrawal(){
                 }
 
 
-                /*
-                 * Latest Firestore balance.
-                 */
                 const latestCoins =
                     Number(
                         latestData.coins ||
@@ -3933,11 +4378,6 @@ async function submitWithdrawal(){
                     );
 
 
-                /*
-                 * IMPORTANT:
-                 * Check balance using latest
-                 * Firestore value.
-                 */
                 if(
                     coins >
                     latestCoins
@@ -3955,14 +4395,6 @@ async function submitWithdrawal(){
                     coins;
 
 
-                /*
-                 * IMPORTANT:
-                 *
-                 * Only coins is changed.
-                 *
-                 * DO NOT update:
-                 * pendingWithdrawalCoins
-                 */
                 transaction.update(
                     userRef,
                     {
@@ -3974,10 +4406,6 @@ async function submitWithdrawal(){
                 );
 
 
-                /*
-                 * Create withdrawal request
-                 * inside SAME transaction.
-                 */
                 transaction.set(
                     withdrawalRef,
                     {
@@ -4020,10 +4448,6 @@ async function submitWithdrawal(){
         );
 
 
-        /*
-         * If we reached here,
-         * the transaction was successful.
-         */
         withdrawalCreated =
             true;
 
@@ -4033,10 +4457,6 @@ async function submitWithdrawal(){
             withdrawalRef.id
         );
 
-
-        /* =================================================
-           RELOAD MEMBER DATA
-        ================================================= */
 
         try{
 
@@ -4065,10 +4485,6 @@ async function submitWithdrawal(){
         }
 
 
-        /* =================================================
-           RELOAD WITHDRAWALS
-        ================================================= */
-
         try{
 
             await loadAllWithdrawals();
@@ -4083,10 +4499,6 @@ async function submitWithdrawal(){
         }
 
 
-        /* =================================================
-           CLEAR FORM
-        ================================================= */
-
         document.getElementById(
             "withdrawCoins"
         ).value = "";
@@ -4099,10 +4511,6 @@ async function submitWithdrawal(){
 
         calculateWithdrawal();
 
-
-        /* =================================================
-           UPDATE UI
-        ================================================= */
 
         updateMemberUI();
 
@@ -4126,10 +4534,6 @@ async function submitWithdrawal(){
 
         }
 
-
-        /* =================================================
-           SUCCESS MESSAGE
-        ================================================= */
 
         const msg =
             document.getElementById(
@@ -4163,10 +4567,6 @@ async function submitWithdrawal(){
             );
 
 
-        /*
-         * If transaction itself succeeded,
-         * don't show failure message.
-         */
         if(
             withdrawalCreated
         ){
@@ -4200,9 +4600,10 @@ async function submitWithdrawal(){
 
     }
 
-    }
-    
-    /* =====================================================
+}
+
+
+/* =====================================================
    WITHDRAWAL HISTORY
 ===================================================== */
 
@@ -4215,9 +4616,7 @@ async function loadWithdrawalHistory(){
 
 
     if(!currentMember){
-
         return;
-
     }
 
 
@@ -4438,9 +4837,7 @@ async function loadWithdrawalHistory(){
 function loadProfile(){
 
     if(!currentMemberData){
-
         return;
-
     }
 
 
