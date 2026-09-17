@@ -386,6 +386,66 @@ input:focus,select:focus{
     flex-wrap:wrap;
 }
 
+
+/* ================= TASK EDIT MODAL ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+    z-index:2000;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:100%;
+    max-width:600px;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.modal-header h3{
+    margin:0;
+}
+
+.close-modal{
+    background:#e5e7eb;
+    color:#374151;
+    border:none;
+    width:36px;
+    height:36px;
+    border-radius:7px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
 /* ================= RESPONSIVE ================= */
 
 @media(max-width:900px){
@@ -705,6 +765,7 @@ input:focus,select:focus{
                         <th>Watch Time</th>
                         <th>YouTube</th>
                         <th>Task ID</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
@@ -1078,6 +1139,82 @@ input:focus,select:focus{
 
 </div>
 
+
+
+<!-- ================= EDIT TASK MODAL ================= -->
+
+<div id="editTaskModal" class="modal" onclick="closeEditTaskModal(event)">
+
+    <div class="modal-box" onclick="event.stopPropagation()">
+
+        <div class="modal-header">
+            <h3>✏️ Edit Task</h3>
+
+            <button class="close-modal"
+                    onclick="closeEditTaskModal()">
+                ×
+            </button>
+        </div>
+
+        <div class="form-grid">
+
+            <div>
+                <label>Task Title</label>
+                <input id="editTaskTitle"
+                       type="text"
+                       placeholder="Enter task title">
+            </div>
+
+            <div>
+                <label>YouTube URL</label>
+                <input id="editYoutubeUrl"
+                       type="text"
+                       placeholder="https://youtube.com/...">
+            </div>
+
+            <div>
+                <label>Reward Coins</label>
+                <input id="editRewardCoins"
+                       type="number"
+                       min="1"
+                       placeholder="10">
+            </div>
+
+            <div>
+                <label>Required Watch Time (Seconds)</label>
+                <input id="editWatchTime"
+                       type="number"
+                       min="1"
+                       placeholder="30">
+            </div>
+
+            <div>
+                <label>Status</label>
+                <select id="editTaskStatus">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="modal-actions">
+
+            <button class="secondary-btn"
+                    onclick="closeEditTaskModal()">
+                Cancel
+            </button>
+
+            <button class="primary-btn"
+                    onclick="saveEditedTask()">
+                💾 Save Changes
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 <!-- ================= FIREBASE ================= -->
 
@@ -1607,6 +1744,22 @@ async function loadTasks(){
                     ${escapeHtml(task.id)}
                 </td>
 
+                <td>
+                    <div class="action-buttons">
+
+                        <button class="primary-btn"
+                                onclick="editTask('${task.id}')">
+                            ✏️ Edit
+                        </button>
+
+                        <button class="delete-btn"
+                                onclick="deleteTask('${task.id}')">
+                            🗑️ Delete
+                        </button>
+
+                    </div>
+                </td>
+
             </tr>
 
         `;
@@ -1621,6 +1774,193 @@ async function loadTasks(){
         .textContent = tasksData.length;
 
 }
+
+
+
+/* ================= EDIT TASK ================= */
+
+let editingTaskId = null;
+
+window.editTask = function(taskId){
+
+    const task = tasksData.find(item => item.id === taskId);
+
+    if(!task){
+        alert("Task not found.");
+        return;
+    }
+
+    editingTaskId = taskId;
+
+    document.getElementById("editTaskTitle").value =
+        task.title || "";
+
+    document.getElementById("editYoutubeUrl").value =
+        task.youtubeUrl || "";
+
+    document.getElementById("editRewardCoins").value =
+        Number(task.rewardCoins || 0);
+
+    document.getElementById("editWatchTime").value =
+        Number(task.watchTime || 0);
+
+    document.getElementById("editTaskStatus").value =
+        String(task.status || "active").toLowerCase() === "active"
+        ? "active"
+        : "inactive";
+
+    document.getElementById("editTaskModal")
+        .classList.add("show");
+
+};
+
+
+window.closeEditTaskModal = function(event){
+
+    if(event && event.target &&
+       event.target.id !== "editTaskModal"){
+
+        return;
+    }
+
+    editingTaskId = null;
+
+    document.getElementById("editTaskModal")
+        .classList.remove("show");
+
+};
+
+
+window.saveEditedTask = async function(){
+
+    if(!editingTaskId){
+        alert("No task selected.");
+        return;
+    }
+
+    const title =
+        document.getElementById("editTaskTitle")
+        .value.trim();
+
+    const youtubeUrl =
+        document.getElementById("editYoutubeUrl")
+        .value.trim();
+
+    const reward =
+        Number(
+            document.getElementById("editRewardCoins")
+            .value
+        );
+
+    const watch =
+        Number(
+            document.getElementById("editWatchTime")
+            .value
+        );
+
+    const status =
+        document.getElementById("editTaskStatus")
+        .value;
+
+    if(!title ||
+       !youtubeUrl ||
+       reward <= 0 ||
+       watch <= 0){
+
+        alert("Please fill all task details.");
+        return;
+    }
+
+    try{
+
+        const taskRef =
+            doc(db,"tasks",editingTaskId);
+
+        await updateDoc(
+            taskRef,
+            {
+                title:title,
+                youtubeUrl:youtubeUrl,
+                rewardCoins:reward,
+                watchTime:watch,
+                status:status,
+                updatedAt:new Date()
+            }
+        );
+
+        alert("Task updated successfully.");
+
+        closeEditTaskModal();
+
+        await refreshAllData();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Task update failed: "
+            + error.message
+        );
+
+    }
+
+};
+
+
+/* ================= DELETE TASK ================= */
+
+window.deleteTask = async function(taskId){
+
+    const task =
+        tasksData.find(item => item.id === taskId);
+
+    if(!task){
+
+        alert("Task not found.");
+        return;
+
+    }
+
+    const confirmed =
+        confirm(
+            "Delete this task?\n\n" +
+            "Task: " +
+            (task.title || "Untitled") +
+            "\n\n" +
+            "The task document will be permanently deleted.\n" +
+            "Existing task completion history will NOT be deleted."
+        );
+
+    if(!confirmed){
+        return;
+    }
+
+    try{
+
+        const taskRef =
+            doc(db,"tasks",taskId);
+
+        await deleteDoc(taskRef);
+
+        alert("Task deleted successfully.");
+
+        await refreshAllData();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Task deletion failed: "
+            + error.message
+        );
+
+    }
+
+};
 
 
 /* ================= LOAD COMPLETIONS ================= */
