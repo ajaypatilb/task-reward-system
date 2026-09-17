@@ -113,7 +113,7 @@ body{
     margin:auto;
 }
 
-/* ================= PAGES ================= */
+/* ================= PAGE ================= */
 
 .page{
     display:none;
@@ -123,7 +123,7 @@ body{
     display:block;
 }
 
-/* ================= DASHBOARD HERO ================= */
+/* ================= HERO ================= */
 
 .hero{
     background:linear-gradient(135deg,#5b2be0,#8a63ff);
@@ -303,6 +303,7 @@ body{
     color:#666;
     font-size:14px;
     margin:8px 0 14px;
+    line-height:1.7;
 }
 
 .reward{
@@ -387,7 +388,6 @@ body{
     margin-top:12px;
     padding:10px;
     border-radius:10px;
-    background:#f1f1f1;
     display:none;
 }
 
@@ -464,6 +464,7 @@ body{
     padding:15px;
     border-radius:14px;
     margin-bottom:15px;
+    line-height:1.8;
 }
 
 .withdrawPreview strong{
@@ -556,11 +557,16 @@ body{
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <div class="header">
 
-    <div class="menuBtn" id="menuBtn">
+    <div
+        class="menuBtn"
+        id="menuBtn"
+    >
         ☰
     </div>
 
@@ -575,9 +581,14 @@ body{
 </div>
 
 
-<!-- ================= SIDEBAR ================= -->
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
-<div class="sidebar" id="sidebar">
+<div
+    class="sidebar"
+    id="sidebar"
+>
 
     <div class="sidebarUser">
 
@@ -597,12 +608,14 @@ body{
 
     </div>
 
+
     <div
         class="navItem"
         data-page="dashboardPage"
     >
         🏠 Dashboard
     </div>
+
 
     <div
         class="navItem"
@@ -611,12 +624,14 @@ body{
         🎯 New Tasks
     </div>
 
+
     <div
         class="navItem"
         data-page="completedTasksPage"
     >
         ✅ Completed Tasks
     </div>
+
 
     <div
         class="navItem"
@@ -625,6 +640,7 @@ body{
         💸 Withdraw
     </div>
 
+
     <div
         class="navItem"
         data-page="withdrawalHistoryPage"
@@ -632,12 +648,14 @@ body{
         📜 Withdrawal History
     </div>
 
+
     <div
         class="navItem"
         data-page="profilePage"
     >
         👤 Profile
     </div>
+
 
     <div
         class="navItem logout"
@@ -649,12 +667,16 @@ body{
 </div>
 
 
-<!-- ================= MAIN ================= -->
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <div class="main">
 
 
-<!-- ================= DASHBOARD ================= -->
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
 
 <div
     class="page active"
@@ -930,7 +952,9 @@ body{
 </div>
 
 
-<!-- ================= NEW TASKS ================= -->
+<!-- =====================================================
+     NEW TASKS
+===================================================== -->
 
 <div
     class="page"
@@ -944,9 +968,11 @@ body{
         </div>
 
         <div id="tasksContainer">
+
             <div class="empty">
                 Loading tasks...
             </div>
+
         </div>
 
     </div>
@@ -964,7 +990,9 @@ body{
             Task
         </h3>
 
+
         <div id="youtubePlayer"></div>
+
 
         <div
             class="timerText"
@@ -972,6 +1000,7 @@ body{
         >
             0 / 0 seconds
         </div>
+
 
         <div class="taskProgressOuter">
 
@@ -982,6 +1011,7 @@ body{
 
         </div>
 
+
         <button
             class="completeBtn"
             id="completeTaskButton"
@@ -990,12 +1020,14 @@ body{
             Complete Task
         </button>
 
+
         <button
             class="exitBtn"
             id="exitTaskButton"
         >
             Exit Task
         </button>
+
 
         <div
             class="taskMessage"
@@ -1007,7 +1039,9 @@ body{
 </div>
 
 
-<!-- ================= COMPLETED TASKS ================= -->
+<!-- =====================================================
+     COMPLETED TASKS
+===================================================== -->
 
 <div
     class="page"
@@ -1021,9 +1055,11 @@ body{
         </div>
 
         <div id="completedTasksContainer">
+
             <div class="empty">
                 Loading...
             </div>
+
         </div>
 
     </div>
@@ -1031,7 +1067,9 @@ body{
 </div>
 
 
-<!-- ================= WITHDRAW ================= -->
+<!-- =====================================================
+     WITHDRAW
+===================================================== -->
 
 <div
     class="page"
@@ -1044,6 +1082,7 @@ body{
             💸 Withdraw Coins
         </div>
 
+
         <div class="withdrawPreview">
 
             Available Coins:
@@ -1051,7 +1090,7 @@ body{
                 0
             </strong>
 
-            <br><br>
+            <br>
 
             Withdrawal Amount:
             <strong id="withdrawRupees">
@@ -1071,6 +1110,7 @@ body{
                 type="number"
                 id="withdrawCoins"
                 min="1"
+                step="1"
                 placeholder="Enter coins"
             >
 
@@ -1110,7 +1150,9 @@ body{
 </div>
 
 
-<!-- ================= WITHDRAWAL HISTORY ================= -->
+<!-- =====================================================
+     WITHDRAWAL HISTORY
+===================================================== -->
 
 <div
     class="page"
@@ -1124,9 +1166,11 @@ body{
         </div>
 
         <div id="withdrawalHistory">
+
             <div class="empty">
                 Loading...
             </div>
+
         </div>
 
     </div>
@@ -1134,7 +1178,9 @@ body{
 </div>
 
 
-<!-- ================= PROFILE ================= -->
+<!-- =====================================================
+     PROFILE
+===================================================== -->
 
 <div
     class="page"
@@ -1146,6 +1192,7 @@ body{
         <div class="sectionTitle">
             👤 My Profile
         </div>
+
 
         <div class="profileRow">
 
@@ -1300,8 +1347,6 @@ let taskCompleted = false;
 
 let youtubePlayer = null;
 
-let youtubeApiReady = false;
-
 
 /* =========================================================
    PAGE NAVIGATION
@@ -1313,58 +1358,86 @@ function showPage(pageId){
         .querySelectorAll(".page")
         .forEach(page => {
 
-            page.classList.remove("active");
+            page.classList.remove(
+                "active"
+            );
 
         });
 
+
     const page =
-        document.getElementById(pageId);
+        document.getElementById(
+            pageId
+        );
+
 
     if(page){
-        page.classList.add("active");
+
+        page.classList.add(
+            "active"
+        );
+
     }
+
 
     document
         .getElementById("sidebar")
-        .classList.remove("active");
-
-    if(pageId === "newTasksPage"){
-        loadTasks();
-    }
-
-    if(pageId === "completedTasksPage"){
-        loadCompletionsData();
-        setTimeout(
-            renderCompletedTasks,
-            100
+        .classList.remove(
+            "active"
         );
+
+
+    if(
+        pageId ===
+        "newTasksPage"
+    ){
+
+        loadTasks();
+
     }
 
-    if(pageId === "withdrawalHistoryPage"){
+
+    if(
+        pageId ===
+        "completedTasksPage"
+    ){
+
+        loadCompletionsData();
+
+    }
+
+
+    if(
+        pageId ===
+        "withdrawalHistoryPage"
+    ){
+
         loadWithdrawalsData();
+
     }
 
 }
 
 
 /* =========================================================
-   NAVIGATION EVENTS
+   NAVIGATION
 ========================================================= */
 
 document
-    .querySelectorAll("[data-page]")
+    .querySelectorAll(
+        "[data-page]"
+    )
     .forEach(item => {
 
         item.addEventListener(
             "click",
             () => {
 
-                const page =
+                showPage(
                     item.getAttribute(
                         "data-page"
-                    );
-
-                showPage(page);
+                    )
+                );
 
             }
         );
@@ -1373,14 +1446,20 @@ document
 
 
 document
-    .getElementById("menuBtn")
+    .getElementById(
+        "menuBtn"
+    )
     .addEventListener(
         "click",
         () => {
 
             document
-                .getElementById("sidebar")
-                .classList.toggle("active");
+                .getElementById(
+                    "sidebar"
+                )
+                .classList.toggle(
+                    "active"
+                );
 
         }
     );
@@ -1403,7 +1482,9 @@ onAuthStateChanged(
 
         }
 
+
         currentUser = user;
+
 
         await loadMemberData();
 
@@ -1424,7 +1505,7 @@ onAuthStateChanged(
 
 
 /* =========================================================
-   LOAD MEMBER DATA
+   LOAD MEMBER
 ========================================================= */
 
 async function loadMemberData(){
@@ -1438,10 +1519,16 @@ async function loadMemberData(){
                 currentUser.uid
             );
 
-        const snap =
-            await getDoc(memberRef);
 
-        if(snap.exists()){
+        const snap =
+            await getDoc(
+                memberRef
+            );
+
+
+        if(
+            snap.exists()
+        ){
 
             currentMemberData =
                 snap.data();
@@ -1449,16 +1536,25 @@ async function loadMemberData(){
         }else{
 
             currentMemberData = {
+
                 name:
                     currentUser.displayName ||
                     "Member",
+
                 email:
-                    currentUser.email || "",
-                mobile:"",
-                coins:0
+                    currentUser.email ||
+                    "",
+
+                mobile:
+                    "",
+
+                coins:
+                    0
+
             };
 
         }
+
 
         updateMemberUI();
 
@@ -1485,56 +1581,95 @@ function updateMemberUI(){
         currentUser.displayName ||
         "Member";
 
+
     const email =
         currentMemberData?.email ||
         currentUser.email ||
         "";
 
+
     const mobile =
         currentMemberData?.mobile ||
         "-";
 
+
     const coins =
         Number(
-            currentMemberData?.coins || 0
+            currentMemberData?.coins ||
+            0
         );
 
 
     document
-        .getElementById("dashboardWelcome")
-        .textContent = name;
+        .getElementById(
+            "dashboardWelcome"
+        )
+        .textContent =
+            name;
+
 
     document
-        .getElementById("sidebarUserName")
-        .textContent = name;
+        .getElementById(
+            "sidebarUserName"
+        )
+        .textContent =
+            name;
+
 
     document
-        .getElementById("sidebarUserEmail")
-        .textContent = email;
+        .getElementById(
+            "sidebarUserEmail"
+        )
+        .textContent =
+            email;
+
 
     document
-        .getElementById("headerCoins")
-        .textContent = coins;
+        .getElementById(
+            "headerCoins"
+        )
+        .textContent =
+            coins;
+
 
     document
-        .getElementById("profileName")
-        .textContent = name;
+        .getElementById(
+            "profileName"
+        )
+        .textContent =
+            name;
+
 
     document
-        .getElementById("profileEmail")
-        .textContent = email;
+        .getElementById(
+            "profileEmail"
+        )
+        .textContent =
+            email;
+
 
     document
-        .getElementById("profileMobile")
-        .textContent = mobile;
+        .getElementById(
+            "profileMobile"
+        )
+        .textContent =
+            mobile;
+
 
     document
-        .getElementById("profileCoins")
-        .textContent = coins;
+        .getElementById(
+            "profileCoins"
+        )
+        .textContent =
+            coins;
+
 
     document
-        .getElementById("withdrawAvailableCoins")
-        .textContent = coins;
+        .getElementById(
+            "withdrawAvailableCoins"
+        )
+        .textContent =
+            coins;
 
 }
 
@@ -1555,27 +1690,37 @@ async function loadTasks(){
                 )
             );
 
+
         allTasks = [];
+
 
         snap.forEach(item => {
 
             const data =
                 item.data();
 
+
             if(
                 String(
-                    data.status || ""
-                ).toLowerCase() === "active"
+                    data.status ||
+                    ""
+                ).toLowerCase() ===
+                "active"
             ){
 
                 allTasks.push({
-                    id:item.id,
+
+                    id:
+                        item.id,
+
                     ...data
+
                 });
 
             }
 
         });
+
 
         renderTasks();
 
@@ -1588,8 +1733,11 @@ async function loadTasks(){
             error
         );
 
+
         document
-            .getElementById("tasksContainer")
+            .getElementById(
+                "tasksContainer"
+            )
             .innerHTML = `
                 <div class="empty">
                     Unable to load tasks.
@@ -1612,7 +1760,10 @@ function renderTasks(){
             "tasksContainer"
         );
 
-    if(!allTasks.length){
+
+    if(
+        !allTasks.length
+    ){
 
         container.innerHTML = `
             <div class="empty">
@@ -1628,67 +1779,88 @@ function renderTasks(){
     container.innerHTML = "";
 
 
-    allTasks.forEach(task => {
+    allTasks.forEach(
+        task => {
 
-        const card =
-            document.createElement("div");
+            const card =
+                document.createElement(
+                    "div"
+                );
 
-        card.className = "taskCard";
 
-        const reward =
-            Number(
-                task.rewardCoins || 0
+            card.className =
+                "taskCard";
+
+
+            const reward =
+                Number(
+                    task.rewardCoins ||
+                    0
+                );
+
+
+            const watchTime =
+                Number(
+                    task.watchTime ||
+                    0
+                );
+
+
+            card.innerHTML = `
+
+                <div class="taskTitle">
+                    ${escapeHtml(
+                        task.title ||
+                        "Task"
+                    )}
+                </div>
+
+                <div class="taskInfo">
+
+                    🎁 Reward:
+                    <span class="reward">
+                        ${reward} Coins
+                    </span>
+
+                    <br>
+
+                    ⏱ Required Watch Time:
+                    ${watchTime} seconds
+
+                </div>
+
+                <button
+                    class="startBtn"
+                    data-task-id="${task.id}"
+                >
+                    ▶ Start Task
+                </button>
+
+            `;
+
+
+            card
+                .querySelector(
+                    ".startBtn"
+                )
+                .addEventListener(
+                    "click",
+                    () => {
+
+                        startTask(
+                            task
+                        );
+
+                    }
+                );
+
+
+            container.appendChild(
+                card
             );
 
-        const watchTime =
-            Number(
-                task.watchTime || 0
-            );
-
-
-        card.innerHTML = `
-
-            <div class="taskTitle">
-                ${escapeHtml(
-                    task.title || "Task"
-                )}
-            </div>
-
-            <div class="taskInfo">
-
-                🎁 Reward:
-                <span class="reward">
-                    ${reward} Coins
-                </span>
-
-                <br>
-
-                ⏱ Required Watch Time:
-                ${watchTime} seconds
-
-            </div>
-
-            <button
-                class="startBtn"
-                data-task-id="${task.id}"
-            >
-                ▶ Start Task
-            </button>
-
-        `;
-
-
-        card
-            .querySelector(".startBtn")
-            .addEventListener(
-                "click",
-                () => startTask(task)
-            );
-
-
-        container.appendChild(card);
-
-    });
+        }
+    );
 
 }
 
@@ -1697,30 +1869,41 @@ function renderTasks(){
    YOUTUBE VIDEO ID
 ========================================================= */
 
-function getYouTubeVideoId(url){
+function getYouTubeVideoId(
+    url
+){
 
     if(!url){
         return null;
     }
+
 
     try{
 
         const parsed =
             new URL(url);
 
+
         const host =
             parsed.hostname
                 .toLowerCase()
-                .replace("www.","");
+                .replace(
+                    "www.",
+                    ""
+                );
 
 
         if(
-            host === "youtube.com" ||
-            host === "m.youtube.com"
+            host ===
+                "youtube.com" ||
+            host ===
+                "m.youtube.com"
         ){
 
             const v =
-                parsed.searchParams.get("v");
+                parsed.searchParams
+                    .get("v");
+
 
             if(v){
                 return v;
@@ -1730,7 +1913,9 @@ function getYouTubeVideoId(url){
             const parts =
                 parsed.pathname
                     .split("/")
-                    .filter(Boolean);
+                    .filter(
+                        Boolean
+                    );
 
 
             if(
@@ -1739,32 +1924,56 @@ function getYouTubeVideoId(url){
                 parts[0] === "live"
             ){
 
-                return parts[1] || null;
+                return (
+                    parts[1] ||
+                    null
+                );
 
             }
 
         }
 
 
-        if(host === "youtu.be"){
+        if(
+            host ===
+            "youtu.be"
+        ){
 
-            return parsed.pathname
-                .split("/")
-                .filter(Boolean)[0] || null;
+            return (
+                parsed.pathname
+                    .split("/")
+                    .filter(
+                        Boolean
+                    )[0] ||
+                null
+            );
 
         }
 
+
         if(
-            host === "youtube-nocookie.com"
+            host ===
+            "youtube-nocookie.com"
         ){
 
             const parts =
                 parsed.pathname
                     .split("/")
-                    .filter(Boolean);
+                    .filter(
+                        Boolean
+                    );
 
-            if(parts[0] === "embed"){
-                return parts[1] || null;
+
+            if(
+                parts[0] ===
+                "embed"
+            ){
+
+                return (
+                    parts[1] ||
+                    null
+                );
+
             }
 
         }
@@ -1778,13 +1987,14 @@ function getYouTubeVideoId(url){
 
     }
 
+
     return null;
 
 }
 
 
 /* =========================================================
-   LOAD YOUTUBE API
+   YOUTUBE API
 ========================================================= */
 
 function loadYouTubeAPI(){
@@ -1796,8 +2006,6 @@ function loadYouTubeAPI(){
                 window.YT &&
                 window.YT.Player
             ){
-
-                youtubeApiReady = true;
 
                 resolve();
 
@@ -1813,8 +2021,6 @@ function loadYouTubeAPI(){
             window.onYouTubeIframeAPIReady =
                 () => {
 
-                    youtubeApiReady = true;
-
                     if(oldCallback){
                         oldCallback();
                     }
@@ -1829,8 +2035,10 @@ function loadYouTubeAPI(){
                     "script"
                 );
 
+
             script.src =
                 "https://www.youtube.com/iframe_api";
+
 
             document.head.appendChild(
                 script
@@ -1846,7 +2054,9 @@ function loadYouTubeAPI(){
    START TASK
 ========================================================= */
 
-async function startTask(task){
+async function startTask(
+    task
+){
 
     stopActiveTask();
 
@@ -1854,13 +2064,17 @@ async function startTask(task){
     activeTask =
         task;
 
+
     activeTaskId =
         task.id;
 
+
     requiredWatchTime =
         Number(
-            task.watchTime || 0
+            task.watchTime ||
+            0
         );
+
 
     watchedSeconds = 0;
 
@@ -1871,7 +2085,8 @@ async function startTask(task){
         .getElementById(
             "videoBox"
         )
-        .style.display = "block";
+        .style.display =
+            "block";
 
 
     document
@@ -1879,7 +2094,8 @@ async function startTask(task){
             "activeTaskTitle"
         )
         .textContent =
-            task.title || "Task";
+            task.title ||
+            "Task";
 
 
     document
@@ -1894,21 +2110,24 @@ async function startTask(task){
         .getElementById(
             "taskProgress"
         )
-        .style.width = "0%";
+        .style.width =
+            "0%";
 
 
     document
         .getElementById(
             "completeTaskButton"
         )
-        .disabled = true;
+        .disabled =
+            true;
 
 
     document
         .getElementById(
             "taskMessage"
         )
-        .style.display = "none";
+        .style.display =
+            "none";
 
 
     const videoId =
@@ -1940,18 +2159,23 @@ async function startTask(task){
 
 
 /* =========================================================
-   CREATE YOUTUBE PLAYER
+   CREATE PLAYER
 ========================================================= */
 
-function createYouTubePlayer(videoId){
+function createYouTubePlayer(
+    videoId
+){
 
-    if(youtubePlayer){
+    if(
+        youtubePlayer
+    ){
 
         try{
             youtubePlayer.destroy();
         }catch(error){}
 
-        youtubePlayer = null;
+        youtubePlayer =
+            null;
 
     }
 
@@ -1961,12 +2185,17 @@ function createYouTubePlayer(videoId){
             "youtubePlayer",
             {
 
-                videoId: videoId,
+                videoId:
+                    videoId,
 
                 playerVars:{
+
                     rel:0,
+
                     modestbranding:1,
+
                     playsinline:1
+
                 },
 
                 events:{
@@ -1979,6 +2208,7 @@ function createYouTubePlayer(videoId){
                                 .playVideo();
 
                         },
+
 
                     onStateChange:
                         event => {
@@ -2012,7 +2242,9 @@ function createYouTubePlayer(videoId){
 
 function startTimer(){
 
-    if(timerInterval){
+    if(
+        timerInterval
+    ){
         return;
     }
 
@@ -2025,15 +2257,20 @@ function startTimer(){
                     !youtubePlayer ||
                     !activeTask
                 ){
+
                     return;
+
                 }
 
 
                 if(
-                    youtubePlayer.getPlayerState() !==
+                    youtubePlayer
+                        .getPlayerState() !==
                     YT.PlayerState.PLAYING
                 ){
+
                     return;
+
                 }
 
 
@@ -2044,13 +2281,15 @@ function startTimer(){
 
                     stopTimer();
 
-                    taskCompleted = true;
+                    taskCompleted =
+                        true;
 
                     document
                         .getElementById(
                             "completeTaskButton"
                         )
-                        .disabled = false;
+                        .disabled =
+                            false;
 
                     return;
 
@@ -2085,7 +2324,8 @@ function startTimer(){
                         "taskProgress"
                     )
                     .style.width =
-                        percent + "%";
+                        percent +
+                        "%";
 
 
                 if(
@@ -2095,13 +2335,16 @@ function startTimer(){
 
                     stopTimer();
 
-                    taskCompleted = true;
+                    taskCompleted =
+                        true;
+
 
                     document
                         .getElementById(
                             "completeTaskButton"
                         )
-                        .disabled = false;
+                        .disabled =
+                            false;
 
 
                     showTaskMessage(
@@ -2120,13 +2363,16 @@ function startTimer(){
 
 function stopTimer(){
 
-    if(timerInterval){
+    if(
+        timerInterval
+    ){
 
         clearInterval(
             timerInterval
         );
 
-        timerInterval = null;
+        timerInterval =
+            null;
 
     }
 
@@ -2147,16 +2393,20 @@ function showTaskMessage(
             "taskMessage"
         );
 
+
     box.style.display =
         "block";
 
+
     box.textContent =
         message;
+
 
     box.style.background =
         error
         ? "#ffe1e1"
         : "#e3f8eb";
+
 
     box.style.color =
         error
@@ -2175,30 +2425,48 @@ function stopActiveTask(){
     stopTimer();
 
 
-    if(youtubePlayer){
+    if(
+        youtubePlayer
+    ){
 
         try{
+
             youtubePlayer.stopVideo();
+
         }catch(error){}
+
 
         try{
+
             youtubePlayer.destroy();
+
         }catch(error){}
 
-        youtubePlayer = null;
+
+        youtubePlayer =
+            null;
 
     }
 
 
-    activeTask = null;
+    activeTask =
+        null;
 
-    activeTaskId = null;
 
-    requiredWatchTime = 0;
+    activeTaskId =
+        null;
 
-    watchedSeconds = 0;
 
-    taskCompleted = false;
+    requiredWatchTime =
+        0;
+
+
+    watchedSeconds =
+        0;
+
+
+    taskCompleted =
+        false;
 
 
     const videoBox =
@@ -2206,8 +2474,12 @@ function stopActiveTask(){
             "videoBox"
         );
 
+
     if(videoBox){
-        videoBox.style.display = "none";
+
+        videoBox.style.display =
+            "none";
+
     }
 
 
@@ -2216,8 +2488,12 @@ function stopActiveTask(){
             "youtubePlayer"
         );
 
+
     if(player){
-        player.innerHTML = "";
+
+        player.innerHTML =
+            "";
+
     }
 
 
@@ -2225,7 +2501,8 @@ function stopActiveTask(){
         .getElementById(
             "completeTaskButton"
         )
-        .disabled = true;
+        .disabled =
+            true;
 
 }
 
@@ -2242,7 +2519,7 @@ document
 
 /* =========================================================
    COMPLETE TASK
-   IMPORTANT FIX
+   MATCHES FIRESTORE RULES
 ========================================================= */
 
 document
@@ -2271,7 +2548,9 @@ document
                 );
 
 
-            button.disabled = true;
+            button.disabled =
+                true;
+
 
             button.textContent =
                 "Submitting...";
@@ -2280,11 +2559,7 @@ document
             try{
 
                 /*
-                 * Duplicate check is done
-                 * using already loaded data.
-                 *
-                 * No extra compound Firestore
-                 * query is used here.
+                 * Check duplicate task
                  */
 
                 const duplicate =
@@ -2294,6 +2569,7 @@ document
                             const sameTask =
                                 item.taskId ===
                                 activeTaskId;
+
 
                             const status =
                                 String(
@@ -2307,9 +2583,13 @@ document
                                 sameTask &&
                                 (
                                     status ===
-                                    "pending" ||
+                                        "pending" ||
+
                                     status ===
-                                    "approved"
+                                        "approved" ||
+
+                                    status ===
+                                        "pending verification"
                                 )
                             );
 
@@ -2317,19 +2597,18 @@ document
                     );
 
 
-                if(duplicate){
+                if(
+                    duplicate
+                ){
 
                     showTaskMessage(
-                        duplicate.rewardStatus ===
-                        "approved"
-                        ? "You have already completed this task."
-                        : "This task is already waiting for owner approval.",
+                        "This task is already submitted or approved.",
                         false
                     );
 
 
                     button.textContent =
-                        "Task Submitted";
+                        "Already Submitted";
 
 
                     return;
@@ -2338,7 +2617,9 @@ document
 
 
                 /*
-                 * Completion document
+                 * IMPORTANT:
+                 * These field names exactly match
+                 * your Firestore Rules.
                  */
 
                 const completionData = {
@@ -2365,35 +2646,33 @@ document
                             0
                         ),
 
-                    rewardStatus:
-                        "pending",
-
-                    status:
-                        "pending",
-
                     watchTime:
                         Number(
                             requiredWatchTime ||
                             0
                         ),
 
-                    completedAt:
-                        serverTimestamp(),
+                    completionDate:
+                        new Date()
+                            .toISOString(),
 
-                    createdAt:
-                        serverTimestamp()
+                    status:
+                        "pending",
+
+                    rewardStatus:
+                        "Pending Verification"
 
                 };
 
 
                 console.log(
-                    "Saving task completion:",
+                    "Saving completion:",
                     completionData
                 );
 
 
                 /*
-                 * THIS IS THE IMPORTANT FIRESTORE WRITE
+                 * Firestore CREATE
                  */
 
                 const completionRef =
@@ -2407,13 +2686,13 @@ document
 
 
                 console.log(
-                    "Task completion saved:",
+                    "Completion saved:",
                     completionRef.id
                 );
 
 
                 /*
-                 * Update local data immediately
+                 * Local update
                  */
 
                 allCompletions.push({
@@ -2421,13 +2700,7 @@ document
                     id:
                         completionRef.id,
 
-                    ...completionData,
-
-                    completedAt:
-                        new Date(),
-
-                    createdAt:
-                        new Date()
+                    ...completionData
 
                 });
 
@@ -2466,10 +2739,12 @@ document
                     error
                 );
 
+
                 console.error(
                     "Firebase error code:",
                     error.code
                 );
+
 
                 console.error(
                     "Firebase error message:",
@@ -2479,6 +2754,7 @@ document
 
                 button.disabled =
                     false;
+
 
                 button.textContent =
                     "Complete Task";
@@ -2505,7 +2781,9 @@ document
 
 async function loadCompletionsData(){
 
-    if(!currentUser){
+    if(
+        !currentUser
+    ){
         return;
     }
 
@@ -2530,21 +2808,24 @@ async function loadCompletionsData(){
             await getDocs(q);
 
 
-        allCompletions = [];
+        allCompletions =
+            [];
 
 
-        snap.forEach(item => {
+        snap.forEach(
+            item => {
 
-            allCompletions.push({
+                allCompletions.push({
 
-                id:
-                    item.id,
+                    id:
+                        item.id,
 
-                ...item.data()
+                    ...item.data()
 
-            });
+                });
 
-        });
+            }
+        );
 
 
         refreshDashboard();
@@ -2559,7 +2840,9 @@ async function loadCompletionsData(){
             error
         );
 
-        allCompletions = [];
+
+        allCompletions =
+            [];
 
     }
 
@@ -2583,7 +2866,9 @@ function renderCompletedTasks(){
     }
 
 
-    if(!allCompletions.length){
+    if(
+        !allCompletions.length
+    ){
 
         container.innerHTML = `
             <div class="empty">
@@ -2601,78 +2886,119 @@ function renderCompletedTasks(){
             .reverse();
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
-    sorted.forEach(item => {
+    sorted.forEach(
+        item => {
 
-        const status =
-            String(
-                item.rewardStatus ||
-                item.status ||
-                "pending"
-            ).toLowerCase();
-
-
-        let badgeClass =
-            "pending";
-
-        if(status === "approved"){
-            badgeClass = "approved";
-        }
-
-        if(status === "rejected"){
-            badgeClass = "rejected";
-        }
+            const rawStatus =
+                String(
+                    item.rewardStatus ||
+                    item.status ||
+                    "pending"
+                );
 
 
-        const date =
-            formatDate(
-                item.completedAt ||
-                item.createdAt
+            const status =
+                rawStatus
+                    .toLowerCase();
+
+
+            let badgeClass =
+                "pending";
+
+
+            let badgeText =
+                "Pending Verification";
+
+
+            if(
+                status ===
+                "approved"
+            ){
+
+                badgeClass =
+                    "approved";
+
+                badgeText =
+                    "Approved";
+
+            }
+
+
+            if(
+                status ===
+                "rejected"
+            ){
+
+                badgeClass =
+                    "rejected";
+
+                badgeText =
+                    "Rejected";
+
+            }
+
+
+            const date =
+                item.completionDate ||
+                formatDate(
+                    item.completedAt ||
+                    item.createdAt
+                );
+
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "historyItem";
+
+
+            div.innerHTML = `
+
+                <div class="historyTitle">
+                    ${escapeHtml(
+                        item.taskTitle ||
+                        "Task"
+                    )}
+                </div>
+
+                <div class="historyMeta">
+                    Reward:
+                    ${Number(
+                        item.rewardCoins ||
+                        0
+                    )} Coins
+                </div>
+
+                <div class="historyMeta">
+                    Completed:
+                    ${escapeHtml(
+                        date
+                    )}
+                </div>
+
+                <span
+                    class="badge ${badgeClass}"
+                >
+                    ${badgeText}
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                div
             );
 
-
-        const div =
-            document.createElement(
-                "div"
-            );
-
-        div.className =
-            "historyItem";
-
-
-        div.innerHTML = `
-
-            <div class="historyTitle">
-                ${escapeHtml(
-                    item.taskTitle ||
-                    "Task"
-                )}
-            </div>
-
-            <div class="historyMeta">
-                Reward:
-                ${Number(
-                    item.rewardCoins || 0
-                )} Coins
-            </div>
-
-            <div class="historyMeta">
-                Completed:
-                ${date}
-            </div>
-
-            <span class="badge ${badgeClass}">
-                ${capitalize(status)}
-            </span>
-
-        `;
-
-
-        container.appendChild(div);
-
-    });
+        }
+    );
 
 }
 
@@ -2698,7 +3024,8 @@ function calculateTotalEarning(){
 
 
             if(
-                status === "approved"
+                status ===
+                "approved"
             ){
 
                 return total +
@@ -2725,7 +3052,9 @@ function calculateTotalEarning(){
 
 async function loadWithdrawalsData(){
 
-    if(!currentUser){
+    if(
+        !currentUser
+    ){
         return;
     }
 
@@ -2750,21 +3079,24 @@ async function loadWithdrawalsData(){
             await getDocs(q);
 
 
-        allWithdrawals = [];
+        allWithdrawals =
+            [];
 
 
-        snap.forEach(item => {
+        snap.forEach(
+            item => {
 
-            allWithdrawals.push({
+                allWithdrawals.push({
 
-                id:
-                    item.id,
+                    id:
+                        item.id,
 
-                ...item.data()
+                    ...item.data()
 
-            });
+                });
 
-        });
+            }
+        );
 
 
         renderWithdrawalHistory();
@@ -2779,7 +3111,9 @@ async function loadWithdrawalsData(){
             error
         );
 
-        allWithdrawals = [];
+
+        allWithdrawals =
+            [];
 
     }
 
@@ -2803,7 +3137,9 @@ function renderWithdrawalHistory(){
     }
 
 
-    if(!allWithdrawals.length){
+    if(
+        !allWithdrawals.length
+    ){
 
         container.innerHTML = `
             <div class="empty">
@@ -2821,99 +3157,123 @@ function renderWithdrawalHistory(){
             .reverse();
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
-    sorted.forEach(item => {
+    sorted.forEach(
+        item => {
 
-        const status =
-            String(
-                item.status ||
-                "pending"
-            ).toLowerCase();
+            const status =
+                String(
+                    item.status ||
+                    "pending"
+                ).toLowerCase();
 
 
-        let badgeClass =
-            "pending";
+            let badgeClass =
+                "pending";
 
-        if(status === "approved"){
-            badgeClass = "approved";
+
+            if(
+                status ===
+                "approved"
+            ){
+
+                badgeClass =
+                    "approved";
+
+            }
+
+
+            if(
+                status ===
+                "rejected"
+            ){
+
+                badgeClass =
+                    "rejected";
+
+            }
+
+
+            const coins =
+                Number(
+                    item.coins ||
+                    0
+                );
+
+
+            const amount =
+                Number(
+                    item.amount ||
+                    coins / 100
+                );
+
+
+            const date =
+                formatDate(
+                    item.createdAt
+                );
+
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "historyItem";
+
+
+            div.innerHTML = `
+
+                <div class="historyTitle">
+                    ${coins} Coins
+                </div>
+
+                <div class="historyMeta">
+                    Amount:
+                    ₹${amount.toFixed(2)}
+                </div>
+
+                <div class="historyMeta">
+                    UPI:
+                    ${escapeHtml(
+                        item.upiId ||
+                        "-"
+                    )}
+                </div>
+
+                <div class="historyMeta">
+                    Date:
+                    ${date}
+                </div>
+
+                <span
+                    class="badge ${badgeClass}"
+                >
+                    ${capitalize(
+                        status
+                    )}
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                div
+            );
+
         }
-
-        if(
-            status === "rejected"
-        ){
-            badgeClass = "rejected";
-        }
-
-
-        const coins =
-            Number(
-                item.coins || 0
-            );
-
-
-        const amount =
-            Number(
-                item.amount ||
-                coins / 100
-            );
-
-
-        const date =
-            formatDate(
-                item.createdAt
-            );
-
-
-        const div =
-            document.createElement(
-                "div"
-            );
-
-        div.className =
-            "historyItem";
-
-
-        div.innerHTML = `
-
-            <div class="historyTitle">
-                ${coins} Coins
-            </div>
-
-            <div class="historyMeta">
-                Amount:
-                ₹${amount.toFixed(2)}
-            </div>
-
-            <div class="historyMeta">
-                UPI:
-                ${escapeHtml(
-                    item.upiId || "-"
-                )}
-            </div>
-
-            <div class="historyMeta">
-                Date:
-                ${date}
-            </div>
-
-            <span class="badge ${badgeClass}">
-                ${capitalize(status)}
-            </span>
-
-        `;
-
-
-        container.appendChild(div);
-
-    });
+    );
 
 }
 
 
 /* =========================================================
-   WITHDRAW COINS CALCULATOR
+   WITHDRAW CALCULATOR
 ========================================================= */
 
 document
@@ -2930,12 +3290,14 @@ document
                         .getElementById(
                             "withdrawCoins"
                         )
-                        .value || 0
+                        .value ||
+                    0
                 );
 
 
             const amount =
-                coins / 100;
+                coins /
+                100;
 
 
             document
@@ -2944,7 +3306,9 @@ document
                 )
                 .textContent =
                     "₹" +
-                    amount.toFixed(2);
+                    amount.toFixed(
+                        2
+                    );
 
         }
     );
@@ -2952,6 +3316,7 @@ document
 
 /* =========================================================
    WITHDRAW
+   ATOMIC TRANSACTION
 ========================================================= */
 
 document
@@ -2968,6 +3333,18 @@ document
                 );
 
 
+            const coinsInput =
+                document.getElementById(
+                    "withdrawCoins"
+                );
+
+
+            const upiInput =
+                document.getElementById(
+                    "withdrawUpi"
+                );
+
+
             const message =
                 document.getElementById(
                     "withdrawMessage"
@@ -2976,36 +3353,19 @@ document
 
             const coins =
                 Number(
-                    document
-                        .getElementById(
-                            "withdrawCoins"
-                        )
-                        .value || 0
-                );
-
-
-            const upiId =
-                document
-                    .getElementById(
-                        "withdrawUpi"
-                    )
-                    .value
-                    .trim();
-
-
-            const availableCoins =
-                Number(
-                    currentMemberData?.coins ||
+                    coinsInput.value ||
                     0
                 );
 
 
-            message.style.display =
-                "none";
+            const upiId =
+                upiInput.value.trim();
 
 
             if(
-                !Number.isInteger(coins) ||
+                !Number.isInteger(
+                    coins
+                ) ||
                 coins <= 0
             ){
 
@@ -3020,20 +3380,8 @@ document
 
 
             if(
-                coins > availableCoins
+                !upiId
             ){
-
-                showWithdrawMessage(
-                    "Insufficient coins.",
-                    true
-                );
-
-                return;
-
-            }
-
-
-            if(!upiId){
 
                 showWithdrawMessage(
                     "Please enter UPI ID.",
@@ -3045,8 +3393,28 @@ document
             }
 
 
+            const amount =
+                coins /
+                100;
+
+
+            if(
+                amount <= 0
+            ){
+
+                showWithdrawMessage(
+                    "Invalid withdrawal amount.",
+                    true
+                );
+
+                return;
+
+            }
+
+
             button.disabled =
                 true;
+
 
             button.textContent =
                 "Submitting...";
@@ -3054,134 +3422,184 @@ document
 
             try{
 
-                const userRef =
-                    doc(
+                /*
+                 * IMPORTANT
+                 *
+                 * User coins update AND
+                 * withdrawal document creation
+                 * happen inside SAME transaction.
+                 *
+                 * This matches Firestore
+                 * getAfter() Rules.
+                 */
+
+                const withdrawalId =
+                    await runTransaction(
                         db,
-                        "users",
-                        currentUser.uid
+                        async transaction => {
+
+                            const userRef =
+                                doc(
+                                    db,
+                                    "users",
+                                    currentUser.uid
+                                );
+
+
+                            const withdrawalRef =
+                                doc(
+                                    collection(
+                                        db,
+                                        "withdrawals"
+                                    )
+                                );
+
+
+                            const userSnap =
+                                await transaction.get(
+                                    userRef
+                                );
+
+
+                            if(
+                                !userSnap.exists()
+                            ){
+
+                                throw new Error(
+                                    "Member account not found."
+                                );
+
+                            }
+
+
+                            const userData =
+                                userSnap.data();
+
+
+                            const availableCoins =
+                                Number(
+                                    userData.coins ||
+                                    0
+                                );
+
+
+                            if(
+                                coins >
+                                availableCoins
+                            ){
+
+                                throw new Error(
+                                    "Insufficient coins."
+                                );
+
+                            }
+
+
+                            const newCoins =
+                                availableCoins -
+                                coins;
+
+
+                            /*
+                             * Update member coins
+                             */
+
+                            transaction.update(
+                                userRef,
+                                {
+                                    coins:
+                                        newCoins
+                                }
+                            );
+
+
+                            /*
+                             * Create withdrawal
+                             */
+
+                            transaction.set(
+                                withdrawalRef,
+                                {
+
+                                    memberId:
+                                        currentUser.uid,
+
+                                    memberName:
+                                        currentMemberData?.name ||
+                                        currentUser.email ||
+                                        "Member",
+
+                                    memberEmail:
+                                        currentMemberData?.email ||
+                                        currentUser.email ||
+                                        "",
+
+                                    coins:
+                                        coins,
+
+                                    amount:
+                                        amount,
+
+                                    upiId:
+                                        upiId,
+
+                                    status:
+                                        "pending",
+
+                                    createdAt:
+                                        serverTimestamp()
+
+                                }
+                            );
+
+
+                            return withdrawalRef.id;
+
+                        }
                     );
 
 
-                await runTransaction(
-                    db,
-                    async transaction => {
-
-                        const userSnap =
-                            await transaction.get(
-                                userRef
-                            );
-
-
-                        if(
-                            !userSnap.exists()
-                        ){
-
-                            throw new Error(
-                                "Member account not found."
-                            );
-
-                        }
-
-
-                        const data =
-                            userSnap.data();
-
-
-                        const currentCoins =
-                            Number(
-                                data.coins ||
-                                0
-                            );
-
-
-                        if(
-                            currentCoins <
-                            coins
-                        ){
-
-                            throw new Error(
-                                "Insufficient coins."
-                            );
-
-                        }
-
-
-                        transaction.update(
-                            userRef,
-                            {
-                                coins:
-                                    currentCoins -
-                                    coins
-                            }
-                        );
-
-                    }
+                console.log(
+                    "Withdrawal created:",
+                    withdrawalId
                 );
 
 
-                await addDoc(
-                    collection(
-                        db,
-                        "withdrawals"
-                    ),
-                    {
-
-                        memberId:
-                            currentUser.uid,
-
-                        memberName:
-                            currentMemberData?.name ||
-                            currentUser.email ||
-                            "Member",
-
-                        memberEmail:
-                            currentMemberData?.email ||
-                            currentUser.email ||
-                            "",
-
-                        coins:
-                            coins,
-
-                        amount:
-                            coins / 100,
-
-                        upiId:
-                            upiId,
-
-                        status:
-                            "pending",
-
-                        createdAt:
-                            serverTimestamp()
-
-                    }
-                );
-
+                /*
+                 * Update local balance
+                 */
 
                 currentMemberData.coins =
-                    availableCoins -
+                    Number(
+                        currentMemberData.coins ||
+                        0
+                    ) -
                     coins;
 
 
                 updateMemberUI();
 
-                refreshDashboard();
+
+                /*
+                 * Reload withdrawals
+                 */
 
                 await loadWithdrawalsData();
 
 
-                document
-                    .getElementById(
-                        "withdrawCoins"
-                    )
-                    .value = "";
+                refreshDashboard();
 
 
-                document
-                    .getElementById(
-                        "withdrawUpi"
-                    )
-                    .value = "";
+                /*
+                 * Clear form
+                 */
+
+                coinsInput.value =
+                    "";
+
+
+                upiInput.value =
+                    "";
 
 
                 document
@@ -3219,9 +3637,29 @@ document
             }catch(error){
 
                 console.error(
-                    "Withdrawal error:",
+                    "WITHDRAWAL ERROR:",
                     error
                 );
+
+
+                console.error(
+                    "Firebase error code:",
+                    error.code
+                );
+
+
+                console.error(
+                    "Firebase error message:",
+                    error.message
+                );
+
+
+                button.disabled =
+                    false;
+
+
+                button.textContent =
+                    "Submit Withdrawal Request";
 
 
                 showWithdrawMessage(
@@ -3229,13 +3667,6 @@ document
                     "Unable to submit withdrawal.",
                     true
                 );
-
-
-                button.disabled =
-                    false;
-
-                button.textContent =
-                    "Submit Withdrawal Request";
 
             }
 
@@ -3261,13 +3692,16 @@ function showWithdrawMessage(
     box.style.display =
         "block";
 
+
     box.textContent =
         text;
+
 
     box.style.background =
         error
         ? "#ffe1e1"
         : "#e3f8eb";
+
 
     box.style.color =
         error
@@ -3278,12 +3712,14 @@ function showWithdrawMessage(
 
 
 /* =========================================================
-   REFRESH DASHBOARD
+   DASHBOARD
 ========================================================= */
 
 function refreshDashboard(){
 
-    if(!currentUser){
+    if(
+        !currentUser
+    ){
         return;
     }
 
@@ -3304,7 +3740,8 @@ function refreshDashboard(){
             .filter(
                 item =>
                     String(
-                        item.status || ""
+                        item.status ||
+                        ""
                     ).toLowerCase() ===
                     "pending"
             )
@@ -3312,11 +3749,15 @@ function refreshDashboard(){
                 (
                     total,
                     item
-                ) =>
-                    total +
-                    Number(
-                        item.coins || 0
-                    ),
+                ) => {
+
+                    return total +
+                        Number(
+                            item.coins ||
+                            0
+                        );
+
+                },
                 0
             );
 
@@ -3326,7 +3767,8 @@ function refreshDashboard(){
             .filter(
                 item =>
                     String(
-                        item.status || ""
+                        item.status ||
+                        ""
                     ).toLowerCase() ===
                     "approved"
             )
@@ -3334,11 +3776,15 @@ function refreshDashboard(){
                 (
                     total,
                     item
-                ) =>
-                    total +
-                    Number(
-                        item.coins || 0
-                    ),
+                ) => {
+
+                    return total +
+                        Number(
+                            item.coins ||
+                            0
+                        );
+
+                },
                 0
             );
 
@@ -3346,6 +3792,13 @@ function refreshDashboard(){
     const pendingTasks =
         allCompletions.filter(
             item =>
+                String(
+                    item.rewardStatus ||
+                    item.status ||
+                    ""
+                ).toLowerCase() ===
+                "pending verification"
+                ||
                 String(
                     item.rewardStatus ||
                     item.status ||
@@ -3369,8 +3822,10 @@ function refreshDashboard(){
         )
         .textContent =
             "₹" +
-            (coins / 100)
-                .toFixed(2);
+            (
+                coins /
+                100
+            ).toFixed(2);
 
 
     document
@@ -3387,8 +3842,10 @@ function refreshDashboard(){
         )
         .textContent =
             "₹" +
-            (totalEarning / 100)
-                .toFixed(2);
+            (
+                totalEarning /
+                100
+            ).toFixed(2);
 
 
     document
@@ -3405,8 +3862,10 @@ function refreshDashboard(){
         )
         .textContent =
             "₹" +
-            (pendingWithdrawal / 100)
-                .toFixed(2);
+            (
+                pendingWithdrawal /
+                100
+            ).toFixed(2);
 
 
     document
@@ -3423,8 +3882,10 @@ function refreshDashboard(){
         )
         .textContent =
             "₹" +
-            (totalWithdrawn / 100)
-                .toFixed(2);
+            (
+                totalWithdrawn /
+                100
+            ).toFixed(2);
 
 
     document
@@ -3470,7 +3931,8 @@ function refreshDashboard(){
             "dashboardEarningProgress"
         )
         .style.width =
-            progress + "%";
+            progress +
+            "%";
 
 
     document
@@ -3487,7 +3949,8 @@ function refreshDashboard(){
         )
         .textContent =
             `₹${(
-                totalEarning / 100
+                totalEarning /
+                100
             ).toFixed(2)} / ₹5.00`;
 
 }
@@ -3509,10 +3972,14 @@ document
 
                 stopActiveTask();
 
-                await signOut(auth);
+                await signOut(
+                    auth
+                );
+
 
                 window.location.href =
                     "index.html";
+
 
             }catch(error){
 
@@ -3531,7 +3998,9 @@ document
    HELPERS
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(
+    value
+){
 
     return String(value)
         .replace(
@@ -3558,20 +4027,27 @@ function escapeHtml(value){
 }
 
 
-function capitalize(value){
+function capitalize(
+    value
+){
 
     if(!value){
         return "";
     }
 
-    return value.charAt(0)
-        .toUpperCase() +
-        value.slice(1);
+
+    return (
+        value.charAt(0)
+            .toUpperCase() +
+        value.slice(1)
+    );
 
 }
 
 
-function formatDate(timestamp){
+function formatDate(
+    timestamp
+){
 
     if(!timestamp){
         return "-";
