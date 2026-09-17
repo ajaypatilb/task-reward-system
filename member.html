@@ -143,7 +143,7 @@ body{
 
 
 /* =====================================================
-   NEW DASHBOARD UI
+   DASHBOARD UI
 ===================================================== */
 
 .dashboardWelcome{
@@ -177,7 +177,7 @@ body{
 }
 
 
-/* Earnings cards */
+/* Earnings */
 
 .earningsGrid{
     display:grid;
@@ -220,7 +220,7 @@ body{
 }
 
 
-/* Task summary */
+/* Task Summary */
 
 .dashboardSection{
     margin-top:18px;
@@ -244,6 +244,18 @@ body{
     padding:16px 12px;
     text-align:center;
     box-shadow:0 2px 8px rgba(0,0,0,.07);
+    cursor:pointer;
+    border:1px solid #edf0f4;
+    transition:.15s;
+    user-select:none;
+}
+
+.summaryCard:hover{
+    background:#f8fafc;
+}
+
+.summaryCard:active{
+    transform:scale(.97);
 }
 
 .summaryIcon{
@@ -315,7 +327,7 @@ body{
 }
 
 
-/* Quick actions */
+/* Quick Actions */
 
 .quickGrid{
     display:grid;
@@ -337,6 +349,10 @@ body{
 
 .quickAction:hover{
     background:#f8fafc;
+}
+
+.quickAction:active{
+    transform:scale(.97);
 }
 
 .quickIcon{
@@ -807,7 +823,7 @@ th{
 
 
     <!-- =================================================
-         DASHBOARD - NEW UI
+         DASHBOARD
     ================================================== -->
 
     <section
@@ -932,7 +948,12 @@ th{
 
             <div class="summaryGrid">
 
-                <div class="summaryCard">
+                <!-- New Tasks Shortcut -->
+
+                <div
+                    class="summaryCard"
+                    onclick="showPage('newTasks')"
+                >
 
                     <div class="summaryIcon">
                         ▶️
@@ -952,7 +973,12 @@ th{
                 </div>
 
 
-                <div class="summaryCard">
+                <!-- Completed Shortcut -->
+
+                <div
+                    class="summaryCard"
+                    onclick="showPage('completedTasks')"
+                >
 
                     <div class="summaryIcon">
                         ✅
@@ -972,7 +998,12 @@ th{
                 </div>
 
 
-                <div class="summaryCard">
+                <!-- Pending Shortcut -->
+
+                <div
+                    class="summaryCard"
+                    onclick="showPage('completedTasks')"
+                >
 
                     <div class="summaryIcon">
                         ⏳
@@ -4371,9 +4402,6 @@ function refreshDashboard(){
         allCompletions.length;
 
 
-    /*
-     * Pending task count
-     */
     const pendingTasks =
         allCompletions.filter(
             item => {
@@ -4400,11 +4428,8 @@ function refreshDashboard(){
         pendingTasks;
 
 
-    /*
-     * Earning Progress
-     *
-     * Target = 500 Coins
-     */
+    /* Earning Progress */
+
     const targetCoins =
         500;
 
@@ -4774,10 +4799,8 @@ async function submitWithdrawal(){
                 transaction.update(
                     userRef,
                     {
-
                         coins:
                             newCoins
-
                     }
                 );
 
