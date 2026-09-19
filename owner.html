@@ -386,6 +386,17 @@ input:focus,select:focus{
     flex-wrap:wrap;
 }
 
+.redeem-box{
+    min-width:210px;
+}
+
+.redeem-input{
+    width:210px;
+    padding:9px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    margin-bottom:6px;
+}
 
 /* ================= TASK EDIT MODAL ================= */
 
@@ -881,9 +892,10 @@ input:focus,select:focus{
                     <tr>
                         <th>Member</th>
                         <th>Email</th>
+                        <th>Type</th>
                         <th>Coins</th>
                         <th>Amount</th>
-                        <th>UPI ID</th>
+                        <th>UPI ID / Redeem</th>
                         <th>Date</th>
                         <th>Action</th>
                     </tr>
@@ -914,9 +926,10 @@ input:focus,select:focus{
                     <tr>
                         <th>Member</th>
                         <th>Email</th>
+                        <th>Type</th>
                         <th>Coins</th>
                         <th>Amount</th>
-                        <th>UPI ID</th>
+                        <th>UPI ID / Redeem Code</th>
                         <th>Completed Date</th>
                     </tr>
 
@@ -946,9 +959,10 @@ input:focus,select:focus{
                     <tr>
                         <th>Member</th>
                         <th>Email</th>
+                        <th>Type</th>
                         <th>Coins</th>
                         <th>Amount</th>
-                        <th>UPI ID</th>
+                        <th>UPI ID / Redeem Code</th>
                         <th>Rejected Date</th>
                     </tr>
 
@@ -1067,7 +1081,7 @@ input:focus,select:focus{
         <div class="info-row">
             <b>Withdrawal</b>
             <br>
-            Member can request withdrawal using UPI ID.
+            Member can request withdrawal using UPI ID or Redeem Code.
         </div>
 
     </div>
@@ -1774,7 +1788,6 @@ async function loadTasks(){
         .textContent = tasksData.length;
 
 }
-
 
 
 /* ================= EDIT TASK ================= */
@@ -2490,13 +2503,49 @@ async function loadWithdrawals(){
 
 
         const amount =
-            Number(item.amount || 0);
+            Number(
+                item.amount ??
+                item.rupees ??
+                0
+            );
+
+
+        /*
+         * Legacy documents did not have withdrawalType.
+         * Therefore missing type is treated as UPI.
+         */
+        const withdrawalType =
+            String(
+                item.withdrawalType || "upi"
+            ).toLowerCase();
+
+
+        const isRedeem =
+            withdrawalType === "redeem";
+
+
+        const typeLabel =
+            isRedeem
+            ? "🎁 Redeem Code"
+            : "💳 UPI";
 
 
         const upi =
             escapeHtml(
                 item.upiId || "-"
             );
+
+
+        const redeemCode =
+            escapeHtml(
+                item.redeemCode || "-"
+            );
+
+
+        const destination =
+            isRedeem
+            ? redeemCode
+            : upi;
 
 
         if(status === "pending"){
@@ -2512,6 +2561,79 @@ async function loadWithdrawals(){
                 );
 
 
+            let action = "";
+
+
+            if(isRedeem){
+
+                action = `
+
+                    <div class="redeem-box">
+
+                        <input
+                            class="redeem-input"
+                            id="redeemCode_${escapeHtml(item.id)}"
+                            type="text"
+                            placeholder="Enter Redeem Code">
+
+                        <div class="action-buttons">
+
+                            <button
+                                class="success-btn"
+                                onclick="approveRedeemWithdrawal('${escapeHtml(item.id)}')">
+                                🎁 Approve & Send Code
+                            </button>
+
+                            <button
+                                class="danger-btn"
+                                onclick="rejectWithdrawal('${escapeHtml(item.id)}')">
+                                Reject
+                            </button>
+
+                            <button
+                                class="delete-btn"
+                                onclick="deleteWithdrawal('${escapeHtml(item.id)}')">
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+            else{
+
+                action = `
+
+                    <div class="action-buttons">
+
+                        <button
+                            class="success-btn"
+                            onclick="approveWithdrawal('${escapeHtml(item.id)}')">
+                            Approve
+                        </button>
+
+                        <button
+                            class="danger-btn"
+                            onclick="rejectWithdrawal('${escapeHtml(item.id)}')">
+                            Reject
+                        </button>
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteWithdrawal('${escapeHtml(item.id)}')">
+                            Delete
+                        </button>
+
+                    </div>
+
+                `;
+
+            }
+
+
             pendingBody.innerHTML += `
 
                 <tr>
@@ -2520,39 +2642,27 @@ async function loadWithdrawals(){
 
                     <td>${email}</td>
 
+                    <td>
+                        <span class="status status-pending">
+                            ${typeLabel}
+                        </span>
+                    </td>
+
                     <td>${coins}</td>
 
                     <td>₹${amount.toFixed(2)}</td>
 
-                    <td>${upi}</td>
+                    <td>
+                        ${
+                            isRedeem
+                            ? "🎁 Redeem Code requested"
+                            : destination
+                        }
+                    </td>
 
                     <td>${date}</td>
 
-                    <td>
-
-                        <div class="action-buttons">
-
-                            <button
-                                class="success-btn"
-                                onclick="approveWithdrawal('${item.id}')">
-                                Approve
-                            </button>
-
-                            <button
-                                class="danger-btn"
-                                onclick="rejectWithdrawal('${item.id}')">
-                                Reject
-                            </button>
-
-                            <button
-                                class="delete-btn"
-                                onclick="deleteWithdrawal('${item.id}')">
-                                Delete
-                            </button>
-
-                        </div>
-
-                    </td>
+                    <td>${action}</td>
 
                 </tr>
 
@@ -2581,11 +2691,23 @@ async function loadWithdrawals(){
 
                     <td>${email}</td>
 
+                    <td>
+                        <span class="status status-approved">
+                            ${typeLabel}
+                        </span>
+                    </td>
+
                     <td>${coins}</td>
 
                     <td>₹${amount.toFixed(2)}</td>
 
-                    <td>${upi}</td>
+                    <td>
+                        ${
+                            isRedeem
+                            ? "🎁 " + redeemCode
+                            : upi
+                        }
+                    </td>
 
                     <td>${date}</td>
 
@@ -2613,11 +2735,23 @@ async function loadWithdrawals(){
 
                     <td>${email}</td>
 
+                    <td>
+                        <span class="status status-rejected">
+                            ${typeLabel}
+                        </span>
+                    </td>
+
                     <td>${coins}</td>
 
                     <td>₹${amount.toFixed(2)}</td>
 
-                    <td>${upi}</td>
+                    <td>
+                        ${
+                            isRedeem
+                            ? "🎁 Redeem Code"
+                            : upi
+                        }
+                    </td>
 
                     <td>${date}</td>
 
@@ -2663,13 +2797,11 @@ async function loadWithdrawals(){
 
 
 /* ================================================= */
-/* APPROVE WITHDRAWAL */
+/* APPROVE NORMAL UPI WITHDRAWAL */
 /*
    IMPORTANT:
-
    Member already lost/reserved these coins when the
    withdrawal request was created.
-
    Therefore APPROVE must NOT deduct coins again.
 */
 /* ================================================= */
@@ -2818,6 +2950,223 @@ window.approveWithdrawal = async function(withdrawalId){
 
         alert(
             "Approval failed: "
+            + error.message
+        );
+
+    }
+
+};
+
+
+/* ================================================= */
+/* APPROVE REDEEM CODE WITHDRAWAL */
+/*
+   Owner manually enters the Redeem Code.
+   System DOES NOT generate a code.
+   Member coins are NOT deducted again.
+*/
+/* ================================================= */
+
+window.approveRedeemWithdrawal = async function(withdrawalId){
+
+    const codeInput =
+        document.getElementById(
+            "redeemCode_" + withdrawalId
+        );
+
+
+    if(!codeInput){
+
+        alert(
+            "Redeem Code field not found."
+        );
+
+        return;
+
+    }
+
+
+    const redeemCode =
+        codeInput.value.trim();
+
+
+    if(!redeemCode){
+
+        alert(
+            "Please enter the Redeem Code."
+        );
+
+        codeInput.focus();
+
+        return;
+
+    }
+
+
+    if(!confirm(
+        "Approve this Redeem Code withdrawal?\n\n" +
+        "Code: " +
+        redeemCode
+    )){
+
+        return;
+
+    }
+
+
+    try{
+
+        await runTransaction(
+            db,
+            async transaction => {
+
+                const withdrawalRef =
+                    doc(
+                        db,
+                        "withdrawals",
+                        withdrawalId
+                    );
+
+
+                const withdrawalSnap =
+                    await transaction.get(
+                        withdrawalRef
+                    );
+
+
+                if(!withdrawalSnap.exists()){
+
+                    throw new Error(
+                        "Withdrawal not found."
+                    );
+
+                }
+
+
+                const withdrawal =
+                    withdrawalSnap.data();
+
+
+                if(
+                    String(withdrawal.status)
+                    .toLowerCase()
+                    !== "pending"
+                ){
+
+                    throw new Error(
+                        "Withdrawal already processed."
+                    );
+
+                }
+
+
+                const withdrawalType =
+                    String(
+                        withdrawal.withdrawalType ||
+                        "upi"
+                    ).toLowerCase();
+
+
+                if(withdrawalType !== "redeem"){
+
+                    throw new Error(
+                        "This is not a Redeem Code withdrawal."
+                    );
+
+                }
+
+
+                const memberRef =
+                    doc(
+                        db,
+                        "users",
+                        withdrawal.memberId
+                    );
+
+
+                const memberSnap =
+                    await transaction.get(
+                        memberRef
+                    );
+
+
+                if(!memberSnap.exists()){
+
+                    throw new Error(
+                        "Member not found."
+                    );
+
+                }
+
+
+                const member =
+                    memberSnap.data();
+
+
+                if(member.role !== "member"){
+
+                    throw new Error(
+                        "Invalid member."
+                    );
+
+                }
+
+
+                const withdrawalCoins =
+                    Number(withdrawal.coins || 0);
+
+
+                if(withdrawalCoins <= 0){
+
+                    throw new Error(
+                        "Invalid withdrawal coins."
+                    );
+
+                }
+
+
+                /*
+                 * IMPORTANT:
+                 * Member coins were already reserved
+                 * when the withdrawal was submitted.
+                 *
+                 * DO NOT deduct coins again.
+                 */
+
+
+                transaction.update(
+                    withdrawalRef,
+                    {
+
+                        status:"approved",
+
+                        redeemCode:
+                            redeemCode,
+
+                        approvedAt:
+                            new Date()
+
+                    }
+                );
+
+            }
+        );
+
+
+        alert(
+            "Redeem Code approved and sent to member."
+        );
+
+
+        await refreshAllData();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Redeem approval failed: "
             + error.message
         );
 
