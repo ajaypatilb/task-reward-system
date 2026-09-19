@@ -1304,7 +1304,7 @@ th{
                     id="withdrawCoins"
                     min="1"
                     step="1"
-                    placeholder="Enter coins"
+                    placeholder="Minimum 500 Coins"
                 >
 
             </div>
@@ -1320,6 +1320,13 @@ th{
                     ₹0.00
                 </strong>
 
+            </div>
+
+            <div class="withdrawInfo">
+                <p>
+                    <strong>Withdrawal Rule:</strong>
+                    Minimum 500 Coins (₹5.00)
+                </p>
             </div>
 
 
@@ -1781,6 +1788,13 @@ function escapeHtml(value){
         .replace(/'/g,"&#039;");
 
 }
+
+
+/* =====================================================
+   WITHDRAWAL RULE
+===================================================== */
+
+const MIN_WITHDRAWAL_COINS = 500;
 
 
 /* =====================================================
@@ -4607,8 +4621,15 @@ function calculateWithdrawal(){
         ).toFixed(2);
 
 
+    const button =
+        document.getElementById("withdrawButton");
+
+    const belowMinimum =
+        coins > 0 && coins < MIN_WITHDRAWAL_COINS;
+
     if(
-        coins > availableCoins
+        coins > availableCoins ||
+        belowMinimum
     ){
 
         input.style.borderColor =
@@ -4618,6 +4639,15 @@ function calculateWithdrawal(){
 
         input.style.borderColor =
             "#d1d5db";
+
+    }
+
+    if(button){
+
+        button.disabled =
+            availableCoins < MIN_WITHDRAWAL_COINS ||
+            coins < MIN_WITHDRAWAL_COINS ||
+            coins > availableCoins;
 
     }
 
@@ -4676,6 +4706,19 @@ async function submitWithdrawal(){
 
         alert(
             "Enter valid whole-number withdrawal coins."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        coins < MIN_WITHDRAWAL_COINS
+    ){
+
+        alert(
+            "Minimum withdrawal is 500 Coins (₹5.00)."
         );
 
         return;
@@ -4777,6 +4820,28 @@ async function submitWithdrawal(){
                         latestData.coins ||
                         0
                     );
+
+
+                if(
+                    latestCoins < MIN_WITHDRAWAL_COINS
+                ){
+
+                    throw new Error(
+                        "Minimum withdrawal is 500 Coins (₹5.00)."
+                    );
+
+                }
+
+
+                if(
+                    coins < MIN_WITHDRAWAL_COINS
+                ){
+
+                    throw new Error(
+                        "Minimum withdrawal is 500 Coins (₹5.00)."
+                    );
+
+                }
 
 
                 if(
