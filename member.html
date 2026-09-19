@@ -659,6 +659,30 @@ th{
 }
 
 
+.redeemCodeBox{
+    background:#f0fdf4;
+    border:1px solid #bbf7d0;
+    padding:14px;
+    border-radius:8px;
+    margin-top:8px;
+}
+
+.redeemCodeValue{
+    font-size:18px;
+    font-weight:bold;
+    margin:7px 0;
+    word-break:break-all;
+}
+
+.copyCodeBtn{
+    background:#2563eb;
+    color:white;
+    padding:8px 12px;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+
 @media(max-width:600px){
 
     .main{
@@ -1296,6 +1320,23 @@ th{
             <div class="formGroup">
 
                 <label>
+                    Withdrawal Type
+                </label>
+
+                <select
+                    id="withdrawType"
+                    style="width:100%;padding:11px;border:1px solid #d1d5db;border-radius:7px;font-size:15px;"
+                >
+                    <option value="upi">UPI</option>
+                    <option value="redeem">Redeem Code</option>
+                </select>
+
+            </div>
+
+
+            <div class="formGroup">
+
+                <label>
                     Withdrawal Coins
                 </label>
 
@@ -1330,7 +1371,7 @@ th{
             </div>
 
 
-            <div class="formGroup">
+            <div class="formGroup" id="upiFieldGroup">
 
                 <label>
                     UPI ID
@@ -1342,6 +1383,14 @@ th{
                     placeholder="example@upi"
                 >
 
+            </div>
+
+
+            <div class="withdrawInfo" id="redeemInfo" style="display:none;">
+                <p>
+                    <strong>🎁 Redeem Code:</strong>
+                    Owner will provide the redeem code after approval.
+                </p>
             </div>
 
 
@@ -4654,6 +4703,30 @@ function calculateWithdrawal(){
 }
 
 
+function updateWithdrawalTypeUI(){
+
+    const type = document.getElementById("withdrawType");
+    const upiGroup = document.getElementById("upiFieldGroup");
+    const redeemInfo = document.getElementById("redeemInfo");
+
+    if(!type || !upiGroup || !redeemInfo){
+        return;
+    }
+
+    if(type.value === "redeem"){
+        upiGroup.style.display = "none";
+        redeemInfo.style.display = "block";
+    }else{
+        upiGroup.style.display = "block";
+        redeemInfo.style.display = "none";
+    }
+
+}
+
+document.getElementById("withdrawType").addEventListener("change",updateWithdrawalTypeUI);
+updateWithdrawalTypeUI();
+
+
 /* =====================================================
    WITHDRAW SUBMIT
 ===================================================== */
@@ -4669,403 +4742,154 @@ document.getElementById(
 async function submitWithdrawal(){
 
     if(!currentMember){
-
-        alert(
-            "Please login again."
-        );
-
+        alert("Please login again.");
         return;
-
     }
 
+    const button = document.getElementById("withdrawButton");
 
-    const button =
-        document.getElementById(
-            "withdrawButton"
-        );
+    const coins = Number(document.getElementById("withdrawCoins").value);
 
-
-    const coins =
-        Number(
-            document.getElementById(
-                "withdrawCoins"
-            ).value
-        );
-
+    const withdrawalType =
+        document.getElementById("withdrawType").value;
 
     const upi =
-        document.getElementById(
-            "withdrawUpi"
-        ).value.trim();
+        document.getElementById("withdrawUpi").value.trim();
 
-
-    if(
-        !Number.isInteger(coins) ||
-        coins <= 0
-    ){
-
-        alert(
-            "Enter valid whole-number withdrawal coins."
-        );
-
+    if(!Number.isInteger(coins) || coins <= 0){
+        alert("Enter valid whole-number withdrawal coins.");
         return;
-
     }
 
-
-    if(
-        coins < MIN_WITHDRAWAL_COINS
-    ){
-
-        alert(
-            "Minimum withdrawal is 500 Coins (₹5.00)."
-        );
-
+    if(coins < MIN_WITHDRAWAL_COINS){
+        alert("Minimum withdrawal is 500 Coins (₹5.00).");
         return;
-
     }
 
-
-    if(
-        upi.length < 3
-    ){
-
-        alert(
-            "Enter a valid UPI ID."
-        );
-
+    if(withdrawalType === "upi" && upi.length < 3){
+        alert("Enter a valid UPI ID.");
         return;
-
     }
 
-
-    button.disabled =
-        true;
-
-
-    let withdrawalCreated =
-        false;
-
+    button.disabled = true;
+    let withdrawalCreated = false;
 
     try{
 
-        const userRef =
-            doc(
-                db,
-                "users",
-                currentMember.uid
-            );
+        const userRef = doc(db,"users",currentMember.uid);
+        const withdrawalRef = doc(collection(db,"withdrawals"));
 
+        await runTransaction(db,async transaction => {
 
-        const withdrawalRef =
-            doc(
-                collection(
-                    db,
-                    "withdrawals"
-                )
-            );
+            const userSnap = await transaction.get(userRef);
 
-
-        await runTransaction(
-            db,
-            async transaction => {
-
-                const userSnap =
-                    await transaction.get(
-                        userRef
-                    );
-
-
-                if(
-                    !userSnap.exists()
-                ){
-
-                    throw new Error(
-                        "Member profile not found."
-                    );
-
-                }
-
-
-                const latestData =
-                    userSnap.data();
-
-
-                if(
-                    latestData.role !==
-                    "member"
-                ){
-
-                    throw new Error(
-                        "Invalid member account."
-                    );
-
-                }
-
-
-                if(
-                    latestData.status !==
-                    "active"
-                ){
-
-                    throw new Error(
-                        "Your member account is not active."
-                    );
-
-                }
-
-
-                const latestCoins =
-                    Number(
-                        latestData.coins ||
-                        0
-                    );
-
-
-                if(
-                    latestCoins < MIN_WITHDRAWAL_COINS
-                ){
-
-                    throw new Error(
-                        "Minimum withdrawal is 500 Coins (₹5.00)."
-                    );
-
-                }
-
-
-                if(
-                    coins < MIN_WITHDRAWAL_COINS
-                ){
-
-                    throw new Error(
-                        "Minimum withdrawal is 500 Coins (₹5.00)."
-                    );
-
-                }
-
-
-                if(
-                    coins >
-                    latestCoins
-                ){
-
-                    throw new Error(
-                        "Insufficient available coins."
-                    );
-
-                }
-
-
-                const newCoins =
-                    latestCoins -
-                    coins;
-
-
-                transaction.update(
-                    userRef,
-                    {
-                        coins:
-                            newCoins
-                    }
-                );
-
-
-                transaction.set(
-                    withdrawalRef,
-                    {
-
-                        memberId:
-                            currentMember.uid,
-
-                        memberName:
-                            latestData.name ||
-                            currentMember.displayName ||
-                            "Member",
-
-                        memberEmail:
-                            latestData.email ||
-                            currentMember.email ||
-                            "",
-
-                        coins:
-                            coins,
-
-                        amount:
-                            coins / 100,
-
-                        rupees:
-                            coins / 100,
-
-                        upiId:
-                            upi,
-
-                        status:
-                            "pending",
-
-                        requestedAt:
-                            serverTimestamp()
-
-                    }
-                );
-
+            if(!userSnap.exists()){
+                throw new Error("Member profile not found.");
             }
-        );
 
+            const latestData = userSnap.data();
 
-        withdrawalCreated =
-            true;
+            if(latestData.role !== "member"){
+                throw new Error("Invalid member account.");
+            }
 
+            if(latestData.status !== "active"){
+                throw new Error("Your member account is not active.");
+            }
 
-        console.log(
-            "Withdrawal created successfully:",
-            withdrawalRef.id
-        );
+            const latestCoins = Number(latestData.coins || 0);
 
+            if(latestCoins < MIN_WITHDRAWAL_COINS){
+                throw new Error("Minimum withdrawal is 500 Coins (₹5.00).");
+            }
+
+            if(coins < MIN_WITHDRAWAL_COINS){
+                throw new Error("Minimum withdrawal is 500 Coins (₹5.00).");
+            }
+
+            if(coins > latestCoins){
+                throw new Error("Insufficient available coins.");
+            }
+
+            transaction.update(userRef,{coins:latestCoins - coins});
+
+            transaction.set(withdrawalRef,{
+                memberId:currentMember.uid,
+                memberName:latestData.name || currentMember.displayName || "Member",
+                memberEmail:latestData.email || currentMember.email || "",
+                coins:coins,
+                amount:coins / 100,
+                rupees:coins / 100,
+                withdrawalType:withdrawalType,
+                upiId:withdrawalType === "upi" ? upi : "",
+                status:"pending",
+                requestedAt:serverTimestamp()
+            });
+
+        });
+
+        withdrawalCreated = true;
 
         try{
-
-            const latestUserSnap =
-                await getDoc(
-                    userRef
-                );
-
-
-            if(
-                latestUserSnap.exists()
-            ){
-
-                currentMemberData =
-                    latestUserSnap.data();
-
+            const latestUserSnap = await getDoc(userRef);
+            if(latestUserSnap.exists()){
+                currentMemberData = latestUserSnap.data();
             }
-
         }catch(refreshError){
-
-            console.error(
-                "Member refresh error:",
-                refreshError
-            );
-
+            console.error("Member refresh error:",refreshError);
         }
-
 
         try{
-
             await loadAllWithdrawals();
-
         }catch(withdrawalLoadError){
-
-            console.error(
-                "Withdrawal reload error:",
-                withdrawalLoadError
-            );
-
+            console.error("Withdrawal reload error:",withdrawalLoadError);
         }
 
-
-        document.getElementById(
-            "withdrawCoins"
-        ).value = "";
-
-
-        document.getElementById(
-            "withdrawUpi"
-        ).value = "";
-
+        document.getElementById("withdrawCoins").value = "";
+        document.getElementById("withdrawUpi").value = "";
 
         calculateWithdrawal();
-
-
         updateMemberUI();
-
         refreshDashboard();
-
         refreshWithdrawPage();
-
         loadProfile();
 
-
         try{
-
             await loadWithdrawalHistory();
-
         }catch(historyError){
-
-            console.error(
-                "Withdrawal history refresh error:",
-                historyError
-            );
-
+            console.error("Withdrawal history refresh error:",historyError);
         }
 
-
-        const msg =
-            document.getElementById(
-                "withdrawMessage"
-            );
-
-
+        const msg = document.getElementById("withdrawMessage");
         msg.textContent =
-            "Withdrawal request submitted successfully. "
-            +
-            coins
-            +
+            "Withdrawal request submitted successfully. " +
+            coins +
             " coins are reserved and waiting for owner approval.";
-
-
-        msg.className =
-            "message show success";
-
+        msg.className = "message show success";
 
     }catch(error){
 
-        console.error(
-            "Withdrawal transaction error:",
-            error
-        );
+        console.error("Withdrawal transaction error:",error);
 
+        const msg = document.getElementById("withdrawMessage");
 
-        const msg =
-            document.getElementById(
-                "withdrawMessage"
-            );
-
-
-        if(
-            withdrawalCreated
-        ){
-
+        if(withdrawalCreated){
             msg.textContent =
-                "Withdrawal request submitted successfully. "
-                +
-                coins
-                +
+                "Withdrawal request submitted successfully. " +
+                coins +
                 " coins are reserved and waiting for owner approval.";
-
-            msg.className =
-                "message show success";
-
+            msg.className = "message show success";
         }else{
-
             msg.textContent =
-                "Unable to submit withdrawal: "
-                +
-                error.message;
-
-            msg.className =
-                "message show error";
-
+                "Unable to submit withdrawal: " + error.message;
+            msg.className = "message show error";
         }
 
     }finally{
-
-        button.disabled =
-            false;
-
+        button.disabled = false;
     }
 
 }
-
 
 /* =====================================================
    WITHDRAWAL HISTORY
@@ -5129,7 +4953,9 @@ async function loadWithdrawalHistory(){
 
                 <th>Amount</th>
 
-                <th>UPI</th>
+                <th>Type</th>
+
+                <th>UPI / Redeem Code</th>
 
                 <th>Status</th>
 
@@ -5223,10 +5049,28 @@ async function loadWithdrawalHistory(){
                         </td>
 
                         <td>
-                            ${escapeHtml(
-                                item.upiId ||
-                                "-"
-                            )}
+                            ${
+                                String(item.withdrawalType || "upi").toLowerCase() === "redeem"
+                                ? "🎁 Redeem Code"
+                                : "💳 UPI"
+                            }
+                        </td>
+
+                        <td>
+                            ${
+                                String(item.withdrawalType || "upi").toLowerCase() === "redeem"
+                                ? (
+                                    status === "approved" && item.redeemCode
+                                    ? `
+                                        <div class="redeemCodeBox">
+                                            <div class="redeemCodeValue">${escapeHtml(item.redeemCode)}</div>
+                                            <button class="copyCodeBtn" onclick="copyRedeemCode('${escapeHtml(item.redeemCode)}')">Copy Code</button>
+                                        </div>
+                                      `
+                                    : "Waiting for Owner Code"
+                                  )
+                                : escapeHtml(item.upiId || "-")
+                            }
                         </td>
 
                         <td>
@@ -5292,6 +5136,18 @@ async function loadWithdrawalHistory(){
     }
 
 }
+
+
+window.copyRedeemCode = async function(code){
+
+    try{
+        await navigator.clipboard.writeText(String(code));
+        alert("Redeem Code copied.");
+    }catch(error){
+        alert("Copy failed. Code: " + code);
+    }
+
+};
 
 
 /* =====================================================
