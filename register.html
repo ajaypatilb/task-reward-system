@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -138,6 +139,10 @@
       text-decoration: none;
     }
 
+    .login-text a:hover {
+      text-decoration: underline;
+    }
+
     .footer {
       text-align: center;
       margin-top: 20px;
@@ -169,7 +174,7 @@
 
       <!-- Full Name -->
       <div class="input-group">
-        <label>Full Name</label>
+        <label for="name">Full Name</label>
 
         <input
           type="text"
@@ -180,7 +185,7 @@
 
       <!-- Email -->
       <div class="input-group">
-        <label>Email Address</label>
+        <label for="email">Email Address</label>
 
         <input
           type="email"
@@ -192,7 +197,7 @@
 
       <!-- Mobile -->
       <div class="input-group">
-        <label>Mobile Number</label>
+        <label for="mobile">Mobile Number</label>
 
         <input
           type="tel"
@@ -205,7 +210,7 @@
 
       <!-- Password -->
       <div class="input-group">
-        <label>Password</label>
+        <label for="password">Password</label>
 
         <input
           type="password"
@@ -218,7 +223,7 @@
 
       <!-- Confirm Password -->
       <div class="input-group">
-        <label>Confirm Password</label>
+        <label for="confirmPassword">Confirm Password</label>
 
         <input
           type="password"
@@ -374,7 +379,7 @@
         // VALIDATION
         // ======================================
 
-        if (mobile.length !== 10) {
+        if (!/^\d{10}$/.test(mobile)) {
 
           showMessage(
             "Please enter a valid 10-digit mobile number.",
@@ -431,6 +436,12 @@
             userCredential.user;
 
 
+          console.log(
+            "Auth account created:",
+            user.uid
+          );
+
+
           // ====================================
           // CREATE FIRESTORE USER PROFILE
           // ====================================
@@ -457,11 +468,21 @@
           );
 
 
+          console.log(
+            "Firestore user profile created."
+          );
+
+
           // ====================================
           // SEND EMAIL VERIFICATION
           // ====================================
 
           await sendEmailVerification(user);
+
+
+          console.log(
+            "Verification email sent."
+          );
 
 
           // ====================================
@@ -476,7 +497,7 @@
           // ====================================
 
           showMessage(
-            "Account created successfully! Verification email sent. Please verify your email before login.",
+            "Account created successfully! Verification email sent. Please check your inbox and verify your email before login.",
             "success"
           );
 
@@ -563,6 +584,16 @@
 
           }
 
+          else if (
+            error.code ===
+            "auth/too-many-requests"
+          ) {
+
+            errorMessage =
+              "Too many requests. Please wait and try again.";
+
+          }
+
 
           showMessage(
             errorMessage,
@@ -586,3 +617,4 @@
 
 </body>
 </html>
+```
