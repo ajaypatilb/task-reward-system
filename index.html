@@ -291,7 +291,8 @@
       getAuth,
       signInWithEmailAndPassword,
       setPersistence,
-      browserLocalPersistence
+      browserLocalPersistence,
+      signOut
     } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
     import {
@@ -347,9 +348,6 @@
     // ==========================================
     // AUTH PERSISTENCE
     // ==========================================
-
-    // Keep Firebase login session saved
-    // in the browser.
 
     try {
 
@@ -506,6 +504,36 @@
 
 
             // ==================================
+            // OWNER EMAIL VERIFICATION
+            // IS NOT REQUIRED
+            // ==================================
+
+            if(selectedRole === "owner") {
+
+              // Owner login continues normally.
+
+            } else {
+
+              // ==================================
+              // MEMBER EMAIL VERIFICATION
+              // ==================================
+
+              if(!user.emailVerified) {
+
+                showMessage(
+                  "Please verify your email before logging in. Check your inbox.",
+                  "error"
+                );
+
+                await signOut(auth);
+
+                return;
+              }
+
+            }
+
+
+            // ==================================
             // GET USER PROFILE
             // ==================================
 
@@ -528,7 +556,7 @@
                 "error"
               );
 
-              await auth.signOut();
+              await signOut(auth);
 
               return;
             }
@@ -554,7 +582,7 @@
                 "error"
               );
 
-              await auth.signOut();
+              await signOut(auth);
 
               return;
             }
@@ -574,7 +602,7 @@
                 "error"
               );
 
-              await auth.signOut();
+              await signOut(auth);
 
               return;
             }
