@@ -186,6 +186,7 @@
           type="email"
           id="email"
           placeholder="Enter your email"
+          autocomplete="email"
           required>
       </div>
 
@@ -211,6 +212,7 @@
           id="password"
           placeholder="Minimum 6 characters"
           minlength="6"
+          autocomplete="new-password"
           required>
       </div>
 
@@ -223,6 +225,7 @@
           id="confirmPassword"
           placeholder="Re-enter your password"
           minlength="6"
+          autocomplete="new-password"
           required>
       </div>
 
@@ -258,7 +261,9 @@
 
     import {
       getAuth,
-      createUserWithEmailAndPassword
+      createUserWithEmailAndPassword,
+      sendEmailVerification,
+      signOut
     } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
     import {
@@ -275,7 +280,8 @@
 
     const firebaseConfig = {
 
-      apiKey: "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",
+      apiKey:
+        "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",
 
       authDomain:
         "task-reward-system-af46f.firebaseapp.com",
@@ -301,11 +307,14 @@
     // FIREBASE INITIALIZE
     // ==========================================
 
-    const app = initializeApp(firebaseConfig);
+    const app =
+      initializeApp(firebaseConfig);
 
-    const auth = getAuth(app);
+    const auth =
+      getAuth(app);
 
-    const db = getFirestore(app);
+    const db =
+      getFirestore(app);
 
 
     // ==========================================
@@ -449,11 +458,25 @@
 
 
           // ====================================
+          // SEND EMAIL VERIFICATION
+          // ====================================
+
+          await sendEmailVerification(user);
+
+
+          // ====================================
+          // SIGN OUT AFTER REGISTRATION
+          // ====================================
+
+          await signOut(auth);
+
+
+          // ====================================
           // SUCCESS
           // ====================================
 
           showMessage(
-            "Account created successfully! Redirecting to login...",
+            "Account created! Verification email sent. Please verify your email before login.",
             "success"
           );
 
@@ -463,12 +486,15 @@
             window.location.href =
               "index.html";
 
-          }, 1500);
+          }, 3000);
 
 
         } catch (error) {
 
-          console.error(error);
+          console.error(
+            "Registration error:",
+            error
+          );
 
 
           let errorMessage =
@@ -507,6 +533,14 @@
             errorMessage =
               "Network error. Please check your internet.";
 
+          } else if (
+            error.code ===
+            "auth/operation-not-allowed"
+          ) {
+
+            errorMessage =
+              "Email/password registration is not enabled in Firebase.";
+
           }
 
 
@@ -518,7 +552,8 @@
 
         } finally {
 
-          registerBtn.disabled = false;
+          registerBtn.disabled =
+            false;
 
           registerBtn.textContent =
             "Create Account";
