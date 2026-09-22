@@ -304,7 +304,7 @@
 
 
     // ==========================================
-    // FIREBASE INITIALIZE
+    // INITIALIZE FIREBASE
     // ==========================================
 
     const app =
@@ -465,7 +465,7 @@
 
 
           // ====================================
-          // SIGN OUT AFTER REGISTRATION
+          // SIGN OUT
           // ====================================
 
           await signOut(auth);
@@ -476,7 +476,7 @@
           // ====================================
 
           showMessage(
-            "Account created! Verification email sent. Please verify your email before login.",
+            "Account created successfully! Verification email sent. Please verify your email before login.",
             "success"
           );
 
@@ -507,9 +507,11 @@
           ) {
 
             errorMessage =
-              "This email is already registered.";
+              "This email is already registered. Please login instead.";
 
-          } else if (
+          }
+
+          else if (
             error.code ===
             "auth/invalid-email"
           ) {
@@ -517,7 +519,9 @@
             errorMessage =
               "Please enter a valid email.";
 
-          } else if (
+          }
+
+          else if (
             error.code ===
             "auth/weak-password"
           ) {
@@ -525,7 +529,9 @@
             errorMessage =
               "Password is too weak. Use at least 6 characters.";
 
-          } else if (
+          }
+
+          else if (
             error.code ===
             "auth/network-request-failed"
           ) {
@@ -533,13 +539,27 @@
             errorMessage =
               "Network error. Please check your internet.";
 
-          } else if (
+          }
+
+          else if (
             error.code ===
             "auth/operation-not-allowed"
           ) {
 
             errorMessage =
               "Email/password registration is not enabled in Firebase.";
+
+          }
+
+          else if (
+            error.code ===
+            "permission-denied" ||
+            error.code ===
+            "firestore/permission-denied"
+          ) {
+
+            errorMessage =
+              "Account created, but profile could not be saved. Please check Firestore Rules.";
 
           }
 
@@ -557,6 +577,7 @@
 
           registerBtn.textContent =
             "Create Account";
+
         }
 
       });
