@@ -217,6 +217,7 @@
 
     </div>
 
+
     <!-- Login Form -->
     <form id="loginForm">
 
@@ -235,6 +236,7 @@
 
       </div>
 
+
       <div class="input-group">
 
         <label for="password">
@@ -250,6 +252,7 @@
 
       </div>
 
+
       <button
         type="submit"
         class="login-btn"
@@ -259,10 +262,12 @@
 
     </form>
 
+
     <div
       id="message"
       class="message">
     </div>
+
 
     <div
       class="register-text"
@@ -272,6 +277,7 @@
       <a href="register.html">Register</a>
 
     </div>
+
 
     <div class="footer">
       © 2026 Task Reward System
@@ -409,6 +415,7 @@
 
         registerText.style.display =
           "none";
+
       }
 
     };
@@ -471,8 +478,7 @@
           try {
 
             // ==================================
-            // MAKE SURE LOCAL PERSISTENCE
-            // IS ENABLED BEFORE LOGIN
+            // PERSISTENCE
             // ==================================
 
             await setPersistence(
@@ -482,7 +488,7 @@
 
 
             // ==================================
-            // FIREBASE AUTHENTICATION
+            // FIREBASE LOGIN
             // ==================================
 
             const userCredential =
@@ -497,26 +503,29 @@
               userCredential.user;
 
 
+            // ==================================
+            // GET LATEST USER STATUS
+            // ==================================
+
+            await user.reload();
+
+
             console.log(
               "Login successful:",
               user.uid
             );
 
+            console.log(
+              "Email verified:",
+              user.emailVerified
+            );
+
 
             // ==================================
-            // OWNER EMAIL VERIFICATION
-            // IS NOT REQUIRED
+            // MEMBER EMAIL VERIFICATION
             // ==================================
 
-            if(selectedRole === "owner") {
-
-              // Owner login continues normally.
-
-            } else {
-
-              // ==================================
-              // MEMBER EMAIL VERIFICATION
-              // ==================================
+            if(selectedRole === "member") {
 
               if(!user.emailVerified) {
 
@@ -609,7 +618,7 @@
 
 
             // ==================================
-            // SUCCESS
+            // LOGIN SUCCESS
             // ==================================
 
             showMessage(
@@ -619,7 +628,7 @@
 
 
             // ==================================
-            // DASHBOARD REDIRECT
+            // REDIRECT
             // ==================================
 
             setTimeout(
@@ -637,6 +646,7 @@
 
                   window.location.href =
                     "member.html";
+
                 }
 
               },
@@ -664,7 +674,9 @@
               errorMessage =
                 "Invalid email or password.";
 
-            } else if(
+            }
+
+            else if(
               error.code ===
               "auth/user-not-found"
             ) {
@@ -672,7 +684,9 @@
               errorMessage =
                 "User account not found.";
 
-            } else if(
+            }
+
+            else if(
               error.code ===
               "auth/wrong-password"
             ) {
@@ -680,7 +694,9 @@
               errorMessage =
                 "Incorrect password.";
 
-            } else if(
+            }
+
+            else if(
               error.code ===
               "auth/invalid-email"
             ) {
@@ -688,7 +704,9 @@
               errorMessage =
                 "Please enter a valid email.";
 
-            } else if(
+            }
+
+            else if(
               error.code ===
               "auth/too-many-requests"
             ) {
@@ -696,7 +714,9 @@
               errorMessage =
                 "Too many login attempts. Please try again later.";
 
-            } else if(
+            }
+
+            else if(
               error.code ===
               "auth/network-request-failed"
             ) {
@@ -720,11 +740,11 @@
 
             loginBtn.textContent =
               "Login";
+
           }
 
         }
       );
-
 
   </script>
 
