@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,6 +130,29 @@
       cursor: not-allowed;
     }
 
+    .resend-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #111827;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .resend-btn:hover {
+      background: #374151;
+    }
+
+    .resend-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
     .message {
       display: none;
       margin-top: 15px;
@@ -195,6 +219,7 @@
     <p class="subtitle">
       Complete tasks and earn rewards
     </p>
+
 
     <!-- Role Selection -->
     <div class="role-buttons">
@@ -263,6 +288,15 @@
     </form>
 
 
+    <!-- Resend Verification -->
+    <button
+      type="button"
+      class="resend-btn"
+      id="resendBtn">
+      📧 Resend Verification Email
+    </button>
+
+
     <div
       id="message"
       class="message">
@@ -298,7 +332,8 @@
       signInWithEmailAndPassword,
       setPersistence,
       browserLocalPersistence,
-      signOut
+      signOut,
+      sendEmailVerification
     } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
     import {
@@ -383,6 +418,17 @@
     let selectedRole = "member";
 
 
+    // ==========================================
+    // CURRENT UNVERIFIED USER
+    // ==========================================
+
+    let unverifiedUser = null;
+
+
+    // ==========================================
+    // SELECT ROLE
+    // ==========================================
+
     window.selectRole = function(role) {
 
       selectedRole = role;
@@ -395,6 +441,9 @@
 
       const registerText =
         document.getElementById("registerText");
+
+      const resendBtn =
+        document.getElementById("resendBtn");
 
 
       memberBtn.classList.remove("active");
@@ -415,6 +464,11 @@
 
         registerText.style.display =
           "none";
+
+        resendBtn.style.display =
+          "none";
+
+        unverifiedUser = null;
 
       }
 
@@ -438,6 +492,102 @@
       message.style.display =
         "block";
     }
+
+
+    // ==========================================
+    // RESEND VERIFICATION EMAIL
+    // ==========================================
+
+    document
+      .getElementById("resendBtn")
+      .addEventListener(
+        "click",
+        async function() {
+
+          const resendBtn =
+            document.getElementById("resendBtn");
+
+
+          if(!unverifiedUser) {
+
+            showMessage(
+              "Please login again to resend the verification email.",
+              "error"
+            );
+
+            return;
+          }
+
+
+          resendBtn.disabled = true;
+
+          resendBtn.textContent =
+            "Sending...";
+
+
+          try {
+
+            await sendEmailVerification(
+              unverifiedUser
+            );
+
+
+            showMessage(
+              "New verification email sent. Please open the latest email and click the verification link.",
+              "success"
+            );
+
+
+          } catch(error) {
+
+            console.error(
+              "Resend verification error:",
+              error
+            );
+
+
+            let errorMessage =
+              "Could not send verification email. Please try again.";
+
+
+            if(
+              error.code ===
+              "auth/too-many-requests"
+            ) {
+
+              errorMessage =
+                "Too many verification requests. Please wait a while before trying again.";
+
+            }
+
+            else if(
+              error.code ===
+              "auth/network-request-failed"
+            ) {
+
+              errorMessage =
+                "Network error. Please check your internet connection.";
+
+            }
+
+
+            showMessage(
+              errorMessage,
+              "error"
+            );
+
+          } finally {
+
+            resendBtn.disabled =
+              false;
+
+            resendBtn.textContent =
+              "📧 Resend Verification Email";
+
+          }
+
+        }
+      );
 
 
     // ==========================================
@@ -467,6 +617,17 @@
           const loginBtn =
             document
               .getElementById("loginBtn");
+
+          const resendBtn =
+            document
+              .getElementById("resendBtn");
+
+
+          // Hide old resend button
+          resendBtn.style.display =
+            "none";
+
+          unverifiedUser = null;
 
 
           loginBtn.disabled = true;
@@ -499,15 +660,19 @@
               );
 
 
-            const user =
+            let user =
               userCredential.user;
 
 
             // ==================================
-            // GET LATEST USER STATUS
+            // GET LATEST EMAIL VERIFIED STATUS
             // ==================================
 
             await user.reload();
+
+
+            // Get refreshed user object
+            user = auth.currentUser;
 
 
             console.log(
@@ -529,11 +694,24 @@
 
               if(!user.emailVerified) {
 
+                // Keep user temporarily available
+                // so resend button can work
+                unverifiedUser = user;
+
+
                 showMessage(
-                  "Please verify your email before logging in. Check your inbox.",
+                  "Your email is not verified yet. Please verify your email before entering the Member Dashboard.",
                   "error"
                 );
 
+
+                resendBtn.style.display =
+                  "block";
+
+
+                // Sign out after keeping reference.
+                // The resend button will ask user
+                // to login again if necessary.
                 await signOut(auth);
 
                 return;
@@ -750,3 +928,4 @@
 
 </body>
 </html>
+```
