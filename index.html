@@ -1,4 +1,3 @@
-```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -220,7 +219,6 @@
       Complete tasks and earn rewards
     </p>
 
-
     <!-- Role Selection -->
     <div class="role-buttons">
 
@@ -242,7 +240,6 @@
 
     </div>
 
-
     <!-- Login Form -->
     <form id="loginForm">
 
@@ -261,7 +258,6 @@
 
       </div>
 
-
       <div class="input-group">
 
         <label for="password">
@@ -277,7 +273,6 @@
 
       </div>
 
-
       <button
         type="submit"
         class="login-btn"
@@ -287,7 +282,6 @@
 
     </form>
 
-
     <!-- Resend Verification -->
     <button
       type="button"
@@ -296,12 +290,10 @@
       📧 Resend Verification Email
     </button>
 
-
     <div
       id="message"
       class="message">
     </div>
-
 
     <div
       class="register-text"
@@ -312,13 +304,11 @@
 
     </div>
 
-
     <div class="footer">
       © 2026 Task Reward System
     </div>
 
   </div>
-
 
   <!-- Firebase SDK -->
   <script type="module">
@@ -419,13 +409,6 @@
 
 
     // ==========================================
-    // CURRENT UNVERIFIED USER
-    // ==========================================
-
-    let unverifiedUser = null;
-
-
-    // ==========================================
     // SELECT ROLE
     // ==========================================
 
@@ -468,8 +451,6 @@
         resendBtn.style.display =
           "none";
 
-        unverifiedUser = null;
-
       }
 
     };
@@ -507,11 +488,22 @@
           const resendBtn =
             document.getElementById("resendBtn");
 
+          const email =
+            document
+              .getElementById("email")
+              .value
+              .trim();
 
-          if(!unverifiedUser) {
+          const password =
+            document
+              .getElementById("password")
+              .value;
+
+
+          if(!email || !password) {
 
             showMessage(
-              "Please login again to resend the verification email.",
+              "Please enter your email and password first.",
               "error"
             );
 
@@ -527,8 +519,48 @@
 
           try {
 
+            /*
+             * Sign in again so Firebase has
+             * an authenticated user.
+             */
+
+            const credential =
+              await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+              );
+
+
+            const user =
+              credential.user;
+
+
+            await user.reload();
+
+
+            const currentUser =
+              auth.currentUser;
+
+
+            if(currentUser.emailVerified) {
+
+              showMessage(
+                "Your email is already verified. Please click Login.",
+                "success"
+              );
+
+              resendBtn.style.display =
+                "none";
+
+              await signOut(auth);
+
+              return;
+            }
+
+
             await sendEmailVerification(
-              unverifiedUser
+              currentUser
             );
 
 
@@ -536,6 +568,9 @@
               "New verification email sent. Please open the latest email and click the verification link.",
               "success"
             );
+
+
+            await signOut(auth);
 
 
           } catch(error) {
@@ -552,11 +587,21 @@
 
             if(
               error.code ===
+              "auth/invalid-credential"
+            ) {
+
+              errorMessage =
+                "Invalid email or password.";
+
+            }
+
+            else if(
+              error.code ===
               "auth/too-many-requests"
             ) {
 
               errorMessage =
-                "Too many verification requests. Please wait a while before trying again.";
+                "Too many requests. Please wait a while before trying again.";
 
             }
 
@@ -567,6 +612,16 @@
 
               errorMessage =
                 "Network error. Please check your internet connection.";
+
+            }
+
+            else if(
+              error.code ===
+              "auth/user-disabled"
+            ) {
+
+              errorMessage =
+                "This account has been disabled.";
 
             }
 
@@ -623,11 +678,8 @@
               .getElementById("resendBtn");
 
 
-          // Hide old resend button
           resendBtn.style.display =
             "none";
-
-          unverifiedUser = null;
 
 
           loginBtn.disabled = true;
@@ -671,8 +723,8 @@
             await user.reload();
 
 
-            // Get refreshed user object
-            user = auth.currentUser;
+            user =
+              auth.currentUser;
 
 
             console.log(
@@ -694,11 +746,6 @@
 
               if(!user.emailVerified) {
 
-                // Keep user temporarily available
-                // so resend button can work
-                unverifiedUser = user;
-
-
                 showMessage(
                   "Your email is not verified yet. Please verify your email before entering the Member Dashboard.",
                   "error"
@@ -709,10 +756,13 @@
                   "block";
 
 
-                // Sign out after keeping reference.
-                // The resend button will ask user
-                // to login again if necessary.
-                await signOut(auth);
+                /*
+                 * IMPORTANT:
+                 * Do NOT sign out here.
+                 *
+                 * The resend button needs an
+                 * authenticated Firebase user.
+                 */
 
                 return;
               }
@@ -928,4 +978,3 @@
 
 </body>
 </html>
-```
