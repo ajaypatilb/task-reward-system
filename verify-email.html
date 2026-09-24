@@ -1,1 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Verify Email - Task Reward System</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 450px;
+      background: #ffffff;
+      padding: 30px 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 25px;
+      color: #222;
+    }
+
+    #status {
+      margin-top: 18px;
+      padding: 15px;
+      border-radius: 10px;
+      line-height: 1.5;
+      font-size: 15px;
+      background: #f1f3f5;
+      color: #333;
+      word-break: break-word;
+    }
+
+    .success {
+      background: #e8f7ee !important;
+      color: #137333 !important;
+    }
+
+    .error {
+      background: #fdeaea !important;
+      color: #b42318 !important;
+    }
+
+    .info {
+      background: #eef4ff !important;
+      color: #174ea6 !important;
+    }
+
+    button,
+    a {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 9px;
+      background: #1a73e8;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button:hover,
+    a:hover {
+      opacity: 0.9;
+    }
+
+    #details {
+      margin-top: 15px;
+      text-align: left;
+      font-size: 13px;
+      color: #555;
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      word-break: break-all;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <h1>Email Verification</h1>
+
+    <div id="status" class="info">
+      Checking verification link...
+    </div>
+
+    <div id="details"></div>
+
+    <a
+      id="loginBtn"
+      href="index.html"
+      style="display:none;"
+    >
+      Go to Login
+    </a>
+
+  </div>
+
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+    import {
+      getAuth,
+      checkActionCode,
+      applyActionCode
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+    // =====================================================
+    // FIREBASE CONFIG
+    // DO NOT CHANGE
+    // =====================================================
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",
+      authDomain: "task-reward-system-af46f.firebaseapp.com",
+      projectId: "task-reward-system-af46f",
+      storageBucket: "task-reward-system-af46f.firebasestorage.app",
+      messagingSenderId: "64322126165",
+      appId: "1:64322126165:web:7aae7a6e4792ab4f092fdc",
+      measurementId: "G-6P3R9F3ZQT"
+    };
+
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+
+    // =====================================================
+    // ELEMENTS
+    // =====================================================
+
+    const statusBox = document.getElementById("status");
+    const detailsBox = document.getElementById("details");
+    const loginBtn = document.getElementById("loginBtn");
+
+
+    // =====================================================
+    // URL PARAMETERS
+    // =====================================================
+
+    const params = new URLSearchParams(window.location.search);
+
+    const mode = params.get("mode");
+    const actionCode = params.get("oobCode");
+    const apiKey = params.get("apiKey");
+    const lang = params.get("lang");
+
+
+    // =====================================================
+    // SHOW DETAILS
+    // =====================================================
+
+    function showDetails(text) {
+      detailsBox.style.display = "block";
+      detailsBox.textContent = text;
+    }
+
+
+    // =====================================================
+    // START VERIFICATION
+    // =====================================================
+
+    async function verifyEmail() {
+
+      console.log("Verification page loaded.");
+
+      console.log("Mode:", mode);
+      console.log("Has oobCode:", !!actionCode);
+      console.log("Has apiKey:", !!apiKey);
+      console.log("Language:", lang);
+
+
+      // -----------------------------------------------------
+      // CHECK REQUIRED PARAMETERS
+      // -----------------------------------------------------
+
+      if (!mode) {
+
+        statusBox.className = "error";
+
+        statusBox.textContent =
+          "Error: Verification mode is missing.";
+
+        showDetails(
+          "URL does not contain the required 'mode' parameter."
+        );
+
+        return;
+      }
+
+
+      if (mode !== "verifyEmail") {
+
+        statusBox.className = "error";
+
+        statusBox.textContent =
+          "Error: This is not an email verification link.";
+
+        showDetails(
+          "Received mode: " + mode
+        );
+
+        return;
+      }
+
+
+      if (!actionCode) {
+
+        statusBox.className = "error";
+
+        statusBox.textContent =
+          "Error: Verification code is missing.";
+
+        showDetails(
+          "The URL does not contain an 'oobCode'."
+        );
+
+        return;
+      }
+
+
+      // -----------------------------------------------------
+      // CHECK ACTION CODE
+      // -----------------------------------------------------
+
+      statusBox.className = "info";
+
+      statusBox.textContent =
+        "Checking Firebase verification code...";
+
+
+      try {
+
+        const info = await checkActionCode(
+          auth,
+          actionCode
+        );
+
+
+        console.log(
+          "checkActionCode SUCCESS:",
+          info
+        );
+
+
+        let email = "";
+
+        if (
+          info &&
+          info.data &&
+          info.data.email
+        ) {
+          email = info.data.email;
+        }
+
+
+        // ---------------------------------------------------
+        // ACTION CODE IS VALID
+        // ---------------------------------------------------
+
+        statusBox.textContent =
+          "Verification code is valid. Completing email verification...";
+
+
+        // ---------------------------------------------------
+        // APPLY ACTION CODE
+        // ---------------------------------------------------
+
+        await applyActionCode(
+          auth,
+          actionCode
+        );
+
+
+        console.log(
+          "applyActionCode SUCCESS"
+        );
+
+
+        // ---------------------------------------------------
+        // SUCCESS
+        // ---------------------------------------------------
+
+        statusBox.className = "success";
+
+        if (email) {
+
+          statusBox.innerHTML =
+            "<strong>Email verified successfully!</strong><br><br>" +
+            "Verified email:<br>" +
+            email;
+
+        } else {
+
+          statusBox.innerHTML =
+            "<strong>Email verified successfully!</strong>";
+
+        }
+
+
+        showDetails(
+          "Firebase applyActionCode() completed successfully."
+        );
+
+
+        loginBtn.style.display = "inline-block";
+
+
+      } catch (error) {
+
+        // ---------------------------------------------------
+        // ERROR
+        // ---------------------------------------------------
+
+        console.error(
+          "Firebase verification error:",
+          error
+        );
+
+
+        statusBox.className = "error";
+
+        statusBox.innerHTML =
+          "<strong>Email verification failed.</strong><br><br>" +
+          "Firebase Error: " +
+          (error.code || "unknown");
+
+
+        showDetails(
+          "Error message: " +
+          (error.message || "Unknown error") +
+          "\n\n" +
+          "Mode: " +
+          mode +
+          "\n\n" +
+          "API key present: " +
+          (!!apiKey)
+        );
+
+
+        loginBtn.style.display = "inline-block";
+
+      }
+
+    }
+
+
+    // =====================================================
+    // RUN
+    // =====================================================
+
+    verifyEmail();
+
+  </script>
+
+</body>
+</html>
