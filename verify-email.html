@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Verify Email - Task Reward System</title>
+  <title>Email Verified - Task Reward System</title>
 
   <style>
     * {
@@ -59,32 +59,19 @@
       margin-bottom: 25px;
     }
 
+    .check-icon {
+      font-size: 58px;
+      margin-bottom: 12px;
+    }
+
     .status {
       padding: 16px;
       border-radius: 12px;
       font-size: 15px;
-      line-height: 1.5;
+      line-height: 1.6;
       margin-bottom: 20px;
-    }
-
-    .loading {
-      background: #eff6ff;
-      color: #1d4ed8;
-    }
-
-    .success {
       background: #dcfce7;
       color: #166534;
-    }
-
-    .error {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    .info {
-      background: #f3f4f6;
-      color: #374151;
     }
 
     .btn {
@@ -98,7 +85,7 @@
       font-weight: bold;
       cursor: pointer;
       text-decoration: none;
-      display: none;
+      display: block;
       margin-top: 10px;
     }
 
@@ -106,30 +93,10 @@
       background: #1d4ed8;
     }
 
-    .secondary-btn {
-      background: #111827;
-    }
-
-    .secondary-btn:hover {
-      background: #374151;
-    }
-
     .footer {
       margin-top: 25px;
       font-size: 12px;
       color: #9ca3af;
-    }
-
-    .check-icon {
-      font-size: 55px;
-      margin-bottom: 10px;
-      display: none;
-    }
-
-    .error-icon {
-      font-size: 55px;
-      margin-bottom: 10px;
-      display: none;
     }
 
     @media (max-width: 480px) {
@@ -152,47 +119,26 @@
       💰
     </div>
 
+    <div class="check-icon">
+      ✅
+    </div>
+
     <h1>Task Reward System</h1>
 
     <p class="subtitle">
       Email Verification
     </p>
 
-    <!-- Success Icon -->
-    <div
-      id="checkIcon"
-      class="check-icon">
-      ✅
+    <div class="status">
+      <strong>Your email has been verified.</strong>
+      <br>
+      You can now sign in with your new account.
     </div>
 
-    <!-- Error Icon -->
-    <div
-      id="errorIcon"
-      class="error-icon">
-      ❌
-    </div>
-
-    <!-- Status -->
-    <div
-      id="status"
-      class="status loading">
-      Verifying your email...
-    </div>
-
-    <!-- Login Button -->
     <a
       href="index.html"
-      id="loginBtn"
       class="btn">
-      🔐 Go to Login
-    </a>
-
-    <!-- Home Button -->
-    <a
-      href="index.html"
-      id="homeBtn"
-      class="btn secondary-btn">
-      🏠 Go to Task Reward System
+      🔐 Continue to Login
     </a>
 
     <div class="footer">
@@ -200,319 +146,6 @@
     </div>
 
   </div>
-
-
-  <!-- Firebase SDK -->
-  <script type="module">
-
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-    import {
-      getAuth,
-      applyActionCode,
-      checkActionCode
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-
-    // ==========================================
-    // FIREBASE CONFIG
-    // ==========================================
-
-    const firebaseConfig = {
-
-      apiKey:
-        "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",
-
-      authDomain:
-        "task-reward-system-af46f.firebaseapp.com",
-
-      projectId:
-        "task-reward-system-af46f",
-
-      storageBucket:
-        "task-reward-system-af46f.firebasestorage.app",
-
-      messagingSenderId:
-        "64322126165",
-
-      appId:
-        "1:64322126165:web:7aae7a6e4792ab4f092fdc",
-
-      measurementId:
-        "G-6P3R9F3ZQT"
-    };
-
-
-    // ==========================================
-    // INITIALIZE FIREBASE
-    // ==========================================
-
-    const app =
-      initializeApp(firebaseConfig);
-
-    const auth =
-      getAuth(app);
-
-
-    // ==========================================
-    // ELEMENTS
-    // ==========================================
-
-    const status =
-      document.getElementById("status");
-
-    const loginBtn =
-      document.getElementById("loginBtn");
-
-    const homeBtn =
-      document.getElementById("homeBtn");
-
-    const checkIcon =
-      document.getElementById("checkIcon");
-
-    const errorIcon =
-      document.getElementById("errorIcon");
-
-
-    // ==========================================
-    // SHOW SUCCESS
-    // ==========================================
-
-    function showSuccess(message) {
-
-      status.className =
-        "status success";
-
-      status.textContent =
-        message;
-
-      checkIcon.style.display =
-        "block";
-
-      errorIcon.style.display =
-        "none";
-
-      loginBtn.style.display =
-        "block";
-
-      homeBtn.style.display =
-        "none";
-    }
-
-
-    // ==========================================
-    // SHOW ERROR
-    // ==========================================
-
-    function showError(message) {
-
-      status.className =
-        "status error";
-
-      status.textContent =
-        message;
-
-      checkIcon.style.display =
-        "none";
-
-      errorIcon.style.display =
-        "block";
-
-      loginBtn.style.display =
-        "block";
-
-      homeBtn.style.display =
-        "none";
-    }
-
-
-    // ==========================================
-    // GET URL PARAMETERS
-    // ==========================================
-
-    const urlParams =
-      new URLSearchParams(
-        window.location.search
-      );
-
-
-    const mode =
-      urlParams.get("mode");
-
-    const oobCode =
-      urlParams.get("oobCode");
-
-    const continueUrl =
-      urlParams.get("continueUrl");
-
-
-    // ==========================================
-    // VERIFY EMAIL
-    // ==========================================
-
-    async function verifyEmail() {
-
-      // ----------------------------------------
-      // CHECK MODE
-      // ----------------------------------------
-
-      if(mode !== "verifyEmail") {
-
-        showError(
-          "Invalid verification link."
-        );
-
-        return;
-      }
-
-
-      // ----------------------------------------
-      // CHECK OOB CODE
-      // ----------------------------------------
-
-      if(!oobCode) {
-
-        showError(
-          "Verification code is missing. Please request a new verification email."
-        );
-
-        return;
-      }
-
-
-      try {
-
-        // ======================================
-        // CHECK ACTION CODE
-        // ======================================
-
-        await checkActionCode(
-          auth,
-          oobCode
-        );
-
-
-        // ======================================
-        // APPLY VERIFICATION CODE
-        // ======================================
-
-        await applyActionCode(
-          auth,
-          oobCode
-        );
-
-
-        // ======================================
-        // SUCCESS
-        // ======================================
-
-        showSuccess(
-          "Your email has been verified successfully! You can now login to your Member account."
-        );
-
-
-        console.log(
-          "Email verification successful."
-        );
-
-
-        // ======================================
-        // OPTIONAL CONTINUE URL
-        // ======================================
-
-        /*
-         * We intentionally do not automatically
-         * redirect here.
-         *
-         * User can click Go to Login.
-         */
-
-
-      } catch(error) {
-
-        console.error(
-          "Email verification error:",
-          error
-        );
-
-
-        // ======================================
-        // ERROR HANDLING
-        // ======================================
-
-        let message =
-          "Email verification failed. Please request a new verification email.";
-
-
-        if(
-          error.code ===
-          "auth/expired-action-code"
-        ) {
-
-          message =
-            "This verification link has expired. Please request a new verification email.";
-
-        }
-
-        else if(
-          error.code ===
-          "auth/invalid-action-code"
-        ) {
-
-          message =
-            "This verification link is invalid or has already been used.";
-
-        }
-
-        else if(
-          error.code ===
-          "auth/user-disabled"
-        ) {
-
-          message =
-            "This account has been disabled.";
-
-        }
-
-        else if(
-          error.code ===
-          "auth/user-not-found"
-        ) {
-
-          message =
-            "The account connected to this verification link was not found.";
-
-        }
-
-        else if(
-          error.code ===
-          "auth/network-request-failed"
-        ) {
-
-          message =
-            "Network error. Please check your internet connection and try again.";
-
-        }
-
-
-        showError(
-          message
-        );
-
-      }
-
-    }
-
-
-    // ==========================================
-    // START VERIFICATION
-    // ==========================================
-
-    verifyEmail();
-
-  </script>
 
 </body>
 </html>
