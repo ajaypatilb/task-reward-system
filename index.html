@@ -220,7 +220,7 @@
       Complete tasks and earn rewards
     </p>
 
-    <!-- Role Selection -->
+    <!-- ROLE SELECTION -->
     <div class="role-buttons">
 
       <button
@@ -241,7 +241,8 @@
 
     </div>
 
-    <!-- Login Form -->
+
+    <!-- LOGIN FORM -->
     <form id="loginForm">
 
       <div class="input-group">
@@ -259,6 +260,7 @@
 
       </div>
 
+
       <div class="input-group">
 
         <label for="password">
@@ -274,6 +276,7 @@
 
       </div>
 
+
       <button
         type="submit"
         class="login-btn"
@@ -283,7 +286,8 @@
 
     </form>
 
-    <!-- Resend Verification -->
+
+    <!-- RESEND VERIFICATION -->
     <button
       type="button"
       class="resend-btn"
@@ -291,11 +295,14 @@
       📧 Resend Verification Email
     </button>
 
+
     <div
       id="message"
       class="message">
     </div>
 
+
+    <!-- REGISTER -->
     <div
       class="register-text"
       id="registerText">
@@ -305,6 +312,7 @@
 
     </div>
 
+
     <div class="footer">
       © 2026 Task Reward System
     </div>
@@ -312,7 +320,7 @@
   </div>
 
 
-  <!-- Firebase SDK -->
+  <!-- FIREBASE -->
   <script type="module">
 
     import {
@@ -335,9 +343,10 @@
     } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-    // ==========================================
+    // ==================================================
     // FIREBASE CONFIG
-    // ==========================================
+    // DO NOT CHANGE
+    // ==================================================
 
     const firebaseConfig = {
 
@@ -364,9 +373,9 @@
     };
 
 
-    // ==========================================
-    // INITIALIZE FIREBASE
-    // ==========================================
+    // ==================================================
+    // INITIALIZE
+    // ==================================================
 
     const app =
       initializeApp(firebaseConfig);
@@ -378,9 +387,18 @@
       getFirestore(app);
 
 
-    // ==========================================
+    // ==================================================
+    // OWNER UID
+    // DO NOT CHANGE
+    // ==================================================
+
+    const OWNER_UID =
+      "cqx3we5X1jX2gpo7xqpqaTqrpDg2";
+
+
+    // ==================================================
     // AUTH PERSISTENCE
-    // ==========================================
+    // ==================================================
 
     try {
 
@@ -389,30 +407,35 @@
         browserLocalPersistence
       );
 
-      console.log(
-        "Firebase Auth persistence enabled."
-      );
-
     } catch(error) {
 
       console.error(
-        "Auth persistence error:",
+        "Persistence error:",
         error
       );
 
     }
 
 
-    // ==========================================
+    // ==================================================
     // ROLE
-    // ==========================================
+    // ==================================================
 
     let selectedRole = "member";
 
 
-    // ==========================================
+    // ==================================================
+    // RESEND COOLDOWN
+    // ==================================================
+
+    let resendCooldown = 0;
+
+    let resendTimer = null;
+
+
+    // ==================================================
     // SELECT ROLE
-    // ==========================================
+    // ==================================================
 
     window.selectRole = function(role) {
 
@@ -458,9 +481,9 @@
     };
 
 
-    // ==========================================
+    // ==================================================
     // MESSAGE
-    // ==========================================
+    // ==================================================
 
     function showMessage(text, type) {
 
@@ -478,19 +501,9 @@
     }
 
 
-    // ==========================================
-    // CUSTOM CONTINUE URL
-    // ==========================================
-
-    /*
-     * After Firebase verifies the email,
-     * Firebase can redirect the user to this
-     * page.
-     *
-     * IMPORTANT:
-     * This is NOT the verification handler itself.
-     * Firebase still processes the oobCode first.
-     */
+    // ==================================================
+    // ACTION CODE SETTINGS
+    // ==================================================
 
     const actionCodeSettings = {
 
@@ -503,9 +516,70 @@
     };
 
 
-    // ==========================================
+    // ==================================================
+    // RESEND COOLDOWN
+    // ==================================================
+
+    function startResendCooldown() {
+
+      resendCooldown = 60;
+
+      const resendBtn =
+        document.getElementById("resendBtn");
+
+      resendBtn.disabled = true;
+
+      resendBtn.textContent =
+        "📧 Resend available in 60s";
+
+
+      if(resendTimer) {
+
+        clearInterval(
+          resendTimer
+        );
+
+      }
+
+
+      resendTimer =
+        setInterval(
+          function() {
+
+            resendCooldown--;
+
+            if(resendCooldown <= 0) {
+
+              clearInterval(
+                resendTimer
+              );
+
+              resendTimer = null;
+
+              resendBtn.disabled =
+                false;
+
+              resendBtn.textContent =
+                "📧 Resend Verification Email";
+
+              return;
+            }
+
+
+            resendBtn.textContent =
+              "📧 Resend available in " +
+              resendCooldown +
+              "s";
+
+          },
+          1000
+        );
+    }
+
+
+    // ==================================================
     // RESEND VERIFICATION EMAIL
-    // ==========================================
+    // ==================================================
 
     document
       .getElementById("resendBtn")
@@ -528,12 +602,24 @@
               .value;
 
 
+          if(selectedRole !== "member") {
+
+            return;
+          }
+
+
           if(!email || !password) {
 
             showMessage(
               "Please enter your email and password first.",
               "error"
             );
+
+            return;
+          }
+
+
+          if(resendCooldown > 0) {
 
             return;
           }
@@ -547,9 +633,9 @@
 
           try {
 
-            // ==================================
+            // ------------------------------------------
             // SIGN IN
-            // ==================================
+            // ------------------------------------------
 
             const credential =
               await signInWithEmailAndPassword(
@@ -559,22 +645,34 @@
               );
 
 
-            const user =
+            let user =
               credential.user;
 
 
+            // ------------------------------------------
+            // GET LATEST AUTH STATUS
+            // ------------------------------------------
+
             await user.reload();
 
-
-            const currentUser =
+            user =
               auth.currentUser;
 
 
-            // ==================================
-            // ALREADY VERIFIED
-            // ==================================
+            if(!user) {
 
-            if(currentUser.emailVerified) {
+              throw new Error(
+                "Authentication session unavailable."
+              );
+
+            }
+
+
+            // ------------------------------------------
+            // ALREADY VERIFIED
+            // ------------------------------------------
+
+            if(user.emailVerified) {
 
               showMessage(
                 "Your email is already verified. Please click Login.",
@@ -590,26 +688,28 @@
             }
 
 
-            // ==================================
+            // ------------------------------------------
             // SEND VERIFICATION
-            // ==================================
+            // ------------------------------------------
 
             await sendEmailVerification(
-              currentUser,
+              user,
               actionCodeSettings
             );
 
 
             showMessage(
-              "New verification email sent. Please open the latest email and click the verification link.",
+              "New verification email sent. Please open the latest email and verify your email.",
               "success"
             );
 
 
-            console.log(
-              "Verification email sent."
-            );
+            startResendCooldown();
 
+
+            // ------------------------------------------
+            // SIGN OUT
+            // ------------------------------------------
 
             await signOut(auth);
 
@@ -642,7 +742,7 @@
             ) {
 
               errorMessage =
-                "Too many requests. Please wait a while before trying again.";
+                "Too many requests. Please wait before trying again.";
 
             }
 
@@ -672,7 +772,7 @@
             ) {
 
               errorMessage =
-                "Verification settings are not configured for this website yet. Please add the website domain in Firebase Authentication settings.";
+                "Verification settings are not configured correctly for this website.";
 
             }
 
@@ -682,7 +782,6 @@
               "error"
             );
 
-          } finally {
 
             resendBtn.disabled =
               false;
@@ -696,9 +795,9 @@
       );
 
 
-    // ==========================================
+    // ==================================================
     // LOGIN
-    // ==========================================
+    // ==================================================
 
     document
       .getElementById("loginForm")
@@ -720,6 +819,7 @@
               .getElementById("password")
               .value;
 
+
           const loginBtn =
             document
               .getElementById("loginBtn");
@@ -733,7 +833,8 @@
             "none";
 
 
-          loginBtn.disabled = true;
+          loginBtn.disabled =
+            true;
 
           loginBtn.textContent =
             "Logging in...";
@@ -741,9 +842,9 @@
 
           try {
 
-            // ==================================
+            // ------------------------------------------
             // PERSISTENCE
-            // ==================================
+            // ------------------------------------------
 
             await setPersistence(
               auth,
@@ -751,9 +852,9 @@
             );
 
 
-            // ==================================
-            // FIREBASE LOGIN
-            // ==================================
+            // ------------------------------------------
+            // SIGN IN
+            // ------------------------------------------
 
             const userCredential =
               await signInWithEmailAndPassword(
@@ -767,35 +868,52 @@
               userCredential.user;
 
 
-            // ==================================
-            // GET LATEST EMAIL VERIFIED STATUS
-            // ==================================
+            // ------------------------------------------
+            // IMPORTANT:
+            // GET LATEST FIREBASE AUTH STATUS
+            // ------------------------------------------
 
             await user.reload();
-
 
             user =
               auth.currentUser;
 
 
+            if(!user) {
+
+              throw new Error(
+                "Authentication session unavailable."
+              );
+
+            }
+
+
             console.log(
-              "Login successful:",
+              "UID:",
               user.uid
             );
 
             console.log(
-              "Email verified:",
+              "Firebase emailVerified:",
               user.emailVerified
             );
 
 
-            // ==================================
-            // MEMBER EMAIL VERIFICATION
-            // ==================================
+            // ==================================================
+            // MEMBER EMAIL VERIFICATION GATE
+            // ==================================================
 
             if(selectedRole === "member") {
 
-              if(!user.emailVerified) {
+              /*
+               * SECURITY RULE:
+               *
+               * Firebase Authentication's
+               * emailVerified is the ONLY source
+               * used for email verification.
+               */
+
+              if(user.emailVerified !== true) {
 
                 showMessage(
                   "Your email is not verified yet. Please verify your email before entering the Member Dashboard.",
@@ -808,10 +926,8 @@
 
 
                 /*
-                 * Do NOT sign out here.
-                 *
-                 * The resend button needs an
-                 * authenticated Firebase user.
+                 * Keep session temporarily active
+                 * because resend requires authentication.
                  */
 
                 return;
@@ -820,9 +936,30 @@
             }
 
 
-            // ==================================
-            // GET USER PROFILE
-            // ==================================
+            // ==================================================
+            // OWNER UID CHECK
+            // ==================================================
+
+            if(selectedRole === "owner") {
+
+              if(user.uid !== OWNER_UID) {
+
+                showMessage(
+                  "This account is not authorized as Owner.",
+                  "error"
+                );
+
+                await signOut(auth);
+
+                return;
+              }
+
+            }
+
+
+            // ==================================================
+            // FIRESTORE PROFILE
+            // ==================================================
 
             const userRef =
               doc(
@@ -853,9 +990,9 @@
               userSnap.data();
 
 
-            // ==================================
-            // CHECK ROLE
-            // ==================================
+            // ==================================================
+            // ROLE CHECK
+            // ==================================================
 
             if(
               userData.role !==
@@ -875,9 +1012,9 @@
             }
 
 
-            // ==================================
-            // CHECK ACCOUNT STATUS
-            // ==================================
+            // ==================================================
+            // ACCOUNT STATUS
+            // ==================================================
 
             if(
               userData.status &&
@@ -895,9 +1032,29 @@
             }
 
 
-            // ==================================
+            // ==================================================
+            // FINAL MEMBER VERIFICATION CHECK
+            // ==================================================
+
+            if(
+              selectedRole === "member" &&
+              user.emailVerified !== true
+            ) {
+
+              showMessage(
+                "Email verification is required.",
+                "error"
+              );
+
+              await signOut(auth);
+
+              return;
+            }
+
+
+            // ==================================================
             // LOGIN SUCCESS
-            // ==================================
+            // ==================================================
 
             showMessage(
               "Login successful!",
@@ -905,17 +1062,14 @@
             );
 
 
-            // ==================================
+            // ==================================================
             // REDIRECT
-            // ==================================
+            // ==================================================
 
             setTimeout(
               function() {
 
-                if(
-                  selectedRole ===
-                  "owner"
-                ) {
+                if(selectedRole === "owner") {
 
                   window.location.href =
                     "owner.html";
@@ -928,7 +1082,7 @@
                 }
 
               },
-              800
+              700
             );
 
 
@@ -1004,12 +1158,21 @@
 
             }
 
+            else if(
+              error.code ===
+              "auth/user-disabled"
+            ) {
+
+              errorMessage =
+                "This account has been disabled.";
+
+            }
+
 
             showMessage(
               errorMessage,
               "error"
             );
-
 
           } finally {
 
