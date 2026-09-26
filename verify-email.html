@@ -29,7 +29,7 @@
       background: white;
       border-radius: 20px;
       padding: 35px 30px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
       text-align: center;
     }
 
@@ -46,6 +46,11 @@
       font-size: 34px;
     }
 
+    .check {
+      font-size: 60px;
+      margin-bottom: 12px;
+    }
+
     h1 {
       color: #111827;
       font-size: 25px;
@@ -55,38 +60,30 @@
     .subtitle {
       color: #6b7280;
       font-size: 14px;
-      line-height: 1.6;
       margin-bottom: 25px;
-    }
-
-    .check-icon {
-      font-size: 58px;
-      margin-bottom: 12px;
+      line-height: 1.6;
     }
 
     .status {
       padding: 16px;
       border-radius: 12px;
+      background: #dcfce7;
+      color: #166534;
       font-size: 15px;
       line-height: 1.6;
       margin-bottom: 20px;
-      background: #dcfce7;
-      color: #166534;
     }
 
     .btn {
+      display: block;
       width: 100%;
       padding: 14px;
-      border: none;
       border-radius: 10px;
       background: #2563eb;
       color: white;
+      text-decoration: none;
       font-size: 16px;
       font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
-      display: block;
-      margin-top: 10px;
     }
 
     .btn:hover {
@@ -99,7 +96,7 @@
       color: #9ca3af;
     }
 
-    @media (max-width: 480px) {
+    @media(max-width:480px) {
       .container {
         padding: 28px 20px;
       }
@@ -119,20 +116,28 @@
       💰
     </div>
 
-    <div class="check-icon">
+    <div class="check">
       ✅
     </div>
 
-    <h1>Task Reward System</h1>
+    <h1>
+      Task Reward System
+    </h1>
 
     <p class="subtitle">
       Email Verification
     </p>
 
     <div class="status">
-      <strong>Your email has been verified.</strong>
+
+      <strong>
+        Your email has been verified.
+      </strong>
+
       <br>
+
       You can now sign in with your new account.
+
     </div>
 
     <a
