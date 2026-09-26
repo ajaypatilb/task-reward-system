@@ -159,6 +159,7 @@
       border-radius: 8px;
       font-size: 14px;
       text-align: center;
+      line-height: 1.5;
     }
 
     .error {
@@ -309,6 +310,7 @@
     </div>
 
   </div>
+
 
   <!-- Firebase SDK -->
   <script type="module">
@@ -465,7 +467,8 @@
       const message =
         document.getElementById("message");
 
-      message.textContent = text;
+      message.textContent =
+        text;
 
       message.className =
         "message " + type;
@@ -473,6 +476,31 @@
       message.style.display =
         "block";
     }
+
+
+    // ==========================================
+    // CUSTOM CONTINUE URL
+    // ==========================================
+
+    /*
+     * After Firebase verifies the email,
+     * Firebase can redirect the user to this
+     * page.
+     *
+     * IMPORTANT:
+     * This is NOT the verification handler itself.
+     * Firebase still processes the oobCode first.
+     */
+
+    const actionCodeSettings = {
+
+      url:
+        "https://ajaypatilb.github.io/task-reward-system/verify-email.html",
+
+      handleCodeInApp:
+        false
+
+    };
 
 
     // ==========================================
@@ -519,10 +547,9 @@
 
           try {
 
-            /*
-             * Sign in again so Firebase has
-             * an authenticated user.
-             */
+            // ==================================
+            // SIGN IN
+            // ==================================
 
             const credential =
               await signInWithEmailAndPassword(
@@ -543,6 +570,10 @@
               auth.currentUser;
 
 
+            // ==================================
+            // ALREADY VERIFIED
+            // ==================================
+
             if(currentUser.emailVerified) {
 
               showMessage(
@@ -559,14 +590,24 @@
             }
 
 
+            // ==================================
+            // SEND VERIFICATION
+            // ==================================
+
             await sendEmailVerification(
-              currentUser
+              currentUser,
+              actionCodeSettings
             );
 
 
             showMessage(
               "New verification email sent. Please open the latest email and click the verification link.",
               "success"
+            );
+
+
+            console.log(
+              "Verification email sent."
             );
 
 
@@ -622,6 +663,16 @@
 
               errorMessage =
                 "This account has been disabled.";
+
+            }
+
+            else if(
+              error.code ===
+              "auth/unauthorized-continue-uri"
+            ) {
+
+              errorMessage =
+                "Verification settings are not configured for this website yet. Please add the website domain in Firebase Authentication settings.";
 
             }
 
@@ -757,7 +808,6 @@
 
 
                 /*
-                 * IMPORTANT:
                  * Do NOT sign out here.
                  *
                  * The resend button needs an
