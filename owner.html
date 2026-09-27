@@ -26,96 +26,6 @@ button{
     display:none!important;
 }
 
-/* ================= OWNER EMAIL VERIFICATION GATE ================= */
-
-.owner-auth-gate{
-    position:fixed;
-    inset:0;
-    background:#f3f4f6;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    z-index:5000;
-}
-
-.owner-auth-box{
-    width:100%;
-    max-width:450px;
-    background:white;
-    padding:28px 22px;
-    border-radius:14px;
-    box-shadow:0 8px 30px rgba(0,0,0,.12);
-    text-align:center;
-}
-
-.owner-auth-box h2{
-    margin-top:0;
-    margin-bottom:10px;
-}
-
-.owner-auth-box p{
-    color:#6b7280;
-    line-height:1.5;
-}
-
-.owner-email{
-    font-weight:bold;
-    color:#111827;
-    word-break:break-word;
-    margin:12px 0;
-}
-
-.owner-warning{
-    background:#fff7ed;
-    border:1px solid #fed7aa;
-    color:#9a3412;
-    padding:13px;
-    border-radius:9px;
-    margin:15px 0;
-    text-align:left;
-}
-
-.owner-success{
-    background:#dcfce7;
-    border:1px solid #bbf7d0;
-    color:#166534;
-    padding:13px;
-    border-radius:9px;
-    margin:15px 0;
-}
-
-.owner-error{
-    background:#fee2e2;
-    border:1px solid #fecaca;
-    color:#991b1b;
-    padding:13px;
-    border-radius:9px;
-    margin:15px 0;
-}
-
-.owner-auth-actions{
-    display:flex;
-    gap:10px;
-    flex-direction:column;
-    margin-top:18px;
-}
-
-.owner-auth-actions button{
-    width:100%;
-}
-
-.cooldown-text{
-    margin-top:10px;
-    font-size:13px;
-    color:#6b7280;
-}
-
-.loading-text{
-    font-weight:bold;
-    color:#374151;
-}
-
 /* ================= HEADER ================= */
 
 header{
@@ -603,26 +513,6 @@ input:focus,select:focus{
 
 <body>
 
-<!-- ================= OWNER AUTH GATE ================= -->
-
-<div id="ownerAuthGate" class="owner-auth-gate">
-
-    <div class="owner-auth-box">
-
-        <h2 id="ownerGateTitle">
-            🔐 Checking Owner Access
-        </h2>
-
-        <p id="ownerGateMessage" class="loading-text">
-            Please wait...
-        </p>
-
-        <div id="ownerGateContent"></div>
-
-    </div>
-
-</div>
-
 <!-- ================= HEADER ================= -->
 
 <header>
@@ -988,6 +878,8 @@ input:focus,select:focus{
     </div>
 
 
+    <!-- PENDING -->
+
     <div id="pendingWithdrawals"
          class="withdraw-tab active">
 
@@ -1020,6 +912,8 @@ input:focus,select:focus{
     </div>
 
 
+    <!-- COMPLETED -->
+
     <div id="completedWithdrawals"
          class="withdraw-tab">
 
@@ -1050,6 +944,8 @@ input:focus,select:focus{
 
     </div>
 
+
+    <!-- REJECTED -->
 
     <div id="rejectedWithdrawals"
          class="withdraw-tab">
@@ -1258,6 +1154,7 @@ input:focus,select:focus{
 </div>
 
 
+
 <!-- ================= EDIT TASK MODAL ================= -->
 
 <div id="editTaskModal" class="modal" onclick="closeEditTaskModal(event)">
@@ -1333,7 +1230,6 @@ input:focus,select:focus{
 
 </div>
 
-
 <!-- ================= FIREBASE ================= -->
 
 <script type="module">
@@ -1344,9 +1240,7 @@ from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import {
     getAuth,
     onAuthStateChanged,
-    signOut,
-    sendEmailVerification,
-    reload
+    signOut
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
@@ -1359,6 +1253,8 @@ import {
     getDoc,
     updateDoc,
     deleteDoc,
+    query,
+    orderBy,
     runTransaction
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
@@ -1394,684 +1290,66 @@ let completionsData = [];
 let withdrawalsData = [];
 
 
-/* ================= OWNER AUTH STATE ================= */
+/* ================= AUTH ================= */
 
-let currentOwnerUser = null;
+onAuthStateChanged(auth, async (user) => {
 
-let resendCooldown = 0;
+    if(!user){
 
-let resendTimer = null;
-
-let ownerDashboardUnlocked = false;
-
-
-/* ================= OWNER AUTH GATE ================= */
-
-function showOwnerGate(title,message,content=""){
-
-    const gate =
-        document.getElementById("ownerAuthGate");
-
-    const titleEl =
-        document.getElementById("ownerGateTitle");
-
-    const messageEl =
-        document.getElementById("ownerGateMessage");
-
-    const contentEl =
-        document.getElementById("ownerGateContent");
-
-
-    titleEl.textContent = title;
-
-    messageEl.textContent = message;
-
-    contentEl.innerHTML = content;
-
-    gate.classList.remove("hidden");
-
-}
-
-
-function hideOwnerGate(){
-
-    document
-        .getElementById("ownerAuthGate")
-        .classList.add("hidden");
-
-}
-
-
-/* ================= OWNER VERIFICATION SCREEN ================= */
-
-function showUnverifiedOwner(user){
-
-    currentOwnerUser = user;
-
-    showOwnerGate(
-
-        "📧 Verify Owner Email",
-
-        "Owner email is not verified. Please verify your Firebase email before accessing the Owner Dashboard.",
-
-        `
-
-        <div class="owner-email">
-            ${escapeHtml(user.email || "-")}
-        </div>
-
-        <div class="owner-warning">
-
-            <b>Owner Dashboard Access Denied</b>
-
-            <br><br>
-
-            Please open the verification link sent to your email.
-
-            <br><br>
-
-            After verifying your email, return to this page and click:
-
-            <b>I've Verified My Email</b>
-
-        </div>
-
-        <div class="owner-auth-actions">
-
-            <button
-                id="resendOwnerVerificationBtn"
-                class="primary-btn"
-                onclick="resendOwnerVerification()">
-
-                📧 Resend Verification Email
-
-            </button>
-
-            <button
-                class="secondary-btn"
-                onclick="checkOwnerVerification()">
-
-                🔄 I've Verified My Email
-
-            </button>
-
-            <button
-                class="danger-btn"
-                onclick="logout()">
-
-                🚪 Logout
-
-            </button>
-
-        </div>
-
-        <div
-            id="ownerCooldown"
-            class="cooldown-text">
-        </div>
-
-        `
-
-    );
-
-    updateOwnerCooldownUI();
-
-}
-
-
-/* ================= SEND VERIFICATION EMAIL ================= */
-
-async function sendOwnerVerificationEmail(user){
-
-    try{
-
-        await sendEmailVerification(user);
-
-        alert(
-            "Verification email sent successfully."
-        );
-
-        startOwnerResendCooldown();
-
-    }
-    catch(error){
-
-        console.error(
-            "Owner verification email error:",
-            error
-        );
-
-        if(
-            error.code ===
-            "auth/too-many-requests"
-        ){
-
-            alert(
-                "Too many verification requests. Please try again later."
-            );
-
-        }
-        else{
-
-            alert(
-                "Verification email failed: " +
-                error.message
-            );
-
-        }
-
-    }
-
-}
-
-
-/* ================= RESEND VERIFICATION ================= */
-
-window.resendOwnerVerification = async function(){
-
-    if(!currentOwnerUser){
-
-        alert(
-            "Owner session not found."
-        );
+        window.location.href = "index.html";
 
         return;
-
     }
 
+    if(user.uid !== OWNER_UID){
 
-    if(resendCooldown > 0){
+        alert("Access denied.");
 
-        alert(
-            "Please wait " +
-            resendCooldown +
-            " seconds before resending."
-        );
+        await signOut(auth);
+
+        window.location.href = "index.html";
 
         return;
-
     }
-
-
-    await sendOwnerVerificationEmail(
-        currentOwnerUser
-    );
-
-};
-
-
-/* ================= COOLDOWN ================= */
-
-function startOwnerResendCooldown(){
-
-    resendCooldown = 60;
-
-    updateOwnerCooldownUI();
-
-    clearInterval(resendTimer);
-
-    resendTimer =
-        setInterval(
-            () => {
-
-                resendCooldown--;
-
-                updateOwnerCooldownUI();
-
-
-                if(resendCooldown <= 0){
-
-                    clearInterval(
-                        resendTimer
-                    );
-
-                    resendTimer = null;
-
-                    resendCooldown = 0;
-
-                    updateOwnerCooldownUI();
-
-                }
-
-            },
-            1000
-        );
-
-}
-
-
-function updateOwnerCooldownUI(){
-
-    const button =
-        document.getElementById(
-            "resendOwnerVerificationBtn"
-        );
-
-    const text =
-        document.getElementById(
-            "ownerCooldown"
-        );
-
-
-    if(!button || !text){
-
-        return;
-
-    }
-
-
-    if(resendCooldown > 0){
-
-        button.disabled = true;
-
-        button.style.opacity = "0.6";
-
-        button.style.cursor = "not-allowed";
-
-        text.textContent =
-            "Resend available in " +
-            resendCooldown +
-            " seconds.";
-
-    }
-    else{
-
-        button.disabled = false;
-
-        button.style.opacity = "1";
-
-        button.style.cursor = "pointer";
-
-        text.textContent =
-            "You can resend the verification email now.";
-
-    }
-
-}
-
-
-/* ================= CHECK OWNER VERIFICATION ================= */
-
-window.checkOwnerVerification = async function(){
-
-    if(!currentOwnerUser){
-
-        alert(
-            "Owner session not found."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        await reload(
-            currentOwnerUser
-        );
-
-
-        const refreshedUser =
-            auth.currentUser;
-
-
-        if(!refreshedUser){
-
-            window.location.href =
-                "index.html";
-
-            return;
-
-        }
-
-
-        currentOwnerUser =
-            refreshedUser;
-
-
-        if(!refreshedUser.emailVerified){
-
-            showUnverifiedOwner(
-                refreshedUser
-            );
-
-            return;
-
-        }
-
-
-        await verifyOwnerFirestoreProfile(
-            refreshedUser
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        showOwnerGate(
-
-            "❌ Verification Check Failed",
-
-            error.message,
-
-            `
-
-            <div class="owner-error">
-
-                Firebase could not verify the current
-                Owner session.
-
-                <br><br>
-
-                Please try again.
-
-            </div>
-
-            <div class="owner-auth-actions">
-
-                <button
-                    class="secondary-btn"
-                    onclick="checkOwnerVerification()">
-
-                    🔄 Try Again
-
-                </button>
-
-                <button
-                    class="danger-btn"
-                    onclick="logout()">
-
-                    🚪 Logout
-
-                </button>
-
-            </div>
-
-            `
-
-        );
-
-    }
-
-};
-
-
-/* ================= VERIFY FIRESTORE OWNER PROFILE ================= */
-
-async function verifyOwnerFirestoreProfile(user){
 
     const userRef =
-        doc(
-            db,
-            "users",
-            user.uid
-        );
-
+        doc(db,"users",user.uid);
 
     const userSnap =
-        await getDoc(
-            userRef
-        );
-
+        await getDoc(userRef);
 
     if(!userSnap.exists()){
 
-        alert(
-            "Owner profile not found."
-        );
+        alert("Owner profile not found.");
 
         await signOut(auth);
 
-        window.location.href =
-            "index.html";
+        window.location.href = "index.html";
 
         return;
-
     }
 
-
-    const data =
-        userSnap.data();
-
+    const data = userSnap.data();
 
     if(data.role !== "owner"){
 
-        alert(
-            "You are not an Owner."
-        );
+        alert("You are not an Owner.");
 
         await signOut(auth);
 
-        window.location.href =
-            "index.html";
+        window.location.href = "index.html";
 
         return;
-
     }
-
-
-    if(data.status !== "active"){
-
-        alert(
-            "Owner account is not active."
-        );
-
-        await signOut(auth);
-
-        window.location.href =
-            "index.html";
-
-        return;
-
-    }
-
-
-    ownerDashboardUnlocked = true;
-
-    hideOwnerGate();
 
     await refreshAllData();
 
-}
-
-
-/* ================= OWNER AUTH ================= */
-
-onAuthStateChanged(
-    auth,
-    async (user) => {
-
-        try{
-
-            ownerDashboardUnlocked = false;
-
-            /*
-             * Gate remains visible until ALL
-             * Owner security checks are completed.
-             */
-
-            showOwnerGate(
-
-                "🔐 Checking Owner Access",
-
-                "Please wait while your Owner account is being verified."
-
-            );
-
-
-            if(!user){
-
-                window.location.href =
-                    "index.html";
-
-                return;
-
-            }
-
-
-            /*
-             * FIRST CHECK:
-             * UID must match the fixed Owner UID.
-             */
-
-            if(user.uid !== OWNER_UID){
-
-                showOwnerGate(
-
-                    "🚫 Access Denied",
-
-                    "This account is not authorized to access the Owner Dashboard."
-
-                );
-
-                await signOut(auth);
-
-                window.location.href =
-                    "index.html";
-
-                return;
-
-            }
-
-
-            currentOwnerUser = user;
-
-
-            /*
-             * Refresh Firebase Auth user data.
-             * This is required after clicking the
-             * Firebase verification link.
-             */
-
-            await reload(
-                currentOwnerUser
-            );
-
-
-            const refreshedUser =
-                auth.currentUser;
-
-
-            if(!refreshedUser){
-
-                window.location.href =
-                    "index.html";
-
-                return;
-
-            }
-
-
-            currentOwnerUser =
-                refreshedUser;
-
-
-            /*
-             * SECOND CHECK:
-             * Firebase native email verification.
-             */
-
-            if(!refreshedUser.emailVerified){
-
-                showUnverifiedOwner(
-                    refreshedUser
-                );
-
-                /*
-                 * Send verification email only during
-                 * the initial unverified Owner login.
-                 *
-                 * We do NOT repeatedly send it every
-                 * page refresh/check.
-                 */
-
-                await sendOwnerVerificationEmail(
-                    refreshedUser
-                );
-
-                return;
-
-            }
-
-
-            /*
-             * THIRD CHECK:
-             * Firestore Owner profile.
-             */
-
-            await verifyOwnerFirestoreProfile(
-                refreshedUser
-            );
-
-        }
-        catch(error){
-
-            console.error(
-                "Owner authentication error:",
-                error
-            );
-
-
-            ownerDashboardUnlocked = false;
-
-
-            showOwnerGate(
-
-                "❌ Owner Access Error",
-
-                error.message,
-
-                `
-
-                <div class="owner-error">
-
-                    Owner Dashboard access could not
-                    be verified.
-
-                </div>
-
-                <div class="owner-auth-actions">
-
-                    <button
-                        class="secondary-btn"
-                        onclick="location.reload()">
-
-                        🔄 Try Again
-
-                    </button>
-
-                    <button
-                        class="danger-btn"
-                        onclick="logout()">
-
-                        🚪 Logout
-
-                    </button>
-
-                </div>
-
-                `
-
-            );
-
-        }
-
-    }
-);
+});
 
 
 /* ================= SIDEBAR ================= */
 
 window.toggleSidebar = function(){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
 
     document
         .getElementById("sidebar")
@@ -2101,13 +1379,6 @@ window.closeSidebar = function(){
 
 window.showPage = function(pageId,element){
 
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
-
     document
         .querySelectorAll(".page")
         .forEach(page => {
@@ -2119,7 +1390,6 @@ window.showPage = function(pageId,element){
 
     const page =
         document.getElementById(pageId);
-
 
     if(page){
 
@@ -2143,16 +1413,11 @@ window.showPage = function(pageId,element){
 
     }
 
-
     closeSidebar();
 
-
     window.scrollTo({
-
         top:0,
-
         behavior:"smooth"
-
     });
 
 };
@@ -2161,13 +1426,6 @@ window.showPage = function(pageId,element){
 /* ================= WITHDRAWAL TABS ================= */
 
 window.showWithdrawalTab = function(tab){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
 
     document
         .querySelectorAll(".withdraw-tab")
@@ -2239,21 +1497,15 @@ async function loadMembers(){
 
     membersData = [];
 
-
     snapshot.forEach(item => {
 
-        const data =
-            item.data();
-
+        const data = item.data();
 
         if(data.role === "member"){
 
             membersData.push({
-
                 id:item.id,
-
                 ...data
-
             });
 
         }
@@ -2262,10 +1514,7 @@ async function loadMembers(){
 
 
     const tbody =
-        document.getElementById(
-            "membersTable"
-        );
-
+        document.getElementById("membersTable");
 
     tbody.innerHTML = "";
 
@@ -2283,11 +1532,8 @@ async function loadMembers(){
 
         }
 
-
         totalCoins +=
-            Number(
-                member.coins || 0
-            );
+            Number(member.coins || 0);
 
 
         const statusClass =
@@ -2313,13 +1559,9 @@ async function loadMembers(){
                 </td>
 
                 <td>
-
                     <span class="status ${statusClass}">
-
                         ${escapeHtml(member.status || "-")}
-
                     </span>
-
                 </td>
 
                 <td>
@@ -2333,40 +1575,24 @@ async function loadMembers(){
     });
 
 
-    document.getElementById(
-        "totalMembers"
-    ).textContent =
-        membersData.length;
+    document.getElementById("totalMembers")
+        .textContent = membersData.length;
+
+    document.getElementById("activeMembers")
+        .textContent = activeCount;
+
+    document.getElementById("totalCoins")
+        .textContent = totalCoins;
 
 
-    document.getElementById(
-        "activeMembers"
-    ).textContent =
-        activeCount;
+    document.getElementById("reportMembers")
+        .textContent = membersData.length;
 
+    document.getElementById("reportActiveMembers")
+        .textContent = activeCount;
 
-    document.getElementById(
-        "totalCoins"
-    ).textContent =
-        totalCoins;
-
-
-    document.getElementById(
-        "reportMembers"
-    ).textContent =
-        membersData.length;
-
-
-    document.getElementById(
-        "reportActiveMembers"
-    ).textContent =
-        activeCount;
-
-
-    document.getElementById(
-        "reportCoins"
-    ).textContent =
-        totalCoins;
+    document.getElementById("reportCoins")
+        .textContent = totalCoins;
 
 }
 
@@ -2375,66 +1601,42 @@ async function loadMembers(){
 
 window.createTask = async function(){
 
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
-
     const title =
-        document.getElementById(
-            "taskTitle"
-        ).value.trim();
-
+        document.getElementById("taskTitle")
+        .value.trim();
 
     const youtubeUrl =
-        document.getElementById(
-            "youtubeUrl"
-        ).value.trim();
-
+        document.getElementById("youtubeUrl")
+        .value.trim();
 
     const reward =
         Number(
-            document.getElementById(
-                "rewardCoins"
-            ).value
+            document.getElementById("rewardCoins")
+            .value
         );
-
 
     const watch =
         Number(
-            document.getElementById(
-                "watchTime"
-            ).value
+            document.getElementById("watchTime")
+            .value
         );
 
 
-    if(
-        !title ||
-        !youtubeUrl ||
-        reward <= 0 ||
-        watch <= 0
-    ){
+    if(!title ||
+       !youtubeUrl ||
+       reward <= 0 ||
+       watch <= 0){
 
-        alert(
-            "Please fill all task details."
-        );
+        alert("Please fill all task details.");
 
         return;
-
     }
 
 
     try{
 
         await addDoc(
-
-            collection(
-                db,
-                "tasks"
-            ),
-
+            collection(db,"tasks"),
             {
 
                 title:title,
@@ -2450,33 +1652,23 @@ window.createTask = async function(){
                 createdAt:new Date()
 
             }
-
         );
 
 
-        alert(
-            "Task created successfully."
-        );
+        alert("Task created successfully.");
 
 
-        document.getElementById(
-            "taskTitle"
-        ).value = "";
+        document.getElementById("taskTitle")
+            .value = "";
 
+        document.getElementById("youtubeUrl")
+            .value = "";
 
-        document.getElementById(
-            "youtubeUrl"
-        ).value = "";
+        document.getElementById("rewardCoins")
+            .value = "";
 
-
-        document.getElementById(
-            "rewardCoins"
-        ).value = "";
-
-
-        document.getElementById(
-            "watchTime"
-        ).value = "";
+        document.getElementById("watchTime")
+            .value = "";
 
 
         await loadTasks();
@@ -2487,8 +1679,8 @@ window.createTask = async function(){
         console.error(error);
 
         alert(
-            "Task creation failed: " +
-            error.message
+            "Task creation failed: "
+            + error.message
         );
 
     }
@@ -2512,21 +1704,15 @@ async function loadTasks(){
     snapshot.forEach(item => {
 
         tasksData.push({
-
             id:item.id,
-
             ...item.data()
-
         });
 
     });
 
 
     const tbody =
-        document.getElementById(
-            "tasksTable"
-        );
-
+        document.getElementById("tasksTable");
 
     tbody.innerHTML = "";
 
@@ -2548,13 +1734,9 @@ async function loadTasks(){
                 </td>
 
                 <td>
-
                     <span class="status ${statusClass}">
-
                         ${escapeHtml(task.status || "-")}
-
                     </span>
-
                 </td>
 
                 <td>
@@ -2566,16 +1748,10 @@ async function loadTasks(){
                 </td>
 
                 <td>
-
-                    <a
-                        href="${escapeHtml(task.youtubeUrl || "#")}"
-                        target="_blank"
-                        rel="noopener noreferrer">
-
-                        Open
-
+                    <a href="${escapeHtml(task.youtubeUrl || "#")}"
+                       target="_blank">
+                       Open
                     </a>
-
                 </td>
 
                 <td>
@@ -2583,27 +1759,19 @@ async function loadTasks(){
                 </td>
 
                 <td>
-
                     <div class="action-buttons">
 
-                        <button
-                            class="primary-btn"
-                            onclick="editTask('${task.id}')">
-
+                        <button class="primary-btn"
+                                onclick="editTask('${task.id}')">
                             ✏️ Edit
-
                         </button>
 
-                        <button
-                            class="delete-btn"
-                            onclick="deleteTask('${task.id}')">
-
+                        <button class="delete-btn"
+                                onclick="deleteTask('${task.id}')">
                             🗑️ Delete
-
                         </button>
 
                     </div>
-
                 </td>
 
             </tr>
@@ -2613,16 +1781,11 @@ async function loadTasks(){
     });
 
 
-    document.getElementById(
-        "totalTasks"
-    ).textContent =
-        tasksData.length;
+    document.getElementById("totalTasks")
+        .textContent = tasksData.length;
 
-
-    document.getElementById(
-        "reportTasks"
-    ).textContent =
-        tasksData.length;
+    document.getElementById("reportTasks")
+        .textContent = tasksData.length;
 
 }
 
@@ -2631,214 +1794,116 @@ async function loadTasks(){
 
 let editingTaskId = null;
 
-
 window.editTask = function(taskId){
 
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
-
-    const task =
-        tasksData.find(
-            item => item.id === taskId
-        );
-
+    const task = tasksData.find(item => item.id === taskId);
 
     if(!task){
-
-        alert(
-            "Task not found."
-        );
-
+        alert("Task not found.");
         return;
-
     }
-
 
     editingTaskId = taskId;
 
-
-    document.getElementById(
-        "editTaskTitle"
-    ).value =
+    document.getElementById("editTaskTitle").value =
         task.title || "";
 
-
-    document.getElementById(
-        "editYoutubeUrl"
-    ).value =
+    document.getElementById("editYoutubeUrl").value =
         task.youtubeUrl || "";
 
+    document.getElementById("editRewardCoins").value =
+        Number(task.rewardCoins || 0);
 
-    document.getElementById(
-        "editRewardCoins"
-    ).value =
-        Number(
-            task.rewardCoins || 0
-        );
+    document.getElementById("editWatchTime").value =
+        Number(task.watchTime || 0);
 
-
-    document.getElementById(
-        "editWatchTime"
-    ).value =
-        Number(
-            task.watchTime || 0
-        );
-
-
-    document.getElementById(
-        "editTaskStatus"
-    ).value =
-        String(
-            task.status || "active"
-        ).toLowerCase() === "active"
+    document.getElementById("editTaskStatus").value =
+        String(task.status || "active").toLowerCase() === "active"
         ? "active"
         : "inactive";
 
-
-    document.getElementById(
-        "editTaskModal"
-    ).classList.add("show");
+    document.getElementById("editTaskModal")
+        .classList.add("show");
 
 };
 
 
 window.closeEditTaskModal = function(event){
 
-    if(
-        event &&
-        event.target &&
-        event.target.id !== "editTaskModal"
-    ){
+    if(event && event.target &&
+       event.target.id !== "editTaskModal"){
 
         return;
-
     }
-
 
     editingTaskId = null;
 
-
-    document.getElementById(
-        "editTaskModal"
-    ).classList.remove("show");
+    document.getElementById("editTaskModal")
+        .classList.remove("show");
 
 };
 
 
 window.saveEditedTask = async function(){
 
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
-
     if(!editingTaskId){
-
-        alert(
-            "No task selected."
-        );
-
+        alert("No task selected.");
         return;
-
     }
-
 
     const title =
-        document.getElementById(
-            "editTaskTitle"
-        ).value.trim();
-
+        document.getElementById("editTaskTitle")
+        .value.trim();
 
     const youtubeUrl =
-        document.getElementById(
-            "editYoutubeUrl"
-        ).value.trim();
-
+        document.getElementById("editYoutubeUrl")
+        .value.trim();
 
     const reward =
         Number(
-            document.getElementById(
-                "editRewardCoins"
-            ).value
+            document.getElementById("editRewardCoins")
+            .value
         );
-
 
     const watch =
         Number(
-            document.getElementById(
-                "editWatchTime"
-            ).value
+            document.getElementById("editWatchTime")
+            .value
         );
-
 
     const status =
-        document.getElementById(
-            "editTaskStatus"
-        ).value;
+        document.getElementById("editTaskStatus")
+        .value;
 
+    if(!title ||
+       !youtubeUrl ||
+       reward <= 0 ||
+       watch <= 0){
 
-    if(
-        !title ||
-        !youtubeUrl ||
-        reward <= 0 ||
-        watch <= 0
-    ){
-
-        alert(
-            "Please fill all task details."
-        );
-
+        alert("Please fill all task details.");
         return;
-
     }
-
 
     try{
 
         const taskRef =
-            doc(
-                db,
-                "tasks",
-                editingTaskId
-            );
-
+            doc(db,"tasks",editingTaskId);
 
         await updateDoc(
-
             taskRef,
-
             {
-
                 title:title,
-
                 youtubeUrl:youtubeUrl,
-
                 rewardCoins:reward,
-
                 watchTime:watch,
-
                 status:status,
-
                 updatedAt:new Date()
-
             }
-
         );
 
-
-        alert(
-            "Task updated successfully."
-        );
-
+        alert("Task updated successfully.");
 
         closeEditTaskModal();
-
 
         await refreshAllData();
 
@@ -2848,8 +1913,8 @@ window.saveEditedTask = async function(){
         console.error(error);
 
         alert(
-            "Task update failed: " +
-            error.message
+            "Task update failed: "
+            + error.message
         );
 
     }
@@ -2861,73 +1926,38 @@ window.saveEditedTask = async function(){
 
 window.deleteTask = async function(taskId){
 
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
-
     const task =
-        tasksData.find(
-            item => item.id === taskId
-        );
-
+        tasksData.find(item => item.id === taskId);
 
     if(!task){
 
-        alert(
-            "Task not found."
-        );
-
+        alert("Task not found.");
         return;
 
     }
-
 
     const confirmed =
         confirm(
-
             "Delete this task?\n\n" +
-
             "Task: " +
             (task.title || "Untitled") +
-
             "\n\n" +
-
             "The task document will be permanently deleted.\n" +
-
             "Existing task completion history will NOT be deleted."
-
         );
 
-
     if(!confirmed){
-
         return;
-
     }
-
 
     try{
 
         const taskRef =
-            doc(
-                db,
-                "tasks",
-                taskId
-            );
+            doc(db,"tasks",taskId);
 
+        await deleteDoc(taskRef);
 
-        await deleteDoc(
-            taskRef
-        );
-
-
-        alert(
-            "Task deleted successfully."
-        );
-
+        alert("Task deleted successfully.");
 
         await refreshAllData();
 
@@ -2937,8 +1967,8 @@ window.deleteTask = async function(taskId){
         console.error(error);
 
         alert(
-            "Task deletion failed: " +
-            error.message
+            "Task deletion failed: "
+            + error.message
         );
 
     }
@@ -2952,10 +1982,7 @@ async function loadCompletions(){
 
     const snapshot =
         await getDocs(
-            collection(
-                db,
-                "taskCompletions"
-            )
+            collection(db,"taskCompletions")
         );
 
 
@@ -2965,21 +1992,15 @@ async function loadCompletions(){
     snapshot.forEach(item => {
 
         completionsData.push({
-
             id:item.id,
-
             ...item.data()
-
         });
 
     });
 
 
     const tbody =
-        document.getElementById(
-            "completionTable"
-        );
-
+        document.getElementById("completionTable");
 
     tbody.innerHTML = "";
 
@@ -2987,10 +2008,7 @@ async function loadCompletions(){
     let pendingCount = 0;
 
 
-    for(
-        const completion
-        of completionsData
-    ){
+    for(const completion of completionsData){
 
         let memberName =
             completion.memberName || "-";
@@ -3008,13 +2026,11 @@ async function loadCompletions(){
 
             const taskSnap =
                 await getDoc(
-
                     doc(
                         db,
                         "tasks",
                         completion.taskId
                     )
-
                 );
 
 
@@ -3023,10 +2039,8 @@ async function loadCompletions(){
                 const task =
                     taskSnap.data();
 
-
                 requiredTime =
                     task.watchTime || "-";
-
 
                 if(!taskTitle){
 
@@ -3045,9 +2059,7 @@ async function loadCompletions(){
         }
 
 
-        if(
-            completion.status === "pending"
-        ){
+        if(completion.status === "pending"){
 
             pendingCount++;
 
@@ -3057,28 +2069,20 @@ async function loadCompletions(){
         let action = "";
 
 
-        if(
-            completion.status === "pending"
-        ){
+        if(completion.status === "pending"){
 
             action = `
 
                 <div class="action-buttons">
 
-                    <button
-                        class="success-btn"
+                    <button class="success-btn"
                         onclick="approveCompletion('${completion.id}')">
-
                         Approve
-
                     </button>
 
-                    <button
-                        class="danger-btn"
+                    <button class="danger-btn"
                         onclick="rejectCompletion('${completion.id}')">
-
                         Reject
-
                     </button>
 
                 </div>
@@ -3089,17 +2093,12 @@ async function loadCompletions(){
         else{
 
             action =
-
                 `<span class="status ${
                     completion.status === "approved"
                     ? "status-approved"
                     : "status-rejected"
                 }">
-
-                    ${escapeHtml(
-                        completion.status || "-"
-                    )}
-
+                ${escapeHtml(completion.status || "-")}
                 </span>`;
 
         }
@@ -3118,9 +2117,7 @@ async function loadCompletions(){
                 </td>
 
                 <td>
-                    ${Number(
-                        completion.rewardCoins || 0
-                    )}
+                    ${Number(completion.rewardCoins || 0)}
                 </td>
 
                 <td>
@@ -3128,9 +2125,7 @@ async function loadCompletions(){
                 </td>
 
                 <td>
-                    ${Number(
-                        completion.watchTime || 0
-                    )} sec
+                    ${Number(completion.watchTime || 0)} sec
                 </td>
 
                 <td>
@@ -3154,30 +2149,19 @@ async function loadCompletions(){
 
     document.getElementById(
         "pendingVerificationCount"
-    ).textContent =
-        pendingCount;
+    ).textContent = pendingCount;
 
 
     document.getElementById(
         "reportPendingVerification"
-    ).textContent =
-        pendingCount;
+    ).textContent = pendingCount;
 
 }
 
 
 /* ================= APPROVE COMPLETION ================= */
 
-window.approveCompletion = async function(
-    completionId
-){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
+window.approveCompletion = async function(completionId){
 
     if(!confirm(
         "Approve this task completion?"
@@ -3191,9 +2175,7 @@ window.approveCompletion = async function(
     try{
 
         await runTransaction(
-
             db,
-
             async transaction => {
 
                 const completionRef =
@@ -3223,10 +2205,7 @@ window.approveCompletion = async function(
                     completionSnap.data();
 
 
-                if(
-                    completion.status !==
-                    "pending"
-                ){
+                if(completion.status !== "pending"){
 
                     throw new Error(
                         "This completion is already processed."
@@ -3262,9 +2241,7 @@ window.approveCompletion = async function(
                     taskSnap.data();
 
 
-                if(
-                    task.status !== "active"
-                ){
+                if(task.status !== "active"){
 
                     throw new Error(
                         "Task is not active."
@@ -3300,9 +2277,7 @@ window.approveCompletion = async function(
                     memberSnap.data();
 
 
-                if(
-                    member.role !== "member"
-                ){
+                if(member.role !== "member"){
 
                     throw new Error(
                         "Invalid member."
@@ -3311,9 +2286,7 @@ window.approveCompletion = async function(
                 }
 
 
-                if(
-                    member.status !== "active"
-                ){
+                if(member.status !== "active"){
 
                     throw new Error(
                         "Member is not active."
@@ -3323,38 +2296,25 @@ window.approveCompletion = async function(
 
 
                 const reward =
-                    Number(
-                        task.rewardCoins || 0
-                    );
+                    Number(task.rewardCoins || 0);
 
 
                 const currentCoins =
-                    Number(
-                        member.coins || 0
-                    );
+                    Number(member.coins || 0);
 
 
                 transaction.update(
-
                     memberRef,
-
                     {
-
                         coins:
-                            currentCoins +
-                            reward
-
+                            currentCoins + reward
                     }
-
                 );
 
 
                 transaction.update(
-
                     completionRef,
-
                     {
-
                         status:"approved",
 
                         rewardStatus:
@@ -3365,13 +2325,10 @@ window.approveCompletion = async function(
 
                         rewardCoins:
                             reward
-
                     }
-
                 );
 
             }
-
         );
 
 
@@ -3388,8 +2345,8 @@ window.approveCompletion = async function(
         console.error(error);
 
         alert(
-            "Approval failed: " +
-            error.message
+            "Approval failed: "
+            + error.message
         );
 
     }
@@ -3399,16 +2356,7 @@ window.approveCompletion = async function(
 
 /* ================= REJECT COMPLETION ================= */
 
-window.rejectCompletion = async function(
-    completionId
-){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
+window.rejectCompletion = async function(completionId){
 
     if(!confirm(
         "Reject this task completion?"
@@ -3422,13 +2370,11 @@ window.rejectCompletion = async function(
     try{
 
         await updateDoc(
-
             doc(
                 db,
                 "taskCompletions",
                 completionId
             ),
-
             {
 
                 status:"rejected",
@@ -3440,7 +2386,6 @@ window.rejectCompletion = async function(
                     new Date()
 
             }
-
         );
 
 
@@ -3457,8 +2402,8 @@ window.rejectCompletion = async function(
         console.error(error);
 
         alert(
-            "Reject failed: " +
-            error.message
+            "Reject failed: "
+            + error.message
         );
 
     }
@@ -3472,10 +2417,7 @@ async function loadWithdrawals(){
 
     const snapshot =
         await getDocs(
-            collection(
-                db,
-                "withdrawals"
-            )
+            collection(db,"withdrawals")
         );
 
 
@@ -3485,11 +2427,8 @@ async function loadWithdrawals(){
     snapshot.forEach(item => {
 
         withdrawalsData.push({
-
             id:item.id,
-
             ...item.data()
-
         });
 
     });
@@ -3500,12 +2439,10 @@ async function loadWithdrawals(){
             "pendingWithdrawalTable"
         );
 
-
     const completedBody =
         document.getElementById(
             "completedWithdrawalTable"
         );
-
 
     const rejectedBody =
         document.getElementById(
@@ -3528,7 +2465,6 @@ async function loadWithdrawals(){
 
 
     withdrawalsData.sort(
-
         (a,b) => {
 
             const aTime =
@@ -3540,16 +2476,14 @@ async function loadWithdrawals(){
             return bTime - aTime;
 
         }
-
     );
 
 
     withdrawalsData.forEach(item => {
 
         const status =
-            String(
-                item.status || ""
-            ).toLowerCase();
+            String(item.status || "")
+            .toLowerCase();
 
 
         const memberName =
@@ -3565,9 +2499,7 @@ async function loadWithdrawals(){
 
 
         const coins =
-            Number(
-                item.coins || 0
-            );
+            Number(item.coins || 0);
 
 
         const amount =
@@ -3578,6 +2510,10 @@ async function loadWithdrawals(){
             );
 
 
+        /*
+         * Legacy documents did not have withdrawalType.
+         * Therefore missing type is treated as UPI.
+         */
         const withdrawalType =
             String(
                 item.withdrawalType || "upi"
@@ -3645,25 +2581,19 @@ async function loadWithdrawals(){
                             <button
                                 class="success-btn"
                                 onclick="approveRedeemWithdrawal('${escapeHtml(item.id)}')">
-
                                 🎁 Approve & Send Code
-
                             </button>
 
                             <button
                                 class="danger-btn"
                                 onclick="rejectWithdrawal('${escapeHtml(item.id)}')">
-
                                 Reject
-
                             </button>
 
                             <button
                                 class="delete-btn"
                                 onclick="deleteWithdrawal('${escapeHtml(item.id)}')">
-
                                 Delete
-
                             </button>
 
                         </div>
@@ -3682,25 +2612,19 @@ async function loadWithdrawals(){
                         <button
                             class="success-btn"
                             onclick="approveWithdrawal('${escapeHtml(item.id)}')">
-
                             Approve
-
                         </button>
 
                         <button
                             class="danger-btn"
                             onclick="rejectWithdrawal('${escapeHtml(item.id)}')">
-
                             Reject
-
                         </button>
 
                         <button
                             class="delete-btn"
                             onclick="deleteWithdrawal('${escapeHtml(item.id)}')">
-
                             Delete
-
                         </button>
 
                     </div>
@@ -3719,13 +2643,9 @@ async function loadWithdrawals(){
                     <td>${email}</td>
 
                     <td>
-
                         <span class="status status-pending">
-
                             ${typeLabel}
-
                         </span>
-
                     </td>
 
                     <td>${coins}</td>
@@ -3733,13 +2653,11 @@ async function loadWithdrawals(){
                     <td>₹${amount.toFixed(2)}</td>
 
                     <td>
-
                         ${
                             isRedeem
                             ? "🎁 Redeem Code requested"
                             : destination
                         }
-
                     </td>
 
                     <td>${date}</td>
@@ -3755,8 +2673,7 @@ async function loadWithdrawals(){
 
         else if(status === "approved"){
 
-            totalWithdrawnCoins +=
-                coins;
+            totalWithdrawnCoins += coins;
 
 
             const date =
@@ -3775,13 +2692,9 @@ async function loadWithdrawals(){
                     <td>${email}</td>
 
                     <td>
-
                         <span class="status status-approved">
-
                             ${typeLabel}
-
                         </span>
-
                     </td>
 
                     <td>${coins}</td>
@@ -3789,13 +2702,11 @@ async function loadWithdrawals(){
                     <td>₹${amount.toFixed(2)}</td>
 
                     <td>
-
                         ${
                             isRedeem
                             ? "🎁 " + redeemCode
                             : upi
                         }
-
                     </td>
 
                     <td>${date}</td>
@@ -3825,13 +2736,9 @@ async function loadWithdrawals(){
                     <td>${email}</td>
 
                     <td>
-
                         <span class="status status-rejected">
-
                             ${typeLabel}
-
                         </span>
-
                     </td>
 
                     <td>${coins}</td>
@@ -3839,13 +2746,11 @@ async function loadWithdrawals(){
                     <td>₹${amount.toFixed(2)}</td>
 
                     <td>
-
                         ${
                             isRedeem
                             ? "🎁 Redeem Code"
                             : upi
                         }
-
                     </td>
 
                     <td>${date}</td>
@@ -3861,56 +2766,47 @@ async function loadWithdrawals(){
 
     document.getElementById(
         "pendingWithdrawalCount"
-    ).textContent =
-        pendingCount;
+    ).textContent = pendingCount;
 
 
     document.getElementById(
         "reportPendingWithdrawals"
-    ).textContent =
-        pendingCount;
+    ).textContent = pendingCount;
 
 
     document.getElementById(
         "pendingWithdrawalCoins"
-    ).textContent =
-        pendingCoins;
+    ).textContent = pendingCoins;
 
 
     document.getElementById(
         "reportPendingWithdrawalCoins"
-    ).textContent =
-        pendingCoins;
+    ).textContent = pendingCoins;
 
 
     document.getElementById(
         "totalWithdrawnCoins"
-    ).textContent =
-        totalWithdrawnCoins;
+    ).textContent = totalWithdrawnCoins;
 
 
     document.getElementById(
         "reportTotalWithdrawnCoins"
-    ).textContent =
-        totalWithdrawnCoins;
+    ).textContent = totalWithdrawnCoins;
 
 }
 
 
 /* ================================================= */
 /* APPROVE NORMAL UPI WITHDRAWAL */
+/*
+   IMPORTANT:
+   Member already lost/reserved these coins when the
+   withdrawal request was created.
+   Therefore APPROVE must NOT deduct coins again.
+*/
 /* ================================================= */
 
-window.approveWithdrawal = async function(
-    withdrawalId
-){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
+window.approveWithdrawal = async function(withdrawalId){
 
     if(!confirm(
         "Approve this withdrawal?"
@@ -3924,9 +2820,7 @@ window.approveWithdrawal = async function(
     try{
 
         await runTransaction(
-
             db,
-
             async transaction => {
 
                 const withdrawalRef =
@@ -3957,9 +2851,8 @@ window.approveWithdrawal = async function(
 
 
                 if(
-                    String(
-                        withdrawal.status
-                    ).toLowerCase()
+                    String(withdrawal.status)
+                    .toLowerCase()
                     !== "pending"
                 ){
 
@@ -3997,9 +2890,7 @@ window.approveWithdrawal = async function(
                     memberSnap.data();
 
 
-                if(
-                    member.role !== "member"
-                ){
+                if(member.role !== "member"){
 
                     throw new Error(
                         "Invalid member."
@@ -4009,9 +2900,7 @@ window.approveWithdrawal = async function(
 
 
                 const withdrawalCoins =
-                    Number(
-                        withdrawal.coins || 0
-                    );
+                    Number(withdrawal.coins || 0);
 
 
                 if(withdrawalCoins <= 0){
@@ -4024,15 +2913,15 @@ window.approveWithdrawal = async function(
 
 
                 /*
-                 * IMPORTANT:
-                 * Coins were already reserved.
-                 * DO NOT deduct again.
+                 * DO NOT CHANGE MEMBER COINS HERE.
+                 *
+                 * Coins were already reserved when
+                 * withdrawal was submitted.
                  */
 
+
                 transaction.update(
-
                     withdrawalRef,
-
                     {
 
                         status:"approved",
@@ -4041,11 +2930,9 @@ window.approveWithdrawal = async function(
                             new Date()
 
                     }
-
                 );
 
             }
-
         );
 
 
@@ -4062,8 +2949,8 @@ window.approveWithdrawal = async function(
         console.error(error);
 
         alert(
-            "Approval failed: " +
-            error.message
+            "Approval failed: "
+            + error.message
         );
 
     }
@@ -4073,22 +2960,18 @@ window.approveWithdrawal = async function(
 
 /* ================================================= */
 /* APPROVE REDEEM CODE WITHDRAWAL */
+/*
+   Owner manually enters the Redeem Code.
+   System DOES NOT generate a code.
+   Member coins are NOT deducted again.
+*/
 /* ================================================= */
 
-window.approveRedeemWithdrawal =
-async function(withdrawalId){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
+window.approveRedeemWithdrawal = async function(withdrawalId){
 
     const codeInput =
         document.getElementById(
-            "redeemCode_" +
-            withdrawalId
+            "redeemCode_" + withdrawalId
         );
 
 
@@ -4121,12 +3004,9 @@ async function(withdrawalId){
 
 
     if(!confirm(
-
         "Approve this Redeem Code withdrawal?\n\n" +
-
         "Code: " +
         redeemCode
-
     )){
 
         return;
@@ -4137,9 +3017,7 @@ async function(withdrawalId){
     try{
 
         await runTransaction(
-
             db,
-
             async transaction => {
 
                 const withdrawalRef =
@@ -4170,9 +3048,8 @@ async function(withdrawalId){
 
 
                 if(
-                    String(
-                        withdrawal.status
-                    ).toLowerCase()
+                    String(withdrawal.status)
+                    .toLowerCase()
                     !== "pending"
                 ){
 
@@ -4190,10 +3067,7 @@ async function(withdrawalId){
                     ).toLowerCase();
 
 
-                if(
-                    withdrawalType !==
-                    "redeem"
-                ){
+                if(withdrawalType !== "redeem"){
 
                     throw new Error(
                         "This is not a Redeem Code withdrawal."
@@ -4229,9 +3103,7 @@ async function(withdrawalId){
                     memberSnap.data();
 
 
-                if(
-                    member.role !== "member"
-                ){
+                if(member.role !== "member"){
 
                     throw new Error(
                         "Invalid member."
@@ -4241,14 +3113,10 @@ async function(withdrawalId){
 
 
                 const withdrawalCoins =
-                    Number(
-                        withdrawal.coins || 0
-                    );
+                    Number(withdrawal.coins || 0);
 
 
-                if(
-                    withdrawalCoins <= 0
-                ){
+                if(withdrawalCoins <= 0){
 
                     throw new Error(
                         "Invalid withdrawal coins."
@@ -4258,14 +3126,16 @@ async function(withdrawalId){
 
 
                 /*
-                 * Coins were already reserved.
-                 * DO NOT deduct again.
+                 * IMPORTANT:
+                 * Member coins were already reserved
+                 * when the withdrawal was submitted.
+                 *
+                 * DO NOT deduct coins again.
                  */
 
+
                 transaction.update(
-
                     withdrawalRef,
-
                     {
 
                         status:"approved",
@@ -4277,11 +3147,9 @@ async function(withdrawalId){
                             new Date()
 
                     }
-
                 );
 
             }
-
         );
 
 
@@ -4298,8 +3166,8 @@ async function(withdrawalId){
         console.error(error);
 
         alert(
-            "Redeem approval failed: " +
-            error.message
+            "Redeem approval failed: "
+            + error.message
         );
 
     }
@@ -4309,22 +3177,16 @@ async function(withdrawalId){
 
 /* ================================================= */
 /* REJECT WITHDRAWAL */
+/*
+   When withdrawal is rejected, reserved coins must
+   return to the member.
+*/
 /* ================================================= */
 
-window.rejectWithdrawal =
-async function(withdrawalId){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
+window.rejectWithdrawal = async function(withdrawalId){
 
     if(!confirm(
-
         "Reject this withdrawal and return coins to member?"
-
     )){
 
         return;
@@ -4335,9 +3197,7 @@ async function(withdrawalId){
     try{
 
         await runTransaction(
-
             db,
-
             async transaction => {
 
                 const withdrawalRef =
@@ -4368,9 +3228,8 @@ async function(withdrawalId){
 
 
                 if(
-                    String(
-                        withdrawal.status
-                    ).toLowerCase()
+                    String(withdrawal.status)
+                    .toLowerCase()
                     !== "pending"
                 ){
 
@@ -4408,9 +3267,7 @@ async function(withdrawalId){
                     memberSnap.data();
 
 
-                if(
-                    member.role !== "member"
-                ){
+                if(member.role !== "member"){
 
                     throw new Error(
                         "Invalid member."
@@ -4420,14 +3277,10 @@ async function(withdrawalId){
 
 
                 const withdrawalCoins =
-                    Number(
-                        withdrawal.coins || 0
-                    );
+                    Number(withdrawal.coins || 0);
 
 
-                if(
-                    withdrawalCoins <= 0
-                ){
+                if(withdrawalCoins <= 0){
 
                     throw new Error(
                         "Invalid withdrawal coins."
@@ -4437,9 +3290,7 @@ async function(withdrawalId){
 
 
                 const currentCoins =
-                    Number(
-                        member.coins || 0
-                    );
+                    Number(member.coins || 0);
 
 
                 /*
@@ -4447,9 +3298,7 @@ async function(withdrawalId){
                  */
 
                 transaction.update(
-
                     memberRef,
-
                     {
 
                         coins:
@@ -4457,14 +3306,11 @@ async function(withdrawalId){
                             withdrawalCoins
 
                     }
-
                 );
 
 
                 transaction.update(
-
                     withdrawalRef,
-
                     {
 
                         status:"rejected",
@@ -4473,11 +3319,9 @@ async function(withdrawalId){
                             new Date()
 
                     }
-
                 );
 
             }
-
         );
 
 
@@ -4494,8 +3338,8 @@ async function(withdrawalId){
         console.error(error);
 
         alert(
-            "Reject failed: " +
-            error.message
+            "Reject failed: "
+            + error.message
         );
 
     }
@@ -4505,26 +3349,21 @@ async function(withdrawalId){
 
 /* ================================================= */
 /* DELETE WITHDRAWAL */
+/*
+   This is mainly for OLD / DUPLICATE requests created
+   before the new reservation system.
+
+   IMPORTANT:
+   DELETE DOES NOT RETURN COINS.
+*/
 /* ================================================= */
 
-window.deleteWithdrawal =
-async function(withdrawalId){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
+window.deleteWithdrawal = async function(withdrawalId){
 
     if(!confirm(
-
         "Delete this withdrawal request?\n\n" +
-
         "This will NOT return coins to the member.\n" +
-
         "Use this only for old/duplicate requests."
-
     )){
 
         return;
@@ -4564,9 +3403,8 @@ async function(withdrawalId){
 
 
         if(
-            String(
-                withdrawal.status
-            ).toLowerCase()
+            String(withdrawal.status)
+            .toLowerCase()
             !== "pending"
         ){
 
@@ -4597,8 +3435,8 @@ async function(withdrawalId){
         console.error(error);
 
         alert(
-            "Delete failed: " +
-            error.message
+            "Delete failed: "
+            + error.message
         );
 
     }
@@ -4609,13 +3447,6 @@ async function(withdrawalId){
 /* ================= REFRESH ================= */
 
 window.refreshAllData = async function(){
-
-    if(!ownerDashboardUnlocked){
-
-        return;
-
-    }
-
 
     try{
 
@@ -4633,8 +3464,8 @@ window.refreshAllData = async function(){
         console.error(error);
 
         alert(
-            "Data refresh failed: " +
-            error.message
+            "Data refresh failed: "
+            + error.message
         );
 
     }
@@ -4648,16 +3479,6 @@ window.logout = async function(){
 
     try{
 
-        ownerDashboardUnlocked = false;
-
-        clearInterval(
-            resendTimer
-        );
-
-        resendTimer = null;
-
-        resendCooldown = 0;
-
         await signOut(auth);
 
         window.location.href =
@@ -4669,8 +3490,8 @@ window.logout = async function(){
         console.error(error);
 
         alert(
-            "Logout failed: " +
-            error.message
+            "Logout failed: "
+            + error.message
         );
 
     }
@@ -4683,31 +3504,11 @@ window.logout = async function(){
 function escapeHtml(value){
 
     return String(value ?? "")
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
@@ -4727,7 +3528,8 @@ function formatDate(value){
 
 
         if(
-            typeof value === "object" &&
+            typeof value === "object"
+            &&
             value.seconds
         ){
 
@@ -4750,8 +3552,7 @@ function formatDate(value){
             typeof value.toDate === "function"
         ){
 
-            date =
-                value.toDate();
+            date = value.toDate();
 
         }
 
@@ -4763,11 +3564,7 @@ function formatDate(value){
         }
 
 
-        if(
-            isNaN(
-                date.getTime()
-            )
-        ){
+        if(isNaN(date.getTime())){
 
             return "-";
 
