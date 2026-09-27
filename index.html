@@ -220,6 +220,7 @@
       Complete tasks and earn rewards
     </p>
 
+
     <!-- ROLE SELECTION -->
     <div class="role-buttons">
 
@@ -453,10 +454,22 @@
       const resendBtn =
         document.getElementById("resendBtn");
 
+      const message =
+        document.getElementById("message");
+
 
       memberBtn.classList.remove("active");
 
       ownerBtn.classList.remove("active");
+
+
+      /*
+       * Hide old verification message
+       * whenever role is changed.
+       */
+
+      message.style.display =
+        "none";
 
 
       if(role === "member") {
@@ -466,12 +479,27 @@
         registerText.style.display =
           "block";
 
+        /*
+         * Resend button stays hidden
+         * until Member login detects
+         * an unverified email.
+         */
+
+        resendBtn.style.display =
+          "none";
+
       } else {
 
         ownerBtn.classList.add("active");
 
         registerText.style.display =
           "none";
+
+        /*
+         * Resend button stays hidden
+         * until Owner login detects
+         * an unverified email.
+         */
 
         resendBtn.style.display =
           "none";
@@ -502,7 +530,7 @@
 
 
     // ==================================================
-    // ACTION CODE SETTINGS
+    // EMAIL VERIFICATION SETTINGS
     // ==================================================
 
     const actionCodeSettings = {
@@ -527,7 +555,8 @@
       const resendBtn =
         document.getElementById("resendBtn");
 
-      resendBtn.disabled = true;
+      resendBtn.disabled =
+        true;
 
       resendBtn.textContent =
         "📧 Resend available in 60s";
@@ -548,13 +577,15 @@
 
             resendCooldown--;
 
+
             if(resendCooldown <= 0) {
 
               clearInterval(
                 resendTimer
               );
 
-              resendTimer = null;
+              resendTimer =
+                null;
 
               resendBtn.disabled =
                 false;
@@ -574,11 +605,13 @@
           },
           1000
         );
+
     }
 
 
     // ==================================================
     // RESEND VERIFICATION EMAIL
+    // MEMBER + OWNER
     // ==================================================
 
     document
@@ -602,7 +635,10 @@
               .value;
 
 
-          if(selectedRole !== "member") {
+          if(
+            selectedRole !== "member" &&
+            selectedRole !== "owner"
+          ) {
 
             return;
           }
@@ -625,7 +661,8 @@
           }
 
 
-          resendBtn.disabled = true;
+          resendBtn.disabled =
+            true;
 
           resendBtn.textContent =
             "Sending...";
@@ -633,9 +670,9 @@
 
           try {
 
-            // ------------------------------------------
+            // ==========================================
             // SIGN IN
-            // ------------------------------------------
+            // ==========================================
 
             const credential =
               await signInWithEmailAndPassword(
@@ -649,9 +686,9 @@
               credential.user;
 
 
-            // ------------------------------------------
+            // ==========================================
             // GET LATEST AUTH STATUS
-            // ------------------------------------------
+            // ==========================================
 
             await user.reload();
 
@@ -668,11 +705,35 @@
             }
 
 
-            // ------------------------------------------
-            // ALREADY VERIFIED
-            // ------------------------------------------
+            // ==========================================
+            // OWNER UID CHECK
+            // ==========================================
 
-            if(user.emailVerified) {
+            if(selectedRole === "owner") {
+
+              if(user.uid !== OWNER_UID) {
+
+                showMessage(
+                  "This account is not authorized as Owner.",
+                  "error"
+                );
+
+                await signOut(auth);
+
+                resendBtn.style.display =
+                  "none";
+
+                return;
+              }
+
+            }
+
+
+            // ==========================================
+            // CHECK CURRENT VERIFICATION
+            // ==========================================
+
+            if(user.emailVerified === true) {
 
               showMessage(
                 "Your email is already verified. Please click Login.",
@@ -688,9 +749,9 @@
             }
 
 
-            // ------------------------------------------
-            // SEND VERIFICATION
-            // ------------------------------------------
+            // ==========================================
+            // SEND VERIFICATION EMAIL
+            // ==========================================
 
             await sendEmailVerification(
               user,
@@ -707,9 +768,9 @@
             startResendCooldown();
 
 
-            // ------------------------------------------
+            // ==========================================
             // SIGN OUT
-            // ------------------------------------------
+            // ==========================================
 
             await signOut(auth);
 
@@ -773,6 +834,16 @@
 
               errorMessage =
                 "Verification settings are not configured correctly for this website.";
+
+            }
+
+            else if(
+              error.code ===
+              "auth/requires-recent-login"
+            ) {
+
+              errorMessage =
+                "Please login again and try sending the verification email.";
 
             }
 
@@ -842,9 +913,9 @@
 
           try {
 
-            // ------------------------------------------
+            // ==========================================
             // PERSISTENCE
-            // ------------------------------------------
+            // ==========================================
 
             await setPersistence(
               auth,
@@ -852,9 +923,9 @@
             );
 
 
-            // ------------------------------------------
+            // ==========================================
             // SIGN IN
-            // ------------------------------------------
+            // ==========================================
 
             const userCredential =
               await signInWithEmailAndPassword(
@@ -868,10 +939,10 @@
               userCredential.user;
 
 
-            // ------------------------------------------
+            // ==========================================
             // IMPORTANT:
             // GET LATEST FIREBASE AUTH STATUS
-            // ------------------------------------------
+            // ==========================================
 
             await user.reload();
 
@@ -900,39 +971,67 @@
 
 
             // ==================================================
-            // MEMBER EMAIL VERIFICATION GATE
+            // EMAIL VERIFICATION GATE
+            // MEMBER + OWNER
             // ==================================================
 
-            if(selectedRole === "member") {
+            /*
+             * Firebase Authentication's
+             * emailVerified is the ONLY source
+             * used for email verification.
+             */
 
-              /*
-               * SECURITY RULE:
-               *
-               * Firebase Authentication's
-               * emailVerified is the ONLY source
-               * used for email verification.
-               */
+            if(user.emailVerified !== true) {
 
-              if(user.emailVerified !== true) {
+              if(selectedRole === "owner") {
+
+                /*
+                 * Owner must pass email verification
+                 * before Owner Dashboard access.
+                 */
+
+                if(user.uid !== OWNER_UID) {
+
+                  showMessage(
+                    "This account is not authorized as Owner.",
+                    "error"
+                  );
+
+                  await signOut(auth);
+
+                  return;
+                }
+
+
+                showMessage(
+                  "Owner email is not verified yet. Please verify your email before entering the Owner Dashboard.",
+                  "error"
+                );
+
+              } else {
+
+                /*
+                 * Existing Member verification flow.
+                 */
 
                 showMessage(
                   "Your email is not verified yet. Please verify your email before entering the Member Dashboard.",
                   "error"
                 );
 
-
-                resendBtn.style.display =
-                  "block";
-
-
-                /*
-                 * Keep session temporarily active
-                 * because resend requires authentication.
-                 */
-
-                return;
               }
 
+
+              resendBtn.style.display =
+                "block";
+
+
+              /*
+               * Keep session temporarily active
+               * because resend requires authentication.
+               */
+
+              return;
             }
 
 
@@ -1033,11 +1132,18 @@
 
 
             // ==================================================
-            // FINAL MEMBER VERIFICATION CHECK
+            // FINAL MEMBER + OWNER VERIFICATION CHECK
             // ==================================================
 
+            /*
+             * Final security gate.
+             *
+             * Both Member and Owner must have:
+             *
+             * Firebase Auth emailVerified === true
+             */
+
             if(
-              selectedRole === "member" &&
               user.emailVerified !== true
             ) {
 
@@ -1046,7 +1152,8 @@
                 "error"
               );
 
-              await signOut(auth);
+              resendBtn.style.display =
+                "block";
 
               return;
             }
@@ -1165,6 +1272,16 @@
 
               errorMessage =
                 "This account has been disabled.";
+
+            }
+
+            else if(
+              error.code ===
+              "auth/operation-not-allowed"
+            ) {
+
+              errorMessage =
+                "Email/password login is not enabled in Firebase.";
 
             }
 
