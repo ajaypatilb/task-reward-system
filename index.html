@@ -1,1310 +1,1175 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Task Reward System - Login</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #111827, #2563eb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .login-container {
-      width: 100%;
-      max-width: 420px;
-      background: white;
-      border-radius: 20px;
-      padding: 35px 30px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-    }
-
-    .logo {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 15px;
-      background: #2563eb;
-      color: white;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #111827;
-      margin-bottom: 8px;
-      font-size: 26px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #6b7280;
-      margin-bottom: 25px;
-      font-size: 14px;
-    }
-
-    .role-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-
-    .role-btn {
-      flex: 1;
-      padding: 12px;
-      border: 2px solid #e5e7eb;
-      background: #f9fafb;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      color: #374151;
-    }
-
-    .role-btn.active {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: white;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-size: 14px;
-      font-weight: bold;
-      color: #374151;
-    }
-
-    .input-group {
-      margin-bottom: 18px;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #2563eb;
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-
-    .login-btn:hover {
-      background: #1d4ed8;
-    }
-
-    .login-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-
-    .resend-btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: #111827;
-      color: white;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-      display: none;
-    }
-
-    .resend-btn:hover {
-      background: #374151;
-    }
-
-    .resend-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-
-    .message {
-      display: none;
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    .error {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    .success {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .register-text {
-      text-align: center;
-      margin-top: 22px;
-      color: #6b7280;
-      font-size: 14px;
-    }
-
-    .register-text a {
-      color: #2563eb;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .register-text a:hover {
-      text-decoration: underline;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 25px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    @media (max-width: 480px) {
-      .login-container {
-        padding: 28px 20px;
-      }
-
-      h1 {
-        font-size: 23px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="login-container">
-
-    <div class="logo">💰</div>
-
-    <h1>Task Reward System</h1>
-
-    <p class="subtitle">
-      Complete tasks and earn rewards
-    </p>
-
-
-    <!-- ROLE SELECTION -->
-    <div class="role-buttons">
-
-      <button
-        type="button"
-        class="role-btn active"
-        id="memberBtn"
-        onclick="selectRole('member')">
-        👤 Member
-      </button>
-
-      <button
-        type="button"
-        class="role-btn"
-        id="ownerBtn"
-        onclick="selectRole('owner')">
-        👑 Owner
-      </button>
-
-    </div>
-
-
-    <!-- LOGIN FORM -->
-    <form id="loginForm">
-
-      <div class="input-group">
-
-        <label for="email">
-          Email Address
-        </label>
-
-        <input
-          type="email"
-          id="email"
-          placeholder="Enter your email"
-          autocomplete="email"
-          required>
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label for="password">
-          Password
-        </label>
-
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter your password"
-          autocomplete="current-password"
-          required>
-
-      </div>
-
-
-      <button
-        type="submit"
-        class="login-btn"
-        id="loginBtn">
-        Login
-      </button>
-
-    </form>
-
-
-    <!-- RESEND VERIFICATION -->
-    <button
-      type="button"
-      class="resend-btn"
-      id="resendBtn">
-      📧 Resend Verification Email
-    </button>
-
-
-    <div
-      id="message"
-      class="message">
-    </div>
-
-
-    <!-- REGISTER -->
-    <div
-      class="register-text"
-      id="registerText">
-
-      New Member?
-      <a href="register.html">Register</a>
-
-    </div>
-
-
-    <div class="footer">
-      © 2026 Task Reward System
-    </div>
-
-  </div>
-
-
-  <!-- FIREBASE -->
-  <script type="module">
-
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      setPersistence,
-      browserLocalPersistence,
-      signOut,
-      sendEmailVerification
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-    import {
-      getFirestore,
-      doc,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-
-    // ==================================================
-    // FIREBASE CONFIG
-    // DO NOT CHANGE
-    // ==================================================
-
-    const firebaseConfig = {
-
-      apiKey:
-        "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",
-
-      authDomain:
-        "task-reward-system-af46f.firebaseapp.com",
-
-      projectId:
-        "task-reward-system-af46f",
-
-      storageBucket:
-        "task-reward-system-af46f.firebasestorage.app",
-
-      messagingSenderId:
-        "64322126165",
-
-      appId:
-        "1:64322126165:web:7aae7a6e4792ab4f092fdc",
-
-      measurementId:
-        "G-6P3R9F3ZQT"
-    };
-
-
-    // ==================================================
-    // INITIALIZE
-    // ==================================================
-
-    const app =
-      initializeApp(firebaseConfig);
-
-    const auth =
-      getAuth(app);
-
-    const db =
-      getFirestore(app);
-
-
-    // ==================================================
-    // OWNER UID
-    // DO NOT CHANGE
-    // ==================================================
-
-    const OWNER_UID =
-      "cqx3we5X1jX2gpo7xqpqaTqrpDg2";
-
-
-    // ==================================================
-    // AUTH PERSISTENCE
-    // ==================================================
-
-    try {
-
-      await setPersistence(
-        auth,
-        browserLocalPersistence
-      );
-
-    } catch(error) {
-
-      console.error(
-        "Persistence error:",
-        error
-      );
-
-    }
-
-
-    // ==================================================
-    // ROLE
-    // ==================================================
-
-    let selectedRole = "member";
-
-
-    // ==================================================
-    // RESEND COOLDOWN
-    // ==================================================
-
-    let resendCooldown = 0;
-
-    let resendTimer = null;
-
-
-    // ==================================================
-    // SELECT ROLE
-    // ==================================================
-
-    window.selectRole = function(role) {
-
-      selectedRole = role;
-
-      const memberBtn =
-        document.getElementById("memberBtn");
-
-      const ownerBtn =
-        document.getElementById("ownerBtn");
-
-      const registerText =
-        document.getElementById("registerText");
-
-      const resendBtn =
-        document.getElementById("resendBtn");
-
-      const message =
-        document.getElementById("message");
-
-
-      memberBtn.classList.remove("active");
-
-      ownerBtn.classList.remove("active");
-
-
-      /*
-       * Hide old verification message
-       * whenever role is changed.
-       */
-
-      message.style.display =
-        "none";
-
-
-      if(role === "member") {
-
-        memberBtn.classList.add("active");
-
-        registerText.style.display =
-          "block";
-
-        /*
-         * Resend button stays hidden
-         * until Member login detects
-         * an unverified email.
-         */
-
-        resendBtn.style.display =
-          "none";
-
-      } else {
-
-        ownerBtn.classList.add("active");
-
-        registerText.style.display =
-          "none";
-
-        /*
-         * Resend button stays hidden
-         * until Owner login detects
-         * an unverified email.
-         */
-
-        resendBtn.style.display =
-          "none";
-
-      }
-
-    };
-
-
-    // ==================================================
-    // MESSAGE
-    // ==================================================
-
-    function showMessage(text, type) {
-
-      const message =
-        document.getElementById("message");
-
-      message.textContent =
-        text;
-
-      message.className =
-        "message " + type;
-
-      message.style.display =
-        "block";
-    }
-
-
-    // ==================================================
-    // EMAIL VERIFICATION SETTINGS
-    // ==================================================
-
-    const actionCodeSettings = {
-
-      url:
-        "https://ajaypatilb.github.io/task-reward-system/verify-email.html",
-
-      handleCodeInApp:
-        false
-
-    };
-
-
-    // ==================================================
-    // RESEND COOLDOWN
-    // ==================================================
-
-    function startResendCooldown() {
-
-      resendCooldown = 60;
-
-      const resendBtn =
-        document.getElementById("resendBtn");
-
-      resendBtn.disabled =
-        true;
-
-      resendBtn.textContent =
-        "📧 Resend available in 60s";
-
-
-      if(resendTimer) {
-
-        clearInterval(
-          resendTimer
-        );
-
-      }
-
-
-      resendTimer =
-        setInterval(
-          function() {
-
-            resendCooldown--;
-
-
-            if(resendCooldown <= 0) {
-
-              clearInterval(
-                resendTimer
-              );
-
-              resendTimer =
-                null;
-
-              resendBtn.disabled =
-                false;
-
-              resendBtn.textContent =
-                "📧 Resend Verification Email";
-
-              return;
-            }
-
-
-            resendBtn.textContent =
-              "📧 Resend available in " +
-              resendCooldown +
-              "s";
-
-          },
-          1000
-        );
-
-    }
-
-
-    // ==================================================
-    // RESEND VERIFICATION EMAIL
-    // MEMBER + OWNER
-    // ==================================================
-
-    document
-      .getElementById("resendBtn")
-      .addEventListener(
-        "click",
-        async function() {
-
-          const resendBtn =
-            document.getElementById("resendBtn");
-
-          const email =
-            document
-              .getElementById("email")
-              .value
-              .trim();
-
-          const password =
-            document
-              .getElementById("password")
-              .value;
-
-
-          if(
-            selectedRole !== "member" &&
-            selectedRole !== "owner"
-          ) {
-
-            return;
-          }
-
-
-          if(!email || !password) {
-
-            showMessage(
-              "Please enter your email and password first.",
-              "error"
-            );
-
-            return;
-          }
-
-
-          if(resendCooldown > 0) {
-
-            return;
-          }
-
-
-          resendBtn.disabled =
-            true;
-
-          resendBtn.textContent =
-            "Sending...";
-
-
-          try {
-
-            // ==========================================
-            // SIGN IN
-            // ==========================================
-
-            const credential =
-              await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
-              );
-
-
-            let user =
-              credential.user;
-
-
-            // ==========================================
-            // GET LATEST AUTH STATUS
-            // ==========================================
-
-            await user.reload();
-
-            user =
-              auth.currentUser;
-
-
-            if(!user) {
-
-              throw new Error(
-                "Authentication session unavailable."
-              );
-
-            }
-
-
-            // ==========================================
-            // OWNER UID CHECK
-            // ==========================================
-
-            if(selectedRole === "owner") {
-
-              if(user.uid !== OWNER_UID) {
-
-                showMessage(
-                  "This account is not authorized as Owner.",
-                  "error"
-                );
-
-                await signOut(auth);
-
-                resendBtn.style.display =
-                  "none";
-
-                return;
-              }
-
-            }
-
-
-            // ==========================================
-            // CHECK CURRENT VERIFICATION
-            // ==========================================
-
-            if(user.emailVerified === true) {
-
-              showMessage(
-                "Your email is already verified. Please click Login.",
-                "success"
-              );
-
-              resendBtn.style.display =
-                "none";
-
-              await signOut(auth);
-
-              return;
-            }
-
-
-            // ==========================================
-            // SEND VERIFICATION EMAIL
-            // ==========================================
-
-            await sendEmailVerification(
-              user,
-              actionCodeSettings
-            );
-
-
-            showMessage(
-              "New verification email sent. Please open the latest email and verify your email.",
-              "success"
-            );
-
-
-            startResendCooldown();
-
-
-            // ==========================================
-            // SIGN OUT
-            // ==========================================
-
-            await signOut(auth);
-
-
-          } catch(error) {
-
-            console.error(
-              "Resend verification error:",
-              error
-            );
-
-
-            let errorMessage =
-              "Could not send verification email. Please try again.";
-
-
-            if(
-              error.code ===
-              "auth/invalid-credential"
-            ) {
-
-              errorMessage =
-                "Invalid email or password.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/too-many-requests"
-            ) {
-
-              errorMessage =
-                "Too many requests. Please wait before trying again.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/network-request-failed"
-            ) {
-
-              errorMessage =
-                "Network error. Please check your internet connection.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/user-disabled"
-            ) {
-
-              errorMessage =
-                "This account has been disabled.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/unauthorized-continue-uri"
-            ) {
-
-              errorMessage =
-                "Verification settings are not configured correctly for this website.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/requires-recent-login"
-            ) {
-
-              errorMessage =
-                "Please login again and try sending the verification email.";
-
-            }
-
-
-            showMessage(
-              errorMessage,
-              "error"
-            );
-
-
-            resendBtn.disabled =
-              false;
-
-            resendBtn.textContent =
-              "📧 Resend Verification Email";
-
-          }
-
-        }
-      );
-
-
-    // ==================================================
-    // LOGIN
-    // ==================================================
-
-    document
-      .getElementById("loginForm")
-      .addEventListener(
-        "submit",
-        async function(e) {
-
-          e.preventDefault();
-
-
-          const email =
-            document
-              .getElementById("email")
-              .value
-              .trim();
-
-          const password =
-            document
-              .getElementById("password")
-              .value;
-
-
-          const loginBtn =
-            document
-              .getElementById("loginBtn");
-
-          const resendBtn =
-            document
-              .getElementById("resendBtn");
-
-
-          resendBtn.style.display =
-            "none";
-
-
-          loginBtn.disabled =
-            true;
-
-          loginBtn.textContent =
-            "Logging in...";
-
-
-          try {
-
-            // ==========================================
-            // PERSISTENCE
-            // ==========================================
-
-            await setPersistence(
-              auth,
-              browserLocalPersistence
-            );
-
-
-            // ==========================================
-            // SIGN IN
-            // ==========================================
-
-            const userCredential =
-              await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
-              );
-
-
-            let user =
-              userCredential.user;
-
-
-            // ==========================================
-            // IMPORTANT:
-            // GET LATEST FIREBASE AUTH STATUS
-            // ==========================================
-
-            await user.reload();
-
-            user =
-              auth.currentUser;
-
-
-            if(!user) {
-
-              throw new Error(
-                "Authentication session unavailable."
-              );
-
-            }
-
-
-            console.log(
-              "UID:",
-              user.uid
-            );
-
-            console.log(
-              "Firebase emailVerified:",
-              user.emailVerified
-            );
-
-
-            // ==================================================
-            // EMAIL VERIFICATION GATE
-            // MEMBER + OWNER
-            // ==================================================
-
-            /*
-             * Firebase Authentication's
-             * emailVerified is the ONLY source
-             * used for email verification.
-             */
-
-            if(user.emailVerified !== true) {
-
-              if(selectedRole === "owner") {
-
-                /*
-                 * Owner must pass email verification
-                 * before Owner Dashboard access.
-                 */
-
-                if(user.uid !== OWNER_UID) {
-
-                  showMessage(
-                    "This account is not authorized as Owner.",
-                    "error"
-                  );
-
-                  await signOut(auth);
-
-                  return;
-                }
-
-
-                showMessage(
-                  "Owner email is not verified yet. Please verify your email before entering the Owner Dashboard.",
-                  "error"
-                );
-
-              } else {
-
-                /*
-                 * Existing Member verification flow.
-                 */
-
-                showMessage(
-                  "Your email is not verified yet. Please verify your email before entering the Member Dashboard.",
-                  "error"
-                );
-
-              }
-
-
-              resendBtn.style.display =
-                "block";
-
-
-              /*
-               * Keep session temporarily active
-               * because resend requires authentication.
-               */
-
-              return;
-            }
-
-
-            // ==================================================
-            // OWNER UID CHECK
-            // ==================================================
-
-            if(selectedRole === "owner") {
-
-              if(user.uid !== OWNER_UID) {
-
-                showMessage(
-                  "This account is not authorized as Owner.",
-                  "error"
-                );
-
-                await signOut(auth);
-
-                return;
-              }
-
-            }
-
-
-            // ==================================================
-            // FIRESTORE PROFILE
-            // ==================================================
-
-            const userRef =
-              doc(
-                db,
-                "users",
-                user.uid
-              );
-
-
-            const userSnap =
-              await getDoc(userRef);
-
-
-            if(!userSnap.exists()) {
-
-              showMessage(
-                "User profile not found.",
-                "error"
-              );
-
-              await signOut(auth);
-
-              return;
-            }
-
-
-            const userData =
-              userSnap.data();
-
-
-            // ==================================================
-            // ROLE CHECK
-            // ==================================================
-
-            if(
-              userData.role !==
-              selectedRole
-            ) {
-
-              showMessage(
-                "You do not have permission to login as " +
-                selectedRole +
-                ".",
-                "error"
-              );
-
-              await signOut(auth);
-
-              return;
-            }
-
-
-            // ==================================================
-            // ACCOUNT STATUS
-            // ==================================================
-
-            if(
-              userData.status &&
-              userData.status !== "active"
-            ) {
-
-              showMessage(
-                "Your account is not active.",
-                "error"
-              );
-
-              await signOut(auth);
-
-              return;
-            }
-
-
-            // ==================================================
-            // FINAL MEMBER + OWNER VERIFICATION CHECK
-            // ==================================================
-
-            /*
-             * Final security gate.
-             *
-             * Both Member and Owner must have:
-             *
-             * Firebase Auth emailVerified === true
-             */
-
-            if(
-              user.emailVerified !== true
-            ) {
-
-              showMessage(
-                "Email verification is required.",
-                "error"
-              );
-
-              resendBtn.style.display =
-                "block";
-
-              return;
-            }
-
-
-            // ==================================================
-            // LOGIN SUCCESS
-            // ==================================================
-
-            showMessage(
-              "Login successful!",
-              "success"
-            );
-
-
-            // ==================================================
-            // REDIRECT
-            // ==================================================
-
-            setTimeout(
-              function() {
-
-                if(selectedRole === "owner") {
-
-                  window.location.href =
-                    "owner.html";
-
-                } else {
-
-                  window.location.href =
-                    "member.html";
-
-                }
-
-              },
-              700
-            );
-
-
-          } catch(error) {
-
-            console.error(
-              "Login error:",
-              error
-            );
-
-
-            let errorMessage =
-              "Login failed. Please try again.";
-
-
-            if(
-              error.code ===
-              "auth/invalid-credential"
-            ) {
-
-              errorMessage =
-                "Invalid email or password.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/user-not-found"
-            ) {
-
-              errorMessage =
-                "User account not found.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/wrong-password"
-            ) {
-
-              errorMessage =
-                "Incorrect password.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/invalid-email"
-            ) {
-
-              errorMessage =
-                "Please enter a valid email.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/too-many-requests"
-            ) {
-
-              errorMessage =
-                "Too many login attempts. Please try again later.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/network-request-failed"
-            ) {
-
-              errorMessage =
-                "Network error. Please check your internet connection.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/user-disabled"
-            ) {
-
-              errorMessage =
-                "This account has been disabled.";
-
-            }
-
-            else if(
-              error.code ===
-              "auth/operation-not-allowed"
-            ) {
-
-              errorMessage =
-                "Email/password login is not enabled in Firebase.";
-
-            }
-
-
-            showMessage(
-              errorMessage,
-              "error"
-            );
-
-          } finally {
-
-            loginBtn.disabled =
-              false;
-
-            loginBtn.textContent =
-              "Login";
-
-          }
-
-        }
-      );
-
-  </script>
-
-</body>
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Task Reward System - Login</title>    <style>  
+    * {  
+      box-sizing: border-box;  
+      margin: 0;  
+      padding: 0;  
+      font-family: Arial, sans-serif;  
+    }  
+  
+    body {  
+      min-height: 100vh;  
+      background: linear-gradient(135deg, #111827, #2563eb);  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+      padding: 20px;  
+    }  
+  
+    .login-container {  
+      width: 100%;  
+      max-width: 420px;  
+      background: white;  
+      border-radius: 20px;  
+      padding: 35px 30px;  
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);  
+    }  
+  
+    .logo {  
+      width: 70px;  
+      height: 70px;  
+      margin: 0 auto 15px;  
+      background: #2563eb;  
+      color: white;  
+      border-radius: 18px;  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+      font-size: 32px;  
+    }  
+  
+    h1 {  
+      text-align: center;  
+      color: #111827;  
+      margin-bottom: 8px;  
+      font-size: 26px;  
+    }  
+  
+    .subtitle {  
+      text-align: center;  
+      color: #6b7280;  
+      margin-bottom: 25px;  
+      font-size: 14px;  
+    }  
+  
+    .role-buttons {  
+      display: flex;  
+      gap: 10px;  
+      margin-bottom: 25px;  
+    }  
+  
+    .role-btn {  
+      flex: 1;  
+      padding: 12px;  
+      border: 2px solid #e5e7eb;  
+      background: #f9fafb;  
+      border-radius: 10px;  
+      cursor: pointer;  
+      font-weight: bold;  
+      color: #374151;  
+    }  
+  
+    .role-btn.active {  
+      background: #2563eb;  
+      border-color: #2563eb;  
+      color: white;  
+    }  
+  
+    label {  
+      display: block;  
+      margin-bottom: 7px;  
+      font-size: 14px;  
+      font-weight: bold;  
+      color: #374151;  
+    }  
+  
+    .input-group {  
+      margin-bottom: 18px;  
+    }  
+  
+    input {  
+      width: 100%;  
+      padding: 13px 14px;  
+      border: 1px solid #d1d5db;  
+      border-radius: 10px;  
+      font-size: 15px;  
+      outline: none;  
+    }  
+  
+    input:focus {  
+      border-color: #2563eb;  
+    }  
+  
+    .login-btn {  
+      width: 100%;  
+      padding: 14px;  
+      border: none;  
+      border-radius: 10px;  
+      background: #2563eb;  
+      color: white;  
+      font-size: 16px;  
+      font-weight: bold;  
+      cursor: pointer;  
+      margin-top: 5px;  
+    }  
+  
+    .login-btn:hover {  
+      background: #1d4ed8;  
+    }  
+  
+    .login-btn:disabled {  
+      opacity: 0.7;  
+      cursor: not-allowed;  
+    }  
+  
+    .resend-btn {  
+      width: 100%;  
+      padding: 12px;  
+      border: none;  
+      border-radius: 10px;  
+      background: #111827;  
+      color: white;  
+      font-size: 14px;  
+      font-weight: bold;  
+      cursor: pointer;  
+      margin-top: 10px;  
+      display: none;  
+    }  
+  
+    .resend-btn:hover {  
+      background: #374151;  
+    }  
+  
+    .resend-btn:disabled {  
+      opacity: 0.7;  
+      cursor: not-allowed;  
+    }  
+  
+    .message {  
+      display: none;  
+      margin-top: 15px;  
+      padding: 12px;  
+      border-radius: 8px;  
+      font-size: 14px;  
+      text-align: center;  
+      line-height: 1.5;  
+    }  
+  
+    .error {  
+      background: #fee2e2;  
+      color: #b91c1c;  
+    }  
+  
+    .success {  
+      background: #dcfce7;  
+      color: #166534;  
+    }  
+  
+    .register-text {  
+      text-align: center;  
+      margin-top: 22px;  
+      color: #6b7280;  
+      font-size: 14px;  
+    }  
+  
+    .register-text a {  
+      color: #2563eb;  
+      font-weight: bold;  
+      text-decoration: none;  
+    }  
+  
+    .register-text a:hover {  
+      text-decoration: underline;  
+    }  
+  
+    .footer {  
+      text-align: center;  
+      margin-top: 25px;  
+      font-size: 12px;  
+      color: #9ca3af;  
+    }  
+  
+    @media (max-width: 480px) {  
+      .login-container {  
+        padding: 28px 20px;  
+      }  
+  
+      h1 {  
+        font-size: 23px;  
+      }  
+    }  
+  </style>  </head>  <body>    <div class="login-container">  <div class="logo">💰</div>  
+
+<h1>Task Reward System</h1>  
+
+<p class="subtitle">  
+  Complete tasks and earn rewards  
+</p>  
+
+<!-- ROLE SELECTION -->  
+<div class="role-buttons">  
+
+  <button  
+    type="button"  
+    class="role-btn active"  
+    id="memberBtn"  
+    onclick="selectRole('member')">  
+    👤 Member  
+  </button>  
+
+  <button  
+    type="button"  
+    class="role-btn"  
+    id="ownerBtn"  
+    onclick="selectRole('owner')">  
+    👑 Owner  
+  </button>  
+
+</div>  
+
+
+<!-- LOGIN FORM -->  
+<form id="loginForm">  
+
+  <div class="input-group">  
+
+    <label for="email">  
+      Email Address  
+    </label>  
+
+    <input  
+      type="email"  
+      id="email"  
+      placeholder="Enter your email"  
+      autocomplete="email"  
+      required>  
+
+  </div>  
+
+
+  <div class="input-group">  
+
+    <label for="password">  
+      Password  
+    </label>  
+
+    <input  
+      type="password"  
+      id="password"  
+      placeholder="Enter your password"  
+      autocomplete="current-password"  
+      required>  
+
+  </div>  
+
+
+  <button  
+    type="submit"  
+    class="login-btn"  
+    id="loginBtn">  
+    Login  
+  </button>  
+
+</form>  
+
+
+<!-- RESEND VERIFICATION -->  
+<button  
+  type="button"  
+  class="resend-btn"  
+  id="resendBtn">  
+  📧 Resend Verification Email  
+</button>  
+
+
+<div  
+  id="message"  
+  class="message">  
+</div>  
+
+
+<!-- REGISTER -->  
+<div  
+  class="register-text"  
+  id="registerText">  
+
+  New Member?  
+  <a href="register.html">Register</a>  
+
+</div>  
+
+
+<div class="footer">  
+  © 2026 Task Reward System  
+</div>
+
+  </div>    <!-- FIREBASE -->    <script type="module">  
+  
+    import {  
+      initializeApp  
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";  
+  
+    import {  
+      getAuth,  
+      signInWithEmailAndPassword,  
+      setPersistence,  
+      browserLocalPersistence,  
+      signOut,  
+      sendEmailVerification  
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";  
+  
+    import {  
+      getFirestore,  
+      doc,  
+      getDoc  
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";  
+  
+  
+    // ==================================================  
+    // FIREBASE CONFIG  
+    // DO NOT CHANGE  
+    // ==================================================  
+  
+    const firebaseConfig = {  
+  
+      apiKey:  
+        "AIzaSyCEOuuahhOU7RLb8FjaCkYMudT446645Lg",  
+  
+      authDomain:  
+        "task-reward-system-af46f.firebaseapp.com",  
+  
+      projectId:  
+        "task-reward-system-af46f",  
+  
+      storageBucket:  
+        "task-reward-system-af46f.firebasestorage.app",  
+  
+      messagingSenderId:  
+        "64322126165",  
+  
+      appId:  
+        "1:64322126165:web:7aae7a6e4792ab4f092fdc",  
+  
+      measurementId:  
+        "G-6P3R9F3ZQT"  
+    };  
+  
+  
+    // ==================================================  
+    // INITIALIZE  
+    // ==================================================  
+  
+    const app =  
+      initializeApp(firebaseConfig);  
+  
+    const auth =  
+      getAuth(app);  
+  
+    const db =  
+      getFirestore(app);  
+  
+  
+    // ==================================================  
+    // OWNER UID  
+    // DO NOT CHANGE  
+    // ==================================================  
+  
+    const OWNER_UID =  
+      "cqx3we5X1jX2gpo7xqpqaTqrpDg2";  
+  
+  
+    // ==================================================  
+    // AUTH PERSISTENCE  
+    // ==================================================  
+  
+    try {  
+  
+      await setPersistence(  
+        auth,  
+        browserLocalPersistence  
+      );  
+  
+    } catch(error) {  
+  
+      console.error(  
+        "Persistence error:",  
+        error  
+      );  
+  
+    }  
+  
+  
+    // ==================================================  
+    // ROLE  
+    // ==================================================  
+  
+    let selectedRole = "member";  
+  
+  
+    // ==================================================  
+    // RESEND COOLDOWN  
+    // ==================================================  
+  
+    let resendCooldown = 0;  
+  
+    let resendTimer = null;  
+  
+  
+    // ==================================================  
+    // SELECT ROLE  
+    // ==================================================  
+  
+    window.selectRole = function(role) {  
+  
+      selectedRole = role;  
+  
+      const memberBtn =  
+        document.getElementById("memberBtn");  
+  
+      const ownerBtn =  
+        document.getElementById("ownerBtn");  
+  
+      const registerText =  
+        document.getElementById("registerText");  
+  
+      const resendBtn =  
+        document.getElementById("resendBtn");  
+  
+  
+      memberBtn.classList.remove("active");  
+  
+      ownerBtn.classList.remove("active");  
+  
+  
+      if(role === "member") {  
+  
+        memberBtn.classList.add("active");  
+  
+        registerText.style.display =  
+          "block";  
+  
+      } else {  
+  
+        ownerBtn.classList.add("active");  
+  
+        registerText.style.display =  
+          "none";  
+  
+        resendBtn.style.display =  
+          "none";  
+  
+      }  
+  
+    };  
+  
+  
+    // ==================================================  
+    // MESSAGE  
+    // ==================================================  
+  
+    function showMessage(text, type) {  
+  
+      const message =  
+        document.getElementById("message");  
+  
+      message.textContent =  
+        text;  
+  
+      message.className =  
+        "message " + type;  
+  
+      message.style.display =  
+        "block";  
+    }  
+  
+  
+    // ==================================================  
+    // ACTION CODE SETTINGS  
+    // ==================================================  
+  
+    const actionCodeSettings = {  
+  
+      url:  
+        "https://ajaypatilb.github.io/task-reward-system/verify-email.html",  
+  
+      handleCodeInApp:  
+        false  
+  
+    };  
+  
+  
+    // ==================================================  
+    // RESEND COOLDOWN  
+    // ==================================================  
+  
+    function startResendCooldown() {  
+  
+      resendCooldown = 60;  
+  
+      const resendBtn =  
+        document.getElementById("resendBtn");  
+  
+      resendBtn.disabled = true;  
+  
+      resendBtn.textContent =  
+        "📧 Resend available in 60s";  
+  
+  
+      if(resendTimer) {  
+  
+        clearInterval(  
+          resendTimer  
+        );  
+  
+      }  
+  
+  
+      resendTimer =  
+        setInterval(  
+          function() {  
+  
+            resendCooldown--;  
+  
+            if(resendCooldown <= 0) {  
+  
+              clearInterval(  
+                resendTimer  
+              );  
+  
+              resendTimer = null;  
+  
+              resendBtn.disabled =  
+                false;  
+  
+              resendBtn.textContent =  
+                "📧 Resend Verification Email";  
+  
+              return;  
+            }  
+  
+  
+            resendBtn.textContent =  
+              "📧 Resend available in " +  
+              resendCooldown +  
+              "s";  
+  
+          },  
+          1000  
+        );  
+    }  
+  
+  
+    // ==================================================  
+    // RESEND VERIFICATION EMAIL  
+    // ==================================================  
+  
+    document  
+      .getElementById("resendBtn")  
+      .addEventListener(  
+        "click",  
+        async function() {  
+  
+          const resendBtn =  
+            document.getElementById("resendBtn");  
+  
+          const email =  
+            document  
+              .getElementById("email")  
+              .value  
+              .trim();  
+  
+          const password =  
+            document  
+              .getElementById("password")  
+              .value;  
+  
+  
+          if(selectedRole !== "member") {  
+  
+            return;  
+          }  
+  
+  
+          if(!email || !password) {  
+  
+            showMessage(  
+              "Please enter your email and password first.",  
+              "error"  
+            );  
+  
+            return;  
+          }  
+  
+  
+          if(resendCooldown > 0) {  
+  
+            return;  
+          }  
+  
+  
+          resendBtn.disabled = true;  
+  
+          resendBtn.textContent =  
+            "Sending...";  
+  
+  
+          try {  
+  
+            // ------------------------------------------  
+            // SIGN IN  
+            // ------------------------------------------  
+  
+            const credential =  
+              await signInWithEmailAndPassword(  
+                auth,  
+                email,  
+                password  
+              );  
+  
+  
+            let user =  
+              credential.user;  
+  
+  
+            // ------------------------------------------  
+            // GET LATEST AUTH STATUS  
+            // ------------------------------------------  
+  
+            await user.reload();  
+  
+            user =  
+              auth.currentUser;  
+  
+  
+            if(!user) {  
+  
+              throw new Error(  
+                "Authentication session unavailable."  
+              );  
+  
+            }  
+  
+  
+            // ------------------------------------------  
+            // ALREADY VERIFIED  
+            // ------------------------------------------  
+  
+            if(user.emailVerified) {  
+  
+              showMessage(  
+                "Your email is already verified. Please click Login.",  
+                "success"  
+              );  
+  
+              resendBtn.style.display =  
+                "none";  
+  
+              await signOut(auth);  
+  
+              return;  
+            }  
+  
+  
+            // ------------------------------------------  
+            // SEND VERIFICATION  
+            // ------------------------------------------  
+  
+            await sendEmailVerification(  
+              user,  
+              actionCodeSettings  
+            );  
+  
+  
+            showMessage(  
+              "New verification email sent. Please open the latest email and verify your email.",  
+              "success"  
+            );  
+  
+  
+            startResendCooldown();  
+  
+  
+            // ------------------------------------------  
+            // SIGN OUT  
+            // ------------------------------------------  
+  
+            await signOut(auth);  
+  
+  
+          } catch(error) {  
+  
+            console.error(  
+              "Resend verification error:",  
+              error  
+            );  
+  
+  
+            let errorMessage =  
+              "Could not send verification email. Please try again.";  
+  
+  
+            if(  
+              error.code ===  
+              "auth/invalid-credential"  
+            ) {  
+  
+              errorMessage =  
+                "Invalid email or password.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/too-many-requests"  
+            ) {  
+  
+              errorMessage =  
+                "Too many requests. Please wait before trying again.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/network-request-failed"  
+            ) {  
+  
+              errorMessage =  
+                "Network error. Please check your internet connection.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/user-disabled"  
+            ) {  
+  
+              errorMessage =  
+                "This account has been disabled.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/unauthorized-continue-uri"  
+            ) {  
+  
+              errorMessage =  
+                "Verification settings are not configured correctly for this website.";  
+  
+            }  
+  
+  
+            showMessage(  
+              errorMessage,  
+              "error"  
+            );  
+  
+  
+            resendBtn.disabled =  
+              false;  
+  
+            resendBtn.textContent =  
+              "📧 Resend Verification Email";  
+  
+          }  
+  
+        }  
+      );  
+  
+  
+    // ==================================================  
+    // LOGIN  
+    // ==================================================  
+  
+    document  
+      .getElementById("loginForm")  
+      .addEventListener(  
+        "submit",  
+        async function(e) {  
+  
+          e.preventDefault();  
+  
+  
+          const email =  
+            document  
+              .getElementById("email")  
+              .value  
+              .trim();  
+  
+          const password =  
+            document  
+              .getElementById("password")  
+              .value;  
+  
+  
+          const loginBtn =  
+            document  
+              .getElementById("loginBtn");  
+  
+          const resendBtn =  
+            document  
+              .getElementById("resendBtn");  
+  
+  
+          resendBtn.style.display =  
+            "none";  
+  
+  
+          loginBtn.disabled =  
+            true;  
+  
+          loginBtn.textContent =  
+            "Logging in...";  
+  
+  
+          try {  
+  
+            // ------------------------------------------  
+            // PERSISTENCE  
+            // ------------------------------------------  
+  
+            await setPersistence(  
+              auth,  
+              browserLocalPersistence  
+            );  
+  
+  
+            // ------------------------------------------  
+            // SIGN IN  
+            // ------------------------------------------  
+  
+            const userCredential =  
+              await signInWithEmailAndPassword(  
+                auth,  
+                email,  
+                password  
+              );  
+  
+  
+            let user =  
+              userCredential.user;  
+  
+  
+            // ------------------------------------------  
+            // IMPORTANT:  
+            // GET LATEST FIREBASE AUTH STATUS  
+            // ------------------------------------------  
+  
+            await user.reload();  
+  
+            user =  
+              auth.currentUser;  
+  
+  
+            if(!user) {  
+  
+              throw new Error(  
+                "Authentication session unavailable."  
+              );  
+  
+            }  
+  
+  
+            console.log(  
+              "UID:",  
+              user.uid  
+            );  
+  
+            console.log(  
+              "Firebase emailVerified:",  
+              user.emailVerified  
+            );  
+  
+  
+            // ==================================================  
+            // MEMBER EMAIL VERIFICATION GATE  
+            // ==================================================  
+  
+            if(selectedRole === "member") {  
+  
+              /*  
+               * SECURITY RULE:  
+               *  
+               * Firebase Authentication's  
+               * emailVerified is the ONLY source  
+               * used for email verification.  
+               */  
+  
+              if(user.emailVerified !== true) {  
+  
+                showMessage(  
+                  "Your email is not verified yet. Please verify your email before entering the Member Dashboard.",  
+                  "error"  
+                );  
+  
+  
+                resendBtn.style.display =  
+                  "block";  
+  
+  
+                /*  
+                 * Keep session temporarily active  
+                 * because resend requires authentication.  
+                 */  
+  
+                return;  
+              }  
+  
+            }  
+  
+  
+            // ==================================================  
+            // OWNER UID CHECK  
+            // ==================================================  
+  
+            if(selectedRole === "owner") {  
+  
+              if(user.uid !== OWNER_UID) {  
+  
+                showMessage(  
+                  "This account is not authorized as Owner.",  
+                  "error"  
+                );  
+  
+                await signOut(auth);  
+  
+                return;  
+              }  
+  
+            }  
+  
+  
+            // ==================================================  
+            // FIRESTORE PROFILE  
+            // ==================================================  
+  
+            const userRef =  
+              doc(  
+                db,  
+                "users",  
+                user.uid  
+              );  
+  
+  
+            const userSnap =  
+              await getDoc(userRef);  
+  
+  
+            if(!userSnap.exists()) {  
+  
+              showMessage(  
+                "User profile not found.",  
+                "error"  
+              );  
+  
+              await signOut(auth);  
+  
+              return;  
+            }  
+  
+  
+            const userData =  
+              userSnap.data();  
+  
+  
+            // ==================================================  
+            // ROLE CHECK  
+            // ==================================================  
+  
+            if(  
+              userData.role !==  
+              selectedRole  
+            ) {  
+  
+              showMessage(  
+                "You do not have permission to login as " +  
+                selectedRole +  
+                ".",  
+                "error"  
+              );  
+  
+              await signOut(auth);  
+  
+              return;  
+            }  
+  
+  
+            // ==================================================  
+            // ACCOUNT STATUS  
+            // ==================================================  
+  
+            if(  
+              userData.status &&  
+              userData.status !== "active"  
+            ) {  
+  
+              showMessage(  
+                "Your account is not active.",  
+                "error"  
+              );  
+  
+              await signOut(auth);  
+  
+              return;  
+            }  
+  
+  
+            // ==================================================  
+            // FINAL MEMBER VERIFICATION CHECK  
+            // ==================================================  
+  
+            if(  
+              selectedRole === "member" &&  
+              user.emailVerified !== true  
+            ) {  
+  
+              showMessage(  
+                "Email verification is required.",  
+                "error"  
+              );  
+  
+              await signOut(auth);  
+  
+              return;  
+            }  
+  
+  
+            // ==================================================  
+            // LOGIN SUCCESS  
+            // ==================================================  
+  
+            showMessage(  
+              "Login successful!",  
+              "success"  
+            );  
+  
+  
+            // ==================================================  
+            // REDIRECT  
+            // ==================================================  
+  
+            setTimeout(  
+              function() {  
+  
+                if(selectedRole === "owner") {  
+  
+                  window.location.href =  
+                    "owner.html";  
+  
+                } else {  
+  
+                  window.location.href =  
+                    "member.html";  
+  
+                }  
+  
+              },  
+              700  
+            );  
+  
+  
+          } catch(error) {  
+  
+            console.error(  
+              "Login error:",  
+              error  
+            );  
+  
+  
+            let errorMessage =  
+              "Login failed. Please try again.";  
+  
+  
+            if(  
+              error.code ===  
+              "auth/invalid-credential"  
+            ) {  
+  
+              errorMessage =  
+                "Invalid email or password.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/user-not-found"  
+            ) {  
+  
+              errorMessage =  
+                "User account not found.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/wrong-password"  
+            ) {  
+  
+              errorMessage =  
+                "Incorrect password.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/invalid-email"  
+            ) {  
+  
+              errorMessage =  
+                "Please enter a valid email.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/too-many-requests"  
+            ) {  
+  
+              errorMessage =  
+                "Too many login attempts. Please try again later.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/network-request-failed"  
+            ) {  
+  
+              errorMessage =  
+                "Network error. Please check your internet connection.";  
+  
+            }  
+  
+            else if(  
+              error.code ===  
+              "auth/user-disabled"  
+            ) {  
+  
+              errorMessage =  
+                "This account has been disabled.";  
+  
+            }  
+  
+  
+            showMessage(  
+              errorMessage,  
+              "error"  
+            );  
+  
+          } finally {  
+  
+            loginBtn.disabled =  
+              false;  
+  
+            loginBtn.textContent =  
+              "Login";  
+  
+          }  
+  
+        }  
+      );  
+  
+  </script>  </body>  
 </html>
