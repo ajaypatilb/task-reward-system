@@ -767,10 +767,61 @@ th{
         font-size:12px;
     }
 }
+
+/* =====================================================
+   EMAIL VERIFICATION GATE
+===================================================== */
+.emailVerifyGate{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(17,24,39,.96);
+    z-index:5000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+.emailVerifyGate.show{display:flex;}
+.emailVerifyCard{
+    width:100%;
+    max-width:460px;
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 10px 35px rgba(0,0,0,.30);
+    text-align:center;
+}
+.emailVerifyIcon{font-size:48px;margin-bottom:10px;}
+.emailVerifyCard h2{margin:0 0 10px;color:#111827;}
+.emailVerifyCard p{color:#4b5563;line-height:1.55;margin:9px 0;}
+.emailVerifyEmail{
+    background:#eff6ff;color:#1e40af;padding:10px;border-radius:8px;
+    word-break:break-word;font-weight:bold;margin:15px 0;
+}
+.emailVerifyActions{display:grid;gap:10px;margin-top:18px;}
+.emailVerifyStatus{min-height:20px;font-size:14px;font-weight:bold;margin-top:12px;}
+
 </style>
 </head>
 
 <body>
+
+<div class="emailVerifyGate" id="emailVerifyGate">
+  <div class="emailVerifyCard">
+    <div class="emailVerifyIcon">📧</div>
+    <h2>Verify Your Email</h2>
+    <p>Please verify your email address before using the Member Dashboard.</p>
+    <div class="emailVerifyEmail" id="emailVerifyEmail">Loading...</div>
+    <p>Open the verification link sent by Firebase in your email. After verifying, come back here and tap <b>I've Verified My Email</b>.</p>
+    <div class="emailVerifyActions">
+      <button class="primaryBtn" id="refreshVerificationBtn">I've Verified My Email</button>
+      <button class="secondaryBtn" id="resendVerificationBtn">Resend Verification Email</button>
+      <button class="dangerBtn" id="verificationLogoutBtn">Logout</button>
+    </div>
+    <div class="emailVerifyStatus" id="emailVerifyStatus"></div>
+  </div>
+</div>
+
 
 <div class="header">
 
@@ -1610,6 +1661,8 @@ import {
     getAuth,
     onAuthStateChanged,
     signOut,
+    reload,
+    sendEmailVerification,
     setPersistence,
     browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
@@ -2002,6 +2055,7 @@ function showPage(page){
 let firstAuthCheck = true;
 
 let authRedirectTimer = null;
+let verificationActionInProgress = false;
 
 
 if(auth){
@@ -2077,6 +2131,36 @@ if(auth){
 
             currentMember =
                 user;
+
+
+            // Member access is allowed only after Firebase email verification.
+            // Firebase Auth emailVerified is the source of truth.
+            try{
+
+                await reload(user);
+
+            }catch(reloadError){
+
+                console.error("Unable to reload Firebase user:", reloadError);
+
+                showAuthError(
+                    reloadError.message || "Unable to check email verification status."
+                );
+
+                return;
+
+            }
+
+            currentMember = auth.currentUser || user;
+
+            if(!currentMember.emailVerified){
+
+                showEmailVerificationGate(currentMember);
+                return;
+
+            }
+
+            hideEmailVerificationGate();
 
 
             try{
@@ -2181,6 +2265,176 @@ if(auth){
     );
 
 }
+
+
+/* =====================================================
+   EMAIL VERIFICATION
+===================================================== */
+
+function showEmailVerificationGate(user){
+
+    const gate = document.getElementById("emailVerifyGate");
+    const emailEl = document.getElementById("emailVerifyEmail");
+    const statusEl = document.getElementById("emailVerifyStatus");
+
+    if(emailEl){
+        emailEl.textContent = user?.email || "your email address";
+    }
+
+    if(statusEl){
+        statusEl.textContent = "Verification required.";
+        statusEl.style.color = "#92400e";
+    }
+
+    if(gate){
+        gate.classList.add("show");
+    }
+}
+
+function hideEmailVerificationGate(){
+
+    const gate = document.getElementById("emailVerifyGate");
+
+    if(gate){
+        gate.classList.remove("show");
+    }
+}
+
+async function refreshEmailVerification(){
+
+    if(verificationActionInProgress) return;
+
+    const user = auth?.currentUser;
+    const statusEl = document.getElementById("emailVerifyStatus");
+
+    if(!user){
+        window.location.replace("index.html");
+        return;
+    }
+
+    verificationActionInProgress = true;
+
+    try{
+
+        if(statusEl){
+            statusEl.textContent = "Checking verification...";
+            statusEl.style.color = "#1e40af";
+        }
+
+        await reload(user);
+
+        if(auth.currentUser?.emailVerified){
+
+            hideEmailVerificationGate();
+
+            if(statusEl){
+                statusEl.textContent = "Email verified successfully.";
+                statusEl.style.color = "#166534";
+            }
+
+            window.location.reload();
+            return;
+
+        }
+
+        if(statusEl){
+            statusEl.textContent = "Email is still not verified. Open the latest verification email and try again.";
+            statusEl.style.color = "#92400e";
+        }
+
+    }catch(error){
+
+        console.error("Verification refresh error:", error);
+
+        if(statusEl){
+            statusEl.textContent = error.message || "Could not check verification status.";
+            statusEl.style.color = "#991b1b";
+        }
+
+    }finally{
+        verificationActionInProgress = false;
+    }
+}
+
+async function resendMemberVerification(){
+
+    if(verificationActionInProgress) return;
+
+    const user = auth?.currentUser;
+    const statusEl = document.getElementById("emailVerifyStatus");
+    const btn = document.getElementById("resendVerificationBtn");
+
+    if(!user){
+        window.location.replace("index.html");
+        return;
+    }
+
+    verificationActionInProgress = true;
+
+    if(btn) btn.disabled = true;
+
+    try{
+
+        await reload(user);
+
+        if(auth.currentUser?.emailVerified){
+            hideEmailVerificationGate();
+            window.location.reload();
+            return;
+        }
+
+        await sendEmailVerification(auth.currentUser);
+
+        if(statusEl){
+            statusEl.textContent = "A new verification email has been sent. Check Inbox/Spam.";
+            statusEl.style.color = "#166534";
+        }
+
+    }catch(error){
+
+        console.error("Resend verification error:", error);
+
+        if(statusEl){
+            statusEl.textContent = error.message || "Could not send verification email.";
+            statusEl.style.color = "#991b1b";
+        }
+
+    }finally{
+        verificationActionInProgress = false;
+        if(btn) btn.disabled = false;
+    }
+}
+
+async function logoutFromVerificationGate(){
+
+    try{
+        await signOut(auth);
+        window.location.replace("index.html");
+    }catch(error){
+        console.error("Logout error:", error);
+        window.location.replace("index.html");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const refreshBtn = document.getElementById("refreshVerificationBtn");
+    const resendBtn = document.getElementById("resendVerificationBtn");
+    const logoutBtn = document.getElementById("verificationLogoutBtn");
+
+    if(refreshBtn){
+        refreshBtn.addEventListener("click", refreshEmailVerification);
+    }
+
+    if(resendBtn){
+        resendBtn.addEventListener("click", resendMemberVerification);
+    }
+
+    if(logoutBtn){
+        logoutBtn.addEventListener("click", logoutFromVerificationGate);
+    }
+
+});
 
 
 /* =====================================================
