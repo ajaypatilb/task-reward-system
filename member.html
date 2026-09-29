@@ -1624,6 +1624,7 @@ import {
     where,
     getDocs,
     setDoc,
+    updateDoc,
     serverTimestamp,
     runTransaction
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
@@ -2081,6 +2082,31 @@ if(auth){
 
             try{
 
+                /* =====================================================
+                   EMAIL VERIFICATION FEATURE
+                   Firebase Auth is the actual source of truth.
+                   Firestore emailVerified is only synced for Owner view.
+                   DO NOT CHANGE OTHER MEMBER FEATURES.
+                ===================================================== */
+
+                await user.reload();
+
+                currentMember =
+                    auth.currentUser;
+
+                if(!currentMember.emailVerified){
+
+                    showAuthError(
+                        "Please verify your email before accessing the Member Dashboard. Check your email and open the latest verification link."
+                    );
+
+                    return;
+
+                }
+
+                await currentMember.getIdToken(true);
+
+
                 const userRef =
                     doc(
                         db,
@@ -2108,6 +2134,22 @@ if(auth){
 
                 currentMemberData =
                     userSnap.data();
+
+
+                // Sync verified status for Owner's Members view.
+                // Firebase Auth remains the actual access-control source.
+                if(currentMember.emailVerified === true && currentMemberData.emailVerified !== true){
+
+                    await updateDoc(
+                        userRef,
+                        {
+                            emailVerified: true
+                        }
+                    );
+
+                    currentMemberData.emailVerified = true;
+
+                }
 
 
                 if(
