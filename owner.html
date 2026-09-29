@@ -687,7 +687,20 @@ input:focus,select:focus{
 </div>
 
 <div class="page-subtitle">
-    View registered members and their current status.
+    View registered members and their email verification status.
+</div>
+
+
+<!-- ================= NOT VERIFIED MEMBERS ================= -->
+
+<div class="form-box">
+
+<h3>
+    ❌ Not Verified Members
+</h3>
+
+<div class="page-subtitle">
+    Members who have not verified their email.
 </div>
 
 <div class="table-box">
@@ -707,15 +720,55 @@ input:focus,select:focus{
 
 </thead>
 
-<tbody id="membersTable">
+<tbody id="notVerifiedMembersTable">
 </tbody>
 
 </table>
 
 </div>
 
-</section>
+</div>
 
+
+<!-- ================= VERIFIED MEMBERS ================= -->
+
+<div class="form-box">
+
+<h3>
+    ✅ Verified Members
+</h3>
+
+<div class="page-subtitle">
+    Members who have successfully verified their email.
+</div>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Email Verification</th>
+    <th>Coins</th>
+    <th>Status</th>
+    <th>Member ID</th>
+</tr>
+
+</thead>
+
+<tbody id="verifiedMembersTable">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
 
 <!-- ================================================= -->
 <!-- TASKS -->
@@ -1639,18 +1692,30 @@ async function loadMembers(){
     });
 
 
-    const tbody =
+    const notVerifiedBody =
         document.getElementById(
-            "membersTable"
+            "notVerifiedMembersTable"
         );
 
 
-    tbody.innerHTML = "";
+    const verifiedBody =
+        document.getElementById(
+            "verifiedMembersTable"
+        );
+
+
+    notVerifiedBody.innerHTML = "";
+
+    verifiedBody.innerHTML = "";
 
 
     let activeCount = 0;
 
     let totalCoins = 0;
+
+    let verifiedCount = 0;
+
+    let notVerifiedCount = 0;
 
 
     membersData.forEach(member => {
@@ -1668,16 +1733,7 @@ async function loadMembers(){
             );
 
 
-        const statusClass =
-            member.status === "active"
-            ? "status-active"
-            : "status-pending";
-
-
-        /* ==========================================
-           NEW FEATURE:
-           MEMBER EMAIL VERIFICATION STATUS
-           ========================================== */
+        /* ================= EMAIL VERIFICATION ================= */
 
         const isEmailVerified =
             member.emailVerified === true;
@@ -1695,7 +1751,13 @@ async function loadMembers(){
             : "❌ Not Verified";
 
 
-        tbody.innerHTML += `
+        const statusClass =
+            member.status === "active"
+            ? "status-active"
+            : "status-pending";
+
+
+        const row = `
 
             <tr>
 
@@ -1754,8 +1816,70 @@ async function loadMembers(){
 
         `;
 
+
+        /* ================= SEPARATE TABLE ================= */
+
+        if(isEmailVerified){
+
+            verifiedCount++;
+
+            verifiedBody.innerHTML += row;
+
+        }
+        else{
+
+            notVerifiedCount++;
+
+            notVerifiedBody.innerHTML += row;
+
+        }
+
     });
 
+
+    /* ================= EMPTY STATES ================= */
+
+    if(notVerifiedCount === 0){
+
+        notVerifiedBody.innerHTML = `
+
+            <tr>
+
+                <td colspan="6"
+                    style="text-align:center;color:#6b7280;">
+
+                    No Not Verified Members
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    if(verifiedCount === 0){
+
+        verifiedBody.innerHTML = `
+
+            <tr>
+
+                <td colspan="6"
+                    style="text-align:center;color:#6b7280;">
+
+                    No Verified Members
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    /* ================= DASHBOARD COUNTS ================= */
 
     document.getElementById(
         "totalMembers"
@@ -1791,6 +1915,14 @@ async function loadMembers(){
         "reportCoins"
     ).textContent =
         totalCoins;
+
+
+    /* ================= PENDING VERIFICATION ================= */
+
+    document.getElementById(
+        "pendingVerificationCount"
+    ).textContent =
+        notVerifiedCount;
 
 }
 
@@ -2533,20 +2665,53 @@ async function loadCompletions(){
         }
         else{
 
-            action =
+    if(
+        completion.status === "approved"
+    ){
 
-                `<span class="status ${
-                    completion.status ===
-                    "approved"
-                    ? "status-approved"
-                    : "status-rejected"
-                }">
+        action = `
+
+            <span class="status status-approved">
+
+                Completed
+
+            </span>
+
+        `;
+
+    }
+    else if(
+        completion.status === "rejected"
+    ){
+
+        action = `
+
+            <span class="status status-rejected">
+
+                Rejected
+
+            </span>
+
+        `;
+
+    }
+    else{
+
+        action = `
+
+            <span class="status status-pending">
 
                 ${escapeHtml(
                     completion.status || "-"
                 )}
 
-                </span>`;
+            </span>
+
+        `;
+
+    }
+
+    }
 
         }
 
@@ -2589,15 +2754,17 @@ async function loadCompletions(){
 
 
                 <td>
-                    ${escapeHtml(
-
-                        completion.rewardStatus ||
-
-                        completion.status ||
-
-                        "-"
-
-                    )}
+                    ${
+    completion.status === "pending"
+    ? "⏳ Pending"
+    : completion.status === "approved"
+    ? "✅ Completed"
+    : completion.status === "rejected"
+    ? "❌ Rejected"
+    : escapeHtml(
+        completion.status || "-"
+      )
+                    }
                 </td>
 
 
